@@ -1,0 +1,13 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    container_name: "postgres_dev"
+    environment:
+      - POSTGRES_USER=john
+      - POSTGRES_PASSWORD=pwd0123456789
+      - POSTGRES_DB=test_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
