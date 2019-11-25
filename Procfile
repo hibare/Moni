@@ -1,0 +1,1 @@
+web: cd src; gunicorn monitor.wsgi --port $PORT
