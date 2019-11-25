@@ -157,3 +157,8 @@ LOGGING = {
         },
     },
 }
+
+
+# Celery settings
+BROKER_TRANSPORT = "sqlakombu.transport.Transport"
+BROKER_HOST = 'postgressql://john:pwd0123456789@127.0.0.1:5432/test_db'
