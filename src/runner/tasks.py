@@ -66,7 +66,7 @@ def retrieve_entries():
 @app.task(base=BaseTask, name="Run health checks")
 def run_health_check(data):
     # Local vars
-    failure_status_codes = ('5', '2')
+    failure_status_codes = ('5')
     url = data.get('url')
     mail_recipient = data.get('mail_recipient')
     slack_endpoint = data.get('slack_endpoint')
