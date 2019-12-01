@@ -1,3 +1,4 @@
-site: cd src; gunicorn -b 0.0.0.0:$PORT --access-logfile logs/app.log --error-logfile logs/app.log monitor.wsgi 
+#site: cd src; gunicorn -b 0.0.0.0:$PORT --access-logfile logs/app.log --error-logfile logs/app.log monitor.wsgi 
+web: cd src; python3 manage.py runserver 0.0.0.0:$PORT
 celery: cd src; celery worker --app=monitor -l info
 beat: cd src; celery -A monitor beat -l info
