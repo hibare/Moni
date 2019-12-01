@@ -1,1 +1,1 @@
-web: env > .env; cd src; env PYTHONUNBUFFERED=true honcho start -f Procfile.real 2>&1
+web: cd src; env > .env; env PYTHONUNBUFFERED=true honcho start -f Procfile.real 2>&1
