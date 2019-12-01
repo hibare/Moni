@@ -19,6 +19,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
+    'celerybeat_status',
+    'runner',
 ]
 
 MIDDLEWARE = [
@@ -160,5 +163,7 @@ LOGGING = {
 
 
 # Celery settings
-BROKER_TRANSPORT = "sqlakombu.transport.Transport"
-BROKER_HOST = 'postgressql://john:pwd0123456789@127.0.0.1:5432/test_db'
+CELERY_BROKER_URL = config('REDIS_URL')
+
+# Celery beat settings
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
