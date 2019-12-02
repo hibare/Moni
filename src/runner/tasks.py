@@ -63,29 +63,34 @@ def retrieve_entries():
     return check_urls
 
 
-@app.task(base=BaseTask, name="Run health checks")
-def run_health_check(data):
+@app.task(base=BaseTask, name="Run health checks", bind=True)
+def run_health_check(self, data):
     # Local vars
     failure_status_codes = ('5')
     url = data.get('url')
     mail_recipient = data.get('mail_recipient')
     slack_endpoint = data.get('slack_endpoint')
 
-    logger.info("Running health check on URL=%s", url)
-    response = requests.get(url)
-    logger.info("Received status=%s for URL=%s, response=%s",
-                response.status_code, url, response.content)
+    try:
+        logger.info("Running health check on URL=%s", url)
+        response = requests.get(url)
+        logger.info("Received status=%s for URL=%s, response=%s",
+                    response.status_code, url, response.content)
 
-    # Check for status code to determine status of health check
-    if str(response.status_code).startswith(failure_status_codes):
-        logger.warning("Health check failed, URL=%s, status=%s",
-                       url, response.status_code)
+        # Check for status code to determine status of health check
+        if str(response.status_code).startswith(failure_status_codes):
+            logger.warning("Health check failed, URL=%s, status=%s",
+                           url, response.status_code)
 
-        # send mail and slack notification
-        send_health_check_notification_mail.delay(
-            mail_recipient, url, response.status_code)
-        send_health_check_notification_slack.delay(
-            slack_endpoint, url, response.status_code)
+            # send mail and slack notification
+            send_health_check_notification_mail.delay(
+                mail_recipient, url, response.status_code)
+            send_health_check_notification_slack.delay(
+                slack_endpoint, url, response.status_code)
+    except Exception as e:
+        logger.error("Exception: %s", traceback.format_exc())
+        logger.info("Retrying task")
+        self.retry(exc=e, countdown=10, max_retries=2)
 
 
 @app.task(base=BaseTask, name="Send health check notification [Mail]")
@@ -101,24 +106,25 @@ def send_health_check_notification_mail(recipient, url, status):
 
 @app.task(base=BaseTask, name="Send health check notification [Slack]")
 def send_health_check_notification_slack(endpoint, url, status):
-    headers = {
-        'Content-type': 'application/json',
-    }
+    if endpoint:
+        headers = {
+            'Content-type': 'application/json',
+        }
 
-    text = "Health check failed.\n\nStatus: %s\nURL: %s" % (status, url)
+        text = "Health check failed.\n\nStatus: %s\nURL: %s" % (status, url)
 
-    data = dict(
-        text=text,
-    )
+        data = dict(
+            text=text,
+        )
 
-    try:
-        response = requests.post(
-            endpoint, headers=headers, data=json.dumps(data))
-        logger.info("Slack notification sent, slack status=%s, response=%s",
-                    response.status_code, response.content)
-    except Exception as e:
-        logger.error("Exception: url=%s, status=%s, error=%s",
-                     url, status, traceback.format_exc())
+        try:
+            response = requests.post(
+                endpoint, headers=headers, data=json.dumps(data))
+            logger.info("Slack notification sent, slack status=%s, response=%s",
+                        response.status_code, response.content)
+        except Exception as e:
+            logger.error("Exception: url=%s, status=%s, error=%s",
+                         url, status, traceback.format_exc())
 
 
 def sendMail(subject, recipient, plainBody=None, htmlBody=None, attachment=None):
