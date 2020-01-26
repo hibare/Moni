@@ -7,7 +7,11 @@ celery==4.3.0
 certifi==2019.11.28
 chardet==3.0.4
 dj-database-url==0.5.0
+<<<<<<< HEAD
 Django==3.0.2
+=======
+Django==2.2.8
+>>>>>>> 64ebc40b7060aecbd4949605e5831ac4d291085d
 django-celery-beat==1.5.0
 django-celerybeat-status==0.0.10
 django-timezone-field==3.1
