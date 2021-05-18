@@ -1,0 +1,15 @@
+---
+application:
+  name: "moni"
+  project: "Moni"
+  organization: "QoveryCommunity"
+databases:
+- type: "POSTGRESQL"
+  name: "PGDB"
+  version: "12"
+routers:
+- name: "main-moni"
+  routes:
+  - application_name: "moni"
+    paths:
+    - "/*"
