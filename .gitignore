@@ -1,6 +1,7 @@
 .vscode
 src/static/*
 volumes/*
+data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
