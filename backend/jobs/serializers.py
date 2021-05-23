@@ -5,23 +5,49 @@ from .models import Jobs
 
 
 class JobsSerializer(serializers.HyperlinkedModelSerializer):
-    uuid = serializers.CharField(max_length=40, read_only=True)
+    uuid = serializers.CharField(
+        max_length=40,
+        read_only=True
+    )
     url = serializers.URLField(
-        help_text="URL to run health check against", required=True)
+        help_text="URL to run health check against",
+        required=True
+    )
     title = serializers.CharField(
-        max_length=40, help_text="Title for easy identification of this job", required=True)
+        max_length=40,
+        help_text="Title for easy identification of this job",
+        required=True
+    )
     state = serializers.BooleanField(
-        default=True, initial=True, help_text="State of the job")
-    notify_url = serializers.URLField(default=None, allow_null=True,
-                                      help_text="Notification URL used when healthcheck fails")
+        default=True,
+        initial=True,
+        help_text="State of the job"
+    )
+    notify_url = serializers.URLField(
+        default=None,
+        allow_null=True,
+        help_text="Notification URL used when healthcheck fails"
+    )
     verify_ssl = serializers.BooleanField(
-        default=True, initial=True, help_text="Verify SSL certificate")
-    interval = serializers.IntegerField(default=15,
-                                        initial=15, help_text="Job interval in minutes")
+        default=True,
+        initial=True,
+        help_text="Verify SSL certificate"
+    )
+    interval = serializers.IntegerField(
+        default=15,
+        initial=15,
+        help_text="Job interval in minutes"
+    )
     success_status = serializers.IntegerField(
-        default=200, initial=200, help_text="HTTP status to check health check response status for success")
+        default=200,
+        initial=200,
+        help_text="HTTP status to check health check response status for success"
+    )
     check_redirect = serializers.BooleanField(
-        default=True, initial=True, help_text="Check for redirects")
+        default=True,
+        initial=True,
+        help_text="Check for redirects"
+    )
 
     class Meta:
         model = Jobs
