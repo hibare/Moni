@@ -13,11 +13,11 @@ class JobsSerializer(serializers.HyperlinkedModelSerializer):
         max_length=40, help_text="Title for easy identification of this job", required=True)
     state = serializers.BooleanField(
         default=True, initial=True, help_text="State of the job")
-    notify_url = serializers.URLField(
+    notify_url = serializers.URLField(default=None, allow_null=True,
         help_text="Notification URL used when healthcheck fails")
     verify_ssl = serializers.BooleanField(
         default=True, initial=True, help_text="Verify SSL certificate")
-    interval = serializers.IntegerField(
+    interval = serializers.IntegerField(default=15,
         initial=15, help_text="Job interval in minutes")
     success_status = serializers.IntegerField(
         default=200, initial=200, help_text="HTTP status to check health check response status for success")
