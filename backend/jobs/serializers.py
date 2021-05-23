@@ -1,8 +1,7 @@
 """Jobs Serializer"""
 
-from rest_framework.fields import ReadOnlyField
-from .models import Jobs
 from rest_framework import serializers
+from .models import Jobs
 
 
 class JobsSerializer(serializers.HyperlinkedModelSerializer):
@@ -14,11 +13,11 @@ class JobsSerializer(serializers.HyperlinkedModelSerializer):
     state = serializers.BooleanField(
         default=True, initial=True, help_text="State of the job")
     notify_url = serializers.URLField(default=None, allow_null=True,
-        help_text="Notification URL used when healthcheck fails")
+                                      help_text="Notification URL used when healthcheck fails")
     verify_ssl = serializers.BooleanField(
         default=True, initial=True, help_text="Verify SSL certificate")
     interval = serializers.IntegerField(default=15,
-        initial=15, help_text="Job interval in minutes")
+                                        initial=15, help_text="Job interval in minutes")
     success_status = serializers.IntegerField(
         default=200, initial=200, help_text="HTTP status to check health check response status for success")
     check_redirect = serializers.BooleanField(
@@ -28,4 +27,3 @@ class JobsSerializer(serializers.HyperlinkedModelSerializer):
         model = Jobs
         fields = ['uuid', 'url', 'title', 'state',
                   'notify_url', 'verify_ssl', 'interval', 'success_status', 'check_redirect']
-        read_only_fields = ['']
