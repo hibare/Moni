@@ -9,9 +9,4 @@ class JobsConfig(AppConfig):
     name = 'jobs'
 
     def ready(self):
-        # Start Scheduler
-        from . import scheduler
-        if settings.SCHEDULER_AUTOSTART:
-            scheduler.start()
-
         import jobs.signals
