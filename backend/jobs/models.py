@@ -10,7 +10,7 @@ class Jobs(models.Model):
     """Health Check jobs"""
 
     uuid = models.CharField(
-        max_length=40, default=get_str_uuid(), primary_key=True)
+        max_length=40, default=get_str_uuid, primary_key=True)
     url = models.URLField(unique=True)
     title = models.CharField(max_length=50)
     state = models.BooleanField(default=True)
