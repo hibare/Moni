@@ -1,7 +1,7 @@
 """Jobs Serializer"""
 
 from rest_framework import serializers
-from .models import Jobs, default_success_status
+from .models import Jobs, default_success_status, JobsHistory
 
 
 class JobsSerializer(serializers.HyperlinkedModelSerializer):
@@ -53,3 +53,25 @@ class JobsSerializer(serializers.HyperlinkedModelSerializer):
         model = Jobs
         fields = ['uuid', 'url', 'title', 'state',
                   'notify_url', 'verify_ssl', 'interval', 'success_status', 'check_redirect']
+
+
+class JobsHistorySerializer(serializers.HyperlinkedModelSerializer):
+    timestamp = serializers.DateTimeField(
+        read_only=True
+    )
+    uuid = serializers.CharField(
+        max_length=40,
+        read_only=True
+    )
+    status_code = serializers.IntegerField(
+        read_only=True,
+        help_text="Status Code"
+    )
+    success = serializers.BooleanField(
+        read_only=True,
+        help_text="Status Code"
+    )
+
+    class Meta:
+        model = JobsHistory
+        fields = ['timestamp', 'uuid', 'status_code', 'success']
