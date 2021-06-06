@@ -3,6 +3,7 @@
 from django.db import models
 from model_utils import FieldTracker
 from moni.utils.funcs import get_str_uuid
+from jobs.validators import apprise_url_validator
 
 
 class Jobs(models.Model):
@@ -13,7 +14,7 @@ class Jobs(models.Model):
     url = models.URLField(unique=True)
     title = models.CharField(max_length=50)
     state = models.BooleanField(default=True)
-    notify_url = models.URLField(null=True)
+    notify_url = models.URLField(null=True, validators=[apprise_url_validator])
     verify_ssl = models.BooleanField(default=True)
     interval = models.IntegerField(default=15)
     success_status = models.IntegerField(default=200)

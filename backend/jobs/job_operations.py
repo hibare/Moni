@@ -7,6 +7,7 @@ from typing import Tuple, Union
 import urllib3
 from jobs.models import Jobs
 from jobs.scheduler import scheduler
+from jobs.notification import Notification
 
 logger = logging.getLogger(__name__)
 
@@ -41,10 +42,12 @@ def executor(id: str) -> None:
 
     try:
         job = Jobs.objects.get(uuid=id)
+        title = job.title
         url = job.url
         verify_ssl = job.verify_ssl
         success_status = job.success_status
         check_redirect = job.check_redirect
+        notify_url = job.notify_url
 
         status, data = request(url, verify_ssl, check_redirect)
         logger.info("Response id=%s, url=%s, status=%s, data=%s",
@@ -52,7 +55,12 @@ def executor(id: str) -> None:
 
         if status != success_status:
             # Notify failure
-            pass
+            Notification().notify(
+                [notify_url],
+                "Service %s down" % (title),
+                "\nSuccess status: %s \nStatus received: %s \nResponse: %s" % (
+                    success_status, status, data, )
+            )
 
     except Exception:
         logger.exception("Failed to execute healthcheck, id=%s", id)
