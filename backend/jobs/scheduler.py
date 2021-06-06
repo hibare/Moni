@@ -32,18 +32,18 @@ def start():
         logging.basicConfig()
         logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
-        scheduler.add_job(
-            delete_old_job_executions,
-            trigger=CronTrigger(
-                day_of_week="mon", hour="00", minute="00"
-            ),  # Midnight on Monday, before start of the next work week.
-            id="delete_old_job_executions",
-            max_instances=1,
-            replace_existing=True,
-        )
-        logger.info(
-            "Added weekly job: 'delete_old_job_executions'."
-        )
+    scheduler.add_job(
+        delete_old_job_executions,
+        trigger=CronTrigger(
+            day_of_week="mon", hour="00", minute="00"
+        ),  # Midnight on Monday, before start of the next work week.
+        id="delete_old_job_executions",
+        max_instances=1,
+        replace_existing=True,
+    )
+    logger.info(
+        "Added weekly job: 'delete_old_job_executions'."
+    )
 
     # scheduler.add_job(test_job,
     #                   "interval", id="test_job", minutes=5, replace_existing=True)
