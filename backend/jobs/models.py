@@ -1,9 +1,14 @@
 """Jobs Models"""
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from model_utils import FieldTracker
 from moni.utils.funcs import get_str_uuid
 from jobs.validators import apprise_url_validator
+
+
+def default_success_status():
+    return [200]
 
 
 class Jobs(models.Model):
@@ -17,7 +22,8 @@ class Jobs(models.Model):
     notify_url = models.URLField(null=True, validators=[apprise_url_validator])
     verify_ssl = models.BooleanField(default=True)
     interval = models.IntegerField(default=15)
-    success_status = models.IntegerField(default=200)
+    success_status = ArrayField(
+        models.IntegerField(), default=default_success_status)
     check_redirect = models.BooleanField(default=True)
 
     tracker = FieldTracker()

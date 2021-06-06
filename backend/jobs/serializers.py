@@ -1,7 +1,7 @@
 """Jobs Serializer"""
 
 from rest_framework import serializers
-from .models import Jobs
+from .models import Jobs, default_success_status
 
 
 class JobsSerializer(serializers.HyperlinkedModelSerializer):
@@ -38,9 +38,9 @@ class JobsSerializer(serializers.HyperlinkedModelSerializer):
         initial=15,
         help_text="Job interval in minutes"
     )
-    success_status = serializers.IntegerField(
-        default=200,
-        initial=200,
+    success_status = serializers.ListField(
+        child=serializers.IntegerField(),
+        default=default_success_status(),
         help_text="HTTP status to check health check response status for success"
     )
     check_redirect = serializers.BooleanField(

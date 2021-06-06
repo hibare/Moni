@@ -31,7 +31,12 @@ def request(url: str, verify_ssl: bool = True, check_redirect: bool = True) -> T
         )
 
         return response.status, response.data.decode()
+
+    except UnicodeDecodeError:
+        return response.status, response.data
+
     except Exception:
+        logger.exception("URL=%s", url)
         return None, None
 
 
@@ -50,11 +55,11 @@ def executor(id: str) -> None:
         notify_url = job.notify_url
 
         status, data = request(url, verify_ssl, check_redirect)
-        logger.info("Response id=%s, url=%s, status=%s, data=%s",
-                    id, url, status, data)
+        logger.info("Response id=%s, url=%s, status=%s",
+                    id, url, status)
 
-        if status != success_status and notify_url:
-            # Notify failure
+        # Notify failure
+        if notify_url and status not in success_status:
             Notification().notify(
                 [notify_url],
                 "Service %s down" % (title),
