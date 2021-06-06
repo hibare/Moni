@@ -53,7 +53,7 @@ def executor(id: str) -> None:
         logger.info("Response id=%s, url=%s, status=%s, data=%s",
                     id, url, status, data)
 
-        if status != success_status:
+        if status != success_status and notify_url:
             # Notify failure
             Notification().notify(
                 [notify_url],
