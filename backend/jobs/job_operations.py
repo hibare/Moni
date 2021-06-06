@@ -5,7 +5,7 @@ import ssl
 import logging
 from typing import Tuple, Union
 import urllib3
-from jobs.models import Jobs
+from jobs.models import Jobs, JobsHistory
 from jobs.scheduler import scheduler
 from jobs.notification import Notification
 
@@ -43,10 +43,11 @@ def request(url: str, verify_ssl: bool = True, check_redirect: bool = True) -> T
 def executor(id: str) -> None:
     """Healthcheck executor"""
 
-    logger.info("Runnin health check, id=%s", id)
+    logger.info("Running health check, id=%s", id)
 
     try:
         job = Jobs.objects.get(uuid=id)
+
         title = job.title
         url = job.url
         verify_ssl = job.verify_ssl
@@ -54,18 +55,27 @@ def executor(id: str) -> None:
         check_redirect = job.check_redirect
         notify_url = job.notify_url
 
-        status, data = request(url, verify_ssl, check_redirect)
-        logger.info("Response id=%s, url=%s, status=%s",
-                    id, url, status)
+        status_code, response = request(url, verify_ssl, check_redirect)
+        logger.info("Response id=%s, url=%s, status_code=%s",
+                    id, url, status_code)
+
+        success = (status_code in success_status)
 
         # Notify failure
-        if notify_url and status not in success_status:
+        if notify_url and not success:
             Notification().notify(
                 [notify_url],
                 "Service %s down" % (title),
                 "\nSuccess status: %s \nStatus received: %s \nResponse: %s" % (
-                    success_status, status, data, )
+                    success_status, status_code, response)
             )
+
+        # Record job execution history
+        _ = JobsHistory.objects.create(
+            uuid=job,
+            status_code=status_code,
+            success=success
+        )
 
     except Exception:
         logger.exception("Failed to execute healthcheck, id=%s", id)

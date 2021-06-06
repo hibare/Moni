@@ -8,6 +8,8 @@ from jobs.validators import apprise_url_validator
 
 
 def default_success_status():
+    """Default Success status code"""
+
     return [200]
 
 
@@ -31,3 +33,17 @@ class Jobs(models.Model):
     class Meta:
         verbose_name = "Jobs"
         verbose_name_plural = "Jobs"
+
+
+class JobsHistory(models.Model):
+    """Health check jobs execution history"""
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+    uuid = models.ForeignKey(
+        Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE)
+    status_code = models.IntegerField(null=True)
+    success = models.BooleanField()
+
+    class Meta:
+        verbose_name = "Jobs History"
+        verbose_name_plural = "Jobs History"
