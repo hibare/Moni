@@ -3,7 +3,7 @@
 
 import ssl
 import logging
-from typing import Tuple, Union
+from typing import Dict, Tuple, Union
 import urllib3
 from jobs.models import Jobs, JobsHistory
 from jobs.scheduler import scheduler
@@ -12,7 +12,7 @@ from jobs.notification import Notification
 logger = logging.getLogger(__name__)
 
 
-def request(url: str, verify_ssl: bool = True, check_redirect: bool = True) -> Tuple[Union[int, None], Union[str, None]]:
+def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redirect: bool = True) -> Tuple[Union[int, None], Union[str, None]]:
     """HTTP Request executor"""
 
     try:
@@ -50,12 +50,14 @@ def executor(id: str) -> None:
 
         title = job.title
         url = job.url
+        headers = job.headers
         verify_ssl = job.verify_ssl
         success_status = job.success_status
         check_redirect = job.check_redirect
         notify_url = job.notify_url
 
-        status_code, response = request(url, verify_ssl, check_redirect)
+        status_code, response = request(
+            url, headers, verify_ssl, check_redirect)
         logger.info("Response id=%s, url=%s, status_code=%s",
                     id, url, status_code)
 
