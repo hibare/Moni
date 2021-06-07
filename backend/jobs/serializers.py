@@ -23,6 +23,11 @@ class JobsSerializer(serializers.HyperlinkedModelSerializer):
         initial=True,
         help_text="State of the job"
     )
+    headers = serializers.JSONField(
+        default=dict,
+        allow_null=True,
+        help_text="Request headers"
+    )
     notify_url = serializers.URLField(
         default=None,
         allow_null=True,
@@ -51,7 +56,7 @@ class JobsSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Jobs
-        fields = ['uuid', 'url', 'title', 'state',
+        fields = ['uuid', 'url', 'title', 'state', 'headers',
                   'notify_url', 'verify_ssl', 'interval', 'success_status', 'check_redirect']
 
 

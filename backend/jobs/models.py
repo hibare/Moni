@@ -21,6 +21,7 @@ class Jobs(models.Model):
     url = models.URLField(unique=True)
     title = models.CharField(max_length=50)
     state = models.BooleanField(default=True)
+    headers = models.JSONField(default=dict)
     notify_url = models.URLField(null=True, validators=[apprise_url_validator])
     verify_ssl = models.BooleanField(default=True)
     interval = models.IntegerField(default=15)
