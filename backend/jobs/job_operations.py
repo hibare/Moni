@@ -26,6 +26,7 @@ def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redir
         response = http.request(
             'GET',
             url,
+            headers=headers,
             timeout=10,
             redirect=check_redirect
         )
