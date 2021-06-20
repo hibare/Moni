@@ -1,5 +1,6 @@
 """Jobs Models"""
 
+from datetime import timedelta, timezone
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from model_utils import FieldTracker
@@ -36,6 +37,16 @@ class Jobs(models.Model):
         verbose_name_plural = "Jobs"
 
 
+class JobHistoryManager(models.Manager):
+    """Job history manager"""
+
+    def delete_old_history(self, max_age: int) -> None:
+        """Delete job history from database"""
+
+        self.filter(timestamp__lte=timezone.now() -
+                    timedelta(seconds=max_age)).delete()
+
+
 class JobsHistory(models.Model):
     """Health check jobs execution history"""
 
@@ -44,6 +55,8 @@ class JobsHistory(models.Model):
         Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE)
     status_code = models.IntegerField(null=True)
     success = models.BooleanField()
+
+    objects = JobHistoryManager()
 
     class Meta:
         verbose_name = "Jobs History"
