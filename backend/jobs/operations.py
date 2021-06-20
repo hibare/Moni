@@ -5,7 +5,6 @@ import ssl
 import logging
 from typing import Dict, Tuple, Union
 import urllib3
-from apscheduler.triggers.cron import CronTrigger
 from jobs.models import Jobs, JobsHistory
 from jobs.scheduler import scheduler
 from jobs.notification import Notification
