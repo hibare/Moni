@@ -1,6 +1,7 @@
 """Jobs Models"""
 
-from datetime import timedelta, timezone
+from datetime import timedelta
+from django.utils import timezone
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from model_utils import FieldTracker
