@@ -6,7 +6,7 @@ import logging
 from typing import Dict, Tuple, Union
 import urllib3
 from apscheduler.triggers.cron import CronTrigger
-from jobs.models import Jobs, JobsHistory, JobHistoryManager
+from jobs.models import Jobs, JobsHistory
 from jobs.scheduler import scheduler
 from jobs.notification import Notification
 
@@ -156,20 +156,3 @@ class JobOps:
         except Exception:
             logger.exception("Failed to reschedule job, id=%s", id)
             return False
-
-
-def delete_job_history(max_age=604800):
-    """This job deletes all job history records older than `max_age` from the database."""
-
-    JobHistoryManager.objects.delete_old_history(max_age)
-
-
-scheduler.add_job(
-    delete_job_history,
-    trigger=CronTrigger(
-        day_of_week="mon", hour="00", minute="00"
-    ),  # Midnight on Monday, before start of the next work week.
-    id="delete_old_job_history",
-    max_instances=1,
-    replace_existing=True,
-)
