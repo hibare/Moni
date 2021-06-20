@@ -30,5 +30,5 @@ six==1.16.0
 sqlparse==0.4.1
 toml==0.10.2
 tzlocal==2.1
-urllib3==1.26.5
+urllib3==1.25.9
 whitenoise==5.2.0
