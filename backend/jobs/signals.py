@@ -4,7 +4,7 @@ import logging
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from jobs.models import Jobs
-from jobs.job_operations import JobOps
+from jobs.operations import JobOps
 
 logger = logging.getLogger(__name__)
 

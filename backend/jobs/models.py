@@ -1,6 +1,7 @@
 """Jobs Models"""
 
 from datetime import timedelta
+from typing import List
 from django.utils import timezone
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
@@ -9,7 +10,7 @@ from moni.utils.funcs import get_str_uuid
 from jobs.validators import apprise_url_validator
 
 
-def default_success_status():
+def default_success_status() -> List[int]:
     """Default Success status code"""
 
     return [200]
