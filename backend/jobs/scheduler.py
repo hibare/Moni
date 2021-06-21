@@ -7,7 +7,7 @@ from apscheduler.triggers.cron import CronTrigger
 from django_apscheduler.jobstores import register_events
 from django_apscheduler.models import DjangoJobExecution
 from jobs.models import JobsHistory
-
+from django_apscheduler.models import DjangoJob
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def delete_old_job_history(max_age=604800):
     JobsHistory.objects.delete_old_history(max_age)
 
 
-def start():
+def start(default_jobs=True):
     """Start Scheduler"""
 
     if settings.DEBUG:
@@ -39,31 +39,32 @@ def start():
         logging.basicConfig()
         logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
-    scheduler.add_job(
-        delete_old_job_executions,
-        trigger=CronTrigger(
-            day_of_week="mon", hour="00", minute="00"
-        ),  # Midnight on Monday, before start of the next work week.
-        id="delete_old_job_executions",
-        max_instances=1,
-        replace_existing=True,
-    )
-    logger.info(
-        "Added weekly job: 'delete_old_job_executions'."
-    )
+    if default_jobs:
+        scheduler.add_job(
+            delete_old_job_executions,
+            trigger=CronTrigger(
+                day_of_week="mon", hour="00", minute="00"
+            ),  # Midnight on Monday, before start of the next work week.
+            id="delete_old_job_executions",
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info(
+            "Added weekly job: 'delete_old_job_executions'."
+        )
 
-    scheduler.add_job(
-        delete_old_job_history,
-        trigger=CronTrigger(
-            day_of_week="mon", hour="00", minute="00"
-        ),  # Midnight on Monday, before start of the next work week.
-        id="delete_old_job_history",
-        max_instances=1,
-        replace_existing=True,
-    )
-    logger.info(
-        "Added weekly job: 'delete_old_job_history'."
-    )
+        scheduler.add_job(
+            delete_old_job_history,
+            trigger=CronTrigger(
+                day_of_week="mon", hour="00", minute="00"
+            ),  # Midnight on Monday, before start of the next work week.
+            id="delete_old_job_history",
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info(
+            "Added weekly job: 'delete_old_job_history'."
+        )
 
     # scheduler.add_job(test_job,
     #                   "interval", id="test_job", minutes=5, replace_existing=True)
@@ -72,3 +73,9 @@ def start():
     register_events(scheduler)
 
     scheduler.start()
+
+
+def shutdown():
+    """Shutdown scheduler"""
+
+    scheduler.shutdown()
