@@ -1,11 +1,9 @@
 """Job Operations"""
 
-
 import ssl
 import logging
 from typing import Dict, Tuple, Union
 import urllib3
-from apscheduler.triggers.cron import CronTrigger
 from jobs.models import Jobs, JobsHistory
 from jobs.scheduler import scheduler
 from jobs.notification import Notification
@@ -107,6 +105,7 @@ class JobOps:
                 minutes=interval,
                 args=[id]
             )
+            logger.info("Job added, id=%s", id)
             return True
         except Exception:
             logger.exception("Failed to add new job, id=%s", id)
@@ -118,7 +117,9 @@ class JobOps:
 
         try:
             scheduler.remove_job(id)
+            logger.info("Job removed, id=%s", id)
             return True
+
         except Exception:
             logger.exception("Failed to remove job, id=%s", id)
             return False
@@ -129,6 +130,7 @@ class JobOps:
 
         try:
             scheduler.pause_job(id)
+            logger.info("Job paused, id=%s", id)
             return True
         except Exception:
             logger.exception("Failed to pause job, id=%s", id)
@@ -140,6 +142,7 @@ class JobOps:
 
         try:
             scheduler.resume_job(id)
+            logger.info("Job resumed, id=%s", id)
             return True
         except Exception:
             logger.exception("Failed to resume job, id=%s", id)
@@ -152,6 +155,7 @@ class JobOps:
         try:
             scheduler.reschedule_job(id,
                                      jobstore=None, trigger="interval", minutes=interval)
+            logger.info("Job rescheduled, id=%s", id)
             return True
         except Exception:
             logger.exception("Failed to reschedule job, id=%s", id)

@@ -3,14 +3,22 @@
 import logging
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
+from django_apscheduler.models import DjangoJobExecution
 from jobs.models import Jobs
-from jobs.job_operations import JobOps
+from jobs.operations import JobOps
 
 logger = logging.getLogger(__name__)
 
 
 @receiver(post_save, sender=Jobs)
 def job_post_save(sender, instance, created, **kwargs):
+    """
+    Update scheduled job when job record is updated.
+    When state is changed:
+        state=True, set job status active, resume job
+        state=False, set job status inactive, pause job
+    When internval changed, reschedule job
+    """
     logger.info("Instance=%s, created=%s", instance, created)
 
     if created:
@@ -28,5 +36,18 @@ def job_post_save(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Jobs)
 def job_post_delete(sender, instance, **kwargs):
+    """Delete scheduled job when the job record is deleted"""
+
     logger.info("Instance=%s", instance)
     JobOps.remove(instance.uuid)
+
+
+@receiver(post_save, sender=DjangoJobExecution)
+def delete_execution_record(sender, instance, created, **kwargs):
+    """
+    Django APScheduler stores execution reccords in DB. As app is storing custom execution records, this is no longer needed.
+    Delete the record as soon as it is saved.
+    """
+
+    if created:
+        instance.delete()

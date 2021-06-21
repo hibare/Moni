@@ -40,4 +40,4 @@ class JobsHistoryAdmin(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request: HttpRequest, obj: Optional[Jobs] = None) -> bool:
-        return False
+        return True
