@@ -34,7 +34,7 @@ RUN mkdir -p ${APP_DIR}
 
 WORKDIR ${APP_DIR}
 
-COPY --chown=ghost:ghost backend .
+COPY --chown=${USER}:${USER} backend .
 
 RUN python manage.py collectstatic --no-input
 
