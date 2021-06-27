@@ -22,7 +22,7 @@ ENV USER=ghost
 
 ENV APP_DIR=/home/${USER}/app
 
-RUN apt install -y libpq5 
+RUN apt-get update && apt-get install -y libpq5 
 
 COPY --from=builder /install /usr/local
 
