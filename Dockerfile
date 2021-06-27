@@ -4,7 +4,7 @@ LABEL Github="hibare"
 
 FROM base as base-builder
 
-RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libffi-dev rustc
+RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libssl-dev libffi-dev rustc
 
 RUN pip install -U pip setuptools
 
