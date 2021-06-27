@@ -14,7 +14,7 @@ COPY backend/requirements.txt .
 
 RUN mkdir -p /install
 
-RUN pip install -r requirements.txt --no-binary :all: --prefix=/install --no-warn-script-location
+RUN pip install -r requirements.txt --prefix=/install --no-warn-script-location
 
 FROM base
 
