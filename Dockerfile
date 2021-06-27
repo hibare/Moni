@@ -4,7 +4,7 @@ LABEL Github="hibare"
 
 FROM base as base-builder
 
-RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libffi-dev
+RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libffi-dev curl
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
