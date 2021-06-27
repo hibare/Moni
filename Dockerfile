@@ -4,11 +4,7 @@ LABEL Github="hibare"
 
 FROM base as base-builder
 
-RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libffi-dev curl
-
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-ENV PATH="/root/.cargo/bin:$PATH"
+RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libffi-dev rustc
 
 RUN pip install -U pip setuptools
 
@@ -18,7 +14,7 @@ COPY backend/requirements.txt .
 
 RUN mkdir -p /install
 
-RUN pip install -r requirements.txt --prefix=/install --no-warn-script-location
+RUN pip install -r requirements.txt --no-binary --prefix=/install --no-warn-script-location
 
 FROM base
 
