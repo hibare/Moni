@@ -22,6 +22,8 @@ ENV USER=ghost
 
 ENV APP_DIR=/home/${USER}/app
 
+RUN apt install -y libpq5 
+
 COPY --from=builder /install /usr/local
 
 RUN useradd -ms /bin/bash ${USER}
