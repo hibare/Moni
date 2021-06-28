@@ -4,9 +4,10 @@ name: Docker build test
 # architectures and push all of them to Docker Hub & Github container registry.
 # Only trigger on semver shaped tags.
 on:
-  push:
+  pull_request:
+      # The branches below must be a subset of the branches above
     branches:
-      - 'dev'
+      - 'master'
     paths-ignore:
       - '**/README.md'
 
