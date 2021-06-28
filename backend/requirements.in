@@ -1,0 +1,11 @@
+django
+dj_database_url
+python-decouple
+djangorestframework
+markdown 
+django-filter 
+django_apscheduler
+psycopg2-binary
+django-model-utils
+whitenoise
+apprise
