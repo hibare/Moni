@@ -12,7 +12,7 @@ on:
 
 
 jobs:
-  dockerhub-publish:
+  docker-build-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
