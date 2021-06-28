@@ -1,4 +1,4 @@
-apprise==0.9.2
+apprise==0.9.3
 APScheduler==3.7.0
 asgiref==3.3.4
 astroid==2.5.6
