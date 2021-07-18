@@ -76,7 +76,11 @@ class JobsHistorySerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         help_text="Status Code"
     )
+    response_time = serializers.FloatField(
+        read_only=True,
+        help_text="Round trip time in seconds"
+    )
 
     class Meta:
         model = JobsHistory
-        fields = ['timestamp', 'uuid', 'status_code', 'success']
+        fields = ['timestamp', 'uuid', 'status_code', 'success', 'response_time']

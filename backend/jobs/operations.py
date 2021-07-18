@@ -1,5 +1,6 @@
 """Job Operations"""
 
+import time
 import ssl
 import logging
 from typing import Dict, Tuple, Union
@@ -11,8 +12,14 @@ from jobs.notification import Notification
 logger = logging.getLogger(__name__)
 
 
-def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redirect: bool = True) -> Tuple[Union[int, None], Union[str, None]]:
+def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redirect: bool = True) -> Tuple[Union[int, None], Union[str, None], Union[float, None]]:
     """HTTP Request executor"""
+
+    DEFAULT_HEADERS = {
+        "Cache-Control": "no-cache"
+    }
+
+    headers.update(DEFAULT_HEADERS)
 
     try:
         if verify_ssl:
@@ -22,6 +29,7 @@ def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redir
 
         http = urllib3.PoolManager(cert_reqs=cert_reqs)
 
+        start = time.time()
         response = http.request(
             'GET',
             url,
@@ -29,15 +37,18 @@ def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redir
             timeout=10,
             redirect=check_redirect
         )
+        end = time.time()
 
-        return response.status, response.data.decode()
+        elapsed_seconds = end - start
+
+        return response.status, response.data.decode(), elapsed_seconds
 
     except UnicodeDecodeError:
-        return response.status, response.data
+        return response.status, response.data, None
 
     except Exception:
         logger.exception("URL=%s", url)
-        return None, None
+        return None, None, None
 
 
 def executor(id: str) -> None:
@@ -56,10 +67,11 @@ def executor(id: str) -> None:
         check_redirect = job.check_redirect
         notify_url = job.notify_url
 
-        status_code, response = request(
+        status_code, response, elapsed_seconds = request(
             url, headers, verify_ssl, check_redirect)
-        logger.info("Response id=%s, url=%s, status_code=%s",
-                    id, url, status_code)
+
+        logger.info("Response id=%s, url=%s, status_code=%s, elapsed_seconds=%s",
+                    id, url, status_code, elapsed_seconds)
 
         success = (status_code in success_status)
 
@@ -76,13 +88,14 @@ def executor(id: str) -> None:
         _ = JobsHistory.objects.create(
             uuid=job,
             status_code=status_code,
-            success=success
+            success=success,
+            response_time=elapsed_seconds
         )
 
     except Exception:
         logger.exception("Failed to execute healthcheck, id=%s", id)
 
-        # Notify failure
+        # Todo - Notify failure
 
 
 class JobOps:

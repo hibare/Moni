@@ -57,6 +57,7 @@ class JobsHistory(models.Model):
         Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE)
     status_code = models.IntegerField(null=True)
     success = models.BooleanField()
+    response_time = models.FloatField(null=True)
 
     objects = JobHistoryManager()
 
