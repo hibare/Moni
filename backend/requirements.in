@@ -8,5 +8,5 @@ django_apscheduler
 psycopg2-binary
 django-model-utils
 whitenoise
-apprise
 gunicorn
+drf-writable-nested

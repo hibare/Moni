@@ -7,6 +7,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from model_utils import FieldTracker
 from moni.utils.funcs import get_str_uuid
+from notification.models import Notifications
 from jobs.validators import apprise_url_validator
 
 
@@ -25,7 +26,8 @@ class Jobs(models.Model):
     title = models.CharField(max_length=50)
     state = models.BooleanField(default=True)
     headers = models.JSONField(default=dict)
-    notify_url = models.URLField(null=True, validators=[apprise_url_validator])
+    notification_urls = models.ManyToManyField(
+        Notifications, related_name="jobs_notification", db_column='uuid', null=True)
     verify_ssl = models.BooleanField(default=True)
     interval = models.IntegerField(default=15)
     success_status = ArrayField(

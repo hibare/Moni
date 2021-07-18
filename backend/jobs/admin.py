@@ -12,7 +12,7 @@ class JobsAdmin(admin.ModelAdmin):
 
     empty_value_display = '-empty-'
     list_display = ['uuid', 'url', 'title',
-                    'state', 'notify_url', 'verify_ssl', 'interval']
+                    'state', 'verify_ssl', 'interval']
     list_filter = ['state', 'verify_ssl', 'interval']
 
     def has_add_permission(self, request: HttpRequest) -> bool:
