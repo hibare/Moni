@@ -30,7 +30,8 @@ class JobsHistoryAdmin(admin.ModelAdmin):
     """Jobs History admin class"""
 
     empty_value_display = '-empty-'
-    list_display = ['timestamp', 'uuid', 'status_code', 'success']
+    list_display = ['timestamp', 'uuid',
+                    'status_code', 'success', 'response_time']
     list_filter = ['timestamp', 'uuid', 'status_code', 'success']
 
     def has_add_permission(self, request: HttpRequest) -> bool:
