@@ -10,3 +10,4 @@ django-model-utils
 whitenoise
 gunicorn
 drf-writable-nested
+urllib3

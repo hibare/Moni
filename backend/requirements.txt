@@ -47,6 +47,8 @@ sqlparse==0.4.1
     # via django
 tzlocal==2.1
     # via apscheduler
+urllib3==1.26.6
+    # via -r requirements.in
 whitenoise==5.2.0
     # via -r requirements.in
 
