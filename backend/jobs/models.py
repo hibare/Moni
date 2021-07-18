@@ -8,7 +8,6 @@ from django.contrib.postgres.fields import ArrayField
 from model_utils import FieldTracker
 from moni.utils.funcs import get_str_uuid
 from notification.models import Notifications
-from jobs.validators import apprise_url_validator
 
 
 def default_success_status() -> List[int]:
