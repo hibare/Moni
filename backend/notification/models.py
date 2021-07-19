@@ -8,7 +8,8 @@ class Notifications(models.Model):
     """Notifications"""
 
     NOTIFICATION_TYPES = [
-        ("slack", "Slack")
+        ("slack", "Slack"),
+        ("discord", "Discord")
     ]
 
     uuid = models.CharField(
