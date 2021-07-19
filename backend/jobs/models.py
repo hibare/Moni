@@ -59,6 +59,7 @@ class JobsHistory(models.Model):
     status_code = models.IntegerField(null=True)
     success = models.BooleanField()
     response_time = models.FloatField(null=True)
+    error = models.TextField(null=True)
 
     objects = JobHistoryManager()
 

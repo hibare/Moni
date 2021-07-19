@@ -7,13 +7,17 @@ from typing import Dict, Tuple, Union
 import urllib3
 from jobs.models import Jobs, JobsHistory
 from jobs.scheduler import scheduler
-from jobs.notify import Notify
+from notification.services.slack.slack import Slack
 
 logger = logging.getLogger(__name__)
 
 
 def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redirect: bool = True) -> Tuple[Union[int, None], Union[str, None], Union[float, None]]:
-    """HTTP Request executor"""
+    """
+    HTTP Request executor
+
+    Return: HTTP status, response data, time elapsed
+    """
 
     DEFAULT_HEADERS = {
         "Cache-Control": "no-cache"
@@ -41,14 +45,14 @@ def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redir
 
         elapsed_seconds = end - start
 
-        return response.status, response.data.decode(), elapsed_seconds
+        return response.status, response.data.decode(), elapsed_seconds, None
 
-    except UnicodeDecodeError:
-        return response.status, response.data, None
+    except UnicodeDecodeError as e:
+        return response.status, response.data, None, repr(e)
 
-    except Exception:
+    except Exception as err:
         logger.exception("URL=%s", url)
-        return None, None, None
+        return None, None, None, repr(err)
 
 
 def executor(id: str) -> None:
@@ -67,29 +71,30 @@ def executor(id: str) -> None:
         check_redirect = job.check_redirect
         notification_urls = job.notification_urls.all()
 
-        status_code, response, elapsed_seconds = request(
+        status_code, response, elapsed_seconds, error = request(
             url, headers, verify_ssl, check_redirect)
 
         logger.info("Response id=%s, url=%s, status_code=%s, elapsed_seconds=%s",
                     id, url, status_code, elapsed_seconds)
 
-        success = (status_code in success_status)
+        success = (status_code in success_status) and error is None
 
         # Notify failure
         if notification_urls and not success:
-            Notify().notify(
-                [notification_urls],
-                "Service %s down" % (title),
-                "\nSuccess status: %s \nStatus received: %s \nResponse: %s" % (
-                    success_status, status_code, response)
-            )
+            for notification_url in notification_urls:
+                if notification_url.type == 'slack':
+                    notify = Slack()
+                    notify.prep_payload(title, url, success,
+                                        success_status, status_code, error)
+                    notify.send(notification_url.url)
 
         # Record job execution history
         _ = JobsHistory.objects.create(
             uuid=job,
             status_code=status_code,
             success=success,
-            response_time=elapsed_seconds
+            response_time=elapsed_seconds,
+            error=error
         )
 
     except Exception:
