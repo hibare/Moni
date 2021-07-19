@@ -36,6 +36,9 @@ class Jobs(models.Model):
     tracker = FieldTracker()
 
     class Meta:
+        indexes = [
+            models.Index(fields=['uuid']),
+        ]
         verbose_name = "Jobs"
         verbose_name_plural = "Jobs"
 
@@ -64,5 +67,9 @@ class JobsHistory(models.Model):
     objects = JobHistoryManager()
 
     class Meta:
+        indexes = [
+            models.Index(fields=['uuid']),
+            models.Index(fields=['-timestamp', 'uuid'])
+        ]
         verbose_name = "Jobs History"
         verbose_name_plural = "Jobs History"

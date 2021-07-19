@@ -18,5 +18,8 @@ class Notifications(models.Model):
     description = models.TextField()
 
     class Meta:
+        indexes = [
+            models.Index(fields=['uuid']),
+        ]
         verbose_name = "Notification"
         verbose_name_plural = "Notifications"
