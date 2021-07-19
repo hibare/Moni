@@ -21,5 +21,5 @@ class JobsHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = JobsHistory
         fields = ['timestamp', 'uuid', 'status_code',
-                  'success', 'response_time']
+                  'success', 'response_time', 'error']
         read_only_fields = fields

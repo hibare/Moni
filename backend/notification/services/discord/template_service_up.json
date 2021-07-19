@@ -1,0 +1,4 @@
+{
+    "content": ":green_heart: **Service Up** [%s](%s)\n\n**Expected Status**\n%s\n\n**Received Status**\n%s\n\n**Error**\n%s",
+    "embeds": null
+}

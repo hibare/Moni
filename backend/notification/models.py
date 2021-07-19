@@ -8,7 +8,8 @@ class Notifications(models.Model):
     """Notifications"""
 
     NOTIFICATION_TYPES = [
-        ("slack", "Slack")
+        ("slack", "Slack"),
+        ("discord", "Discord")
     ]
 
     uuid = models.CharField(
@@ -18,5 +19,8 @@ class Notifications(models.Model):
     description = models.TextField()
 
     class Meta:
+        indexes = [
+            models.Index(fields=['uuid']),
+        ]
         verbose_name = "Notification"
         verbose_name_plural = "Notifications"
