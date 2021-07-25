@@ -1,6 +1,7 @@
 """Slack notification service"""
 
 import logging
+import json
 from typing import List
 from django.conf import settings
 from moni.utils.requests_proxy import requests_post
@@ -12,9 +13,9 @@ class Slack:
     """Slack notifications"""
 
     def __init__(self) -> None:
-        self.payload = {
+        self.payload = json.dumps({
             "text": "Test content from Moni"
-        }
+        }).encode("utf-8")
         self.HEADERS = {
             "Content-type": "application/json"
         }
