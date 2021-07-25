@@ -137,6 +137,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Logging
 
+LOG_LEVEL = config("LOG_LEVEL", default="INFO", cast=str).upper()
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -162,15 +164,15 @@ LOGGING = {
     'loggers': {
         # root logger
         '': {
-            'level': 'INFO',
+            'level': LOG_LEVEL,
             'handlers': ['console', 'file'],
         },
         'django': {
-            'level': 'INFO',
+            'level': LOG_LEVEL,
             'handlers': ['console', 'file'],
         },
         'django.request': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'handlers': ['console', 'file'],
         },
     },
