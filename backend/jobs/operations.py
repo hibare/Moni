@@ -10,6 +10,7 @@ from jobs.scheduler import scheduler
 from notification.services.slack.slack import Slack
 from notification.services.discord.discord import Discord
 from notification.services.webhook.webhook import Webhook
+from notification.services.gotify.gotify import Gotify
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +99,12 @@ def executor(id: str) -> None:
 
                 if notification_url.type == 'webhook':
                     notify = Webhook()
+                    notify.prep_payload(title, url, success,
+                                        success_status, status_code, error)
+                    notify.send(notification_url.url)
+
+                if notification_url.type == 'gotify':
+                    notify = Gotify()
                     notify.prep_payload(title, url, success,
                                         success_status, status_code, error)
                     notify.send(notification_url.url)

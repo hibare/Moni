@@ -10,7 +10,8 @@ class Notifications(models.Model):
     NOTIFICATION_TYPES = [
         ("slack", "Slack"),
         ("discord", "Discord"),
-        ("webhook", "Webhook")
+        ("webhook", "Webhook"),
+        ("gotify", "Gotify")
     ]
 
     uuid = models.CharField(

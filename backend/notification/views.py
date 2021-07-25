@@ -11,6 +11,7 @@ from notification.models import Notifications
 from notification.services.slack.slack import Slack
 from notification.services.discord.discord import Discord
 from notification.services.webhook.webhook import Webhook
+from notification.services.gotify.gotify import Gotify
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,10 @@ class NotificationViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins
 
             elif queryset.type == 'webhook':
                 notify = Webhook()
+                state = notify.send(queryset.url)
+
+            elif queryset.type == 'gotify':
+                notify = Gotify()
                 state = notify.send(queryset.url)
 
             if state:
