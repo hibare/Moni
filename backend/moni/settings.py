@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from moni import VERSION
 from pathlib import Path
 from dj_database_url import parse as db_url
 from decouple import config, Csv
+from moni.utils.funcs import get_version
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -201,3 +203,6 @@ SCHEDULER_CONFIG = {
     },
 }
 SCHEDULER_AUTOSTART = True
+
+# Version
+VERSION = get_version()
