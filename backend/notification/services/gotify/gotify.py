@@ -1,4 +1,4 @@
-"""Discord notification service"""
+"""Gotify notification service"""
 
 import logging
 import json
@@ -9,21 +9,21 @@ from moni.utils.requests_proxy import requests_post
 logger = logging.getLogger(__name__)
 
 
-class Discord:
-    """Discord notifications"""
+class Gotify:
+    """Gotify notifications"""
 
     def __init__(self) -> None:
         self.payload = json.dumps({
-            "content": "Moni: Test notification",
-            "embeds": None
+            "title": "Moni: Test notification",
+            "message": "Test Message"
         }).encode("utf-8")
         self.HEADERS = {
             "Content-type": "application/json"
         }
         self.SERVICE_DOWN_TEMPLATE = settings.BASE_DIR / \
-            "notification/services/discord/template_service_down.json"
+            "notification/services/gotify/template_service_down.json"
         self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / \
-            "notification/services/discord/template_service_up.json"
+            "notification/services/gotify/template_service_up.json"
 
     def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str = None) -> None:
         TEMPLATE = self.SERVICE_UP_TEMPLATE if success else self.SERVICE_DOWN_TEMPLATE
@@ -39,12 +39,12 @@ class Discord:
     def send(self, webhook: str) -> bool:
         try:
             response = requests_post(webhook, self.payload, self.HEADERS)
-            logger.debug("Response from Discord, status_code=%s, response=%s",
+            logger.debug("Response from Gotify, status_code=%s, response=%s",
                          response.status, response.data)
 
-            if response.status == 204:
+            if response.status == 200:
                 return True
             return False
         except Exception:
-            logger.exception("Discord notification exception")
+            logger.exception("Gotify notification exception")
             return False

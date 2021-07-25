@@ -14,7 +14,7 @@ class Slack:
 
     def __init__(self) -> None:
         self.payload = json.dumps({
-            "text": "Test content from Moni"
+            "text": "Moni: Test notification"
         }).encode("utf-8")
         self.HEADERS = {
             "Content-type": "application/json"

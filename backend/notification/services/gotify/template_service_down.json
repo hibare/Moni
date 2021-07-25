@@ -1,0 +1,4 @@
+{
+    "title": "Service down: %s",
+    "message": "URL: %s\nExpected Status: %s\nReceived Status: %s\nError: %s"
+}
