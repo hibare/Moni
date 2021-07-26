@@ -1,9 +1,8 @@
 """Accounts URLs"""
 
 from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
-
+from accounts.views import APIToken
 
 urlpatterns = [
-    path('token/', obtain_auth_token, name='get_token')
+    path('token/', APIToken.as_view(), name='token')
 ]
