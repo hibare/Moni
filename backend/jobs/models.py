@@ -28,9 +28,9 @@ class Jobs(models.Model):
     notification_urls = models.ManyToManyField(
         Notifications, related_name="jobs_notification", db_column='uuid', null=True)
     verify_ssl = models.BooleanField(default=True)
-    interval = models.IntegerField(default=15)
+    interval = models.PositiveIntegerField(default=15)
     success_status = ArrayField(
-        models.IntegerField(), default=default_success_status)
+        models.PositiveIntegerField(), default=default_success_status)
     check_redirect = models.BooleanField(default=True)
 
     tracker = FieldTracker()

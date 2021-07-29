@@ -11,6 +11,7 @@ from jobs.serializers import JobsSerializer, JobsHistorySerializer
 
 logger = logging.getLogger(__name__)
 
+
 class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """Jobs ViewSet"""
 
