@@ -1,0 +1,565 @@
+openapi: 3.0.2
+info:
+  title: "Moni"
+  version: "1.0.0"
+  description: "Moni - A HTTP service monitoring solution OpenAPI schema"
+paths:
+  /api/v1/accounts/token/:
+    get:
+      operationId: Retrieve API token
+      description: Retrieve API token
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthToken"
+          description: ""
+      tags:
+        - Auth Token
+    post:
+      operationId: Create / Get Token
+      description: Create or get API Token
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthToken"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthToken"
+          description: ""
+      tags:
+        - Auth Token
+    put:
+      operationId: Regenerate API Token
+      description: Regenerate API token
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthToken"
+          description: ""
+      tags:
+        - Auth Token
+    delete:
+      operationId: Delete API token
+      description: Delete API token
+      parameters: []
+      responses:
+        "204":
+          description: ""
+      tags:
+        - Auth Token
+  /api/v1/jobs/:
+    get:
+      operationId: List all Jobs
+      description: List all Jobs
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Jobs"
+          description: ""
+      tags:
+        - Jobs
+    post:
+      operationId: Create new Job
+      description: Create new Job
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+          description: ""
+      tags:
+        - Jobs
+  /api/v1/jobs/{uuid}/:
+    get:
+      operationId: Get a Job details
+      description: Get a Job details
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+          description: ""
+      tags:
+        - Jobs
+    put:
+      operationId: Update a Job
+      description: Update a Job
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+          description: ""
+      tags:
+        - Jobs
+    patch:
+      operationId: Partial update a Job
+      description: Partial update a Job
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Jobs"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+          description: ""
+      tags:
+        - Jobs
+    delete:
+      operationId: Delete a Job
+      description: Delete a Job
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "204":
+          description: ""
+      tags:
+        - Jobs
+  /api/v1/jobs/{uuid}/history/:
+    get:
+      operationId: Job History
+      description: Get a Job execution history
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobsHistory"
+          description: ""
+      tags:
+        - Jobs
+  /api/v1/jobs/{uuid}/pause/:
+    post:
+      operationId: Pause a Job
+      description: Pause a Job execution
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+          description: ""
+      tags:
+        - Jobs
+  /api/v1/jobs/{uuid}/resume/:
+    post:
+      operationId: Resume Job
+      description: Resume Job execution
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+          description: ""
+      tags:
+        - Jobs
+  /api/v1/jobs/history/:
+    get:
+      operationId: List jobs execution history
+      description: "List all jobs execution history"
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobsHistory"
+          description: ""
+      tags:
+        - Jobs History
+  /api/v1/notification/:
+    get:
+      operationId: List Notifications
+      description: List all Notifications
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+          description: ""
+      tags:
+        - Notifications
+    post:
+      operationId: Create Notificaiton
+      description: Create new Notification
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Notification"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+          description: ""
+      tags:
+        - Notifications
+  /api/v1/notification/{uuid}/:
+    get:
+      operationId: Get a Notification
+      description: Get a Notification details
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notification.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+          description: ""
+      tags:
+        - Notifications
+    put:
+      operationId: Upate Notification
+      description: Update a Notification details
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notification.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Notification"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+          description: ""
+      tags:
+        - Notifications
+    patch:
+      operationId: Partial update Notification
+      description: Partial update a Notification details
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notification.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Notification"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+          description: ""
+      tags:
+        - Notifications
+    delete:
+      operationId: Delete Notification
+      description: Delete a Notification
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notification.
+          schema:
+            type: string
+      responses:
+        "204":
+          description: ""
+      tags:
+        - Notifications
+  /api/v1/notification/{uuid}/test/:
+    post:
+      operationId: Test a Notification
+      description: Test a Notification endpoint
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notification.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+      tags:
+        - Notifications
+components:
+  schemas:
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+        - username
+        - password
+    Jobs:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+          pattern:
+            "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:0|25[0-5]|2[0-4]\\\
+            d|1\\d?\\d?|[1-9]\\d?)(?:\\.(?:0|25[0-5]|2[0-4]\\d|1\\d?\\d?|[1-9]\\d?)){3}|\\\
+            [[0-9a-f:.]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1\
+            -\uFFFF0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
+            -\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\d{2,5})?(?:[/?#][^\\\
+            s]*)?\\z"
+        title:
+          type: string
+          maxLength: 50
+        state:
+          type: boolean
+        headers:
+          type: object
+        notification_urls:
+          type: array
+          items:
+            type: object
+            properties:
+              uuid:
+                type: string
+                readOnly: true
+              url:
+                type: string
+                format: uri
+                maxLength: 200
+                pattern:
+                  "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:0|25[0-5]|2[0-4]\\\
+                  d|1\\d?\\d?|[1-9]\\d?)(?:\\.(?:0|25[0-5]|2[0-4]\\d|1\\d?\\d?|[1-9]\\\
+                  d?)){3}|\\[[0-9a-f:.]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF\
+                  0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\\
+                  .(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\\
+                  d{2,5})?(?:[/?#][^\\s]*)?\\z"
+              type:
+                enum:
+                  - slack
+                  - discord
+                  - webhook
+                  - gotify
+                type: string
+              description:
+                type: string
+            required:
+              - url
+              - type
+              - description
+        verify_ssl:
+          type: boolean
+        interval:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        success_status:
+          type: array
+          items:
+            type: integer
+            maximum: 2147483647
+        check_redirect:
+          type: boolean
+      required:
+        - url
+        - title
+    JobsHistory:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          readOnly: true
+        status_code:
+          type: integer
+          readOnly: true
+        success:
+          type: boolean
+          readOnly: true
+        response_time:
+          type: number
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+    Notification:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+          pattern:
+            "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:0|25[0-5]|2[0-4]\\\
+            d|1\\d?\\d?|[1-9]\\d?)(?:\\.(?:0|25[0-5]|2[0-4]\\d|1\\d?\\d?|[1-9]\\d?)){3}|\\\
+            [[0-9a-f:.]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1\
+            -\uFFFF0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
+            -\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\d{2,5})?(?:[/?#][^\\\
+            s]*)?\\z"
+        type:
+          enum:
+            - slack
+            - discord
+            - webhook
+            - gotify
+          type: string
+        description:
+          type: string
+      required:
+        - url
+        - type
+        - description

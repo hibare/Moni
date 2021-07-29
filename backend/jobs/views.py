@@ -34,7 +34,7 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
         else:
             raise NotFound()
 
-    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def pause(self, request, **kwargs):
         """Pause job"""
 
@@ -53,7 +53,7 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
         except Jobs.DoesNotExist:
             raise NotFound
 
-    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def resume(self, request, **kwargs):
         """Resume job"""
 
