@@ -11,6 +11,7 @@ from jobs.serializers import JobsSerializer, JobsHistorySerializer
 
 logger = logging.getLogger(__name__)
 
+
 class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """Jobs ViewSet"""
 
@@ -33,7 +34,7 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
         else:
             raise NotFound()
 
-    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def pause(self, request, **kwargs):
         """Pause job"""
 
@@ -52,7 +53,7 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
         except Jobs.DoesNotExist:
             raise NotFound
 
-    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def resume(self, request, **kwargs):
         """Resume job"""
 

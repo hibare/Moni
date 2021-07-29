@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import health_v, version_v
+from django.views.generic import TemplateView
+from .views import health_v, version_v, OpenAPISchemaView, ReDocView, SwaggerUIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +24,8 @@ urlpatterns = [
     path('__health/', health_v, name='health'),
     path('api/v1/accounts/', include('accounts.urls')),
     path('api/v1/jobs/', include('jobs.urls')),
-    path('api/v1/notification/', include('notification.urls'))
+    path('api/v1/notification/', include('notification.urls')),
+    path('openapi/', OpenAPISchemaView.as_view(), name='openapi-schema'),
+    path('redoc/', ReDocView.as_view(), name='redoc'),
+    path('swagger/', SwaggerUIView.as_view(), name='swagger-ui'),
 ]
