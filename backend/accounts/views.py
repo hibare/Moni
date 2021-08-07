@@ -27,20 +27,6 @@ class APIToken(ObtainAuthToken):
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
 
-    def get(self, request, *args, **kwargs):
-        """Get API token"""
-
-        user = request.user
-
-        try:
-            token = Token.objects.get(user=user)
-            return Response({'token': token.key})
-        except Token.DoesNotExist:
-            raise NotFound
-        except Exception:
-            logger.exception("Token get failed")
-            return Response({'Details': 'Operation failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
     def put(self, request, *args, **kwargs):
         """Regenerate API token"""
 
