@@ -216,30 +216,6 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
-  /api/v1/jobs/{uuid}/history/:
-    get:
-      operationId: Job History
-      description: Get a Job execution history
-      parameters:
-        - name: uuid
-          in: path
-          required: true
-          description: A unique value identifying this Jobs.
-          schema:
-            type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/JobsHistory"
-          description: ""
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-      tags:
-        - Jobs
   /api/v1/jobs/{uuid}/pause/:
     post:
       operationId: Pause a Job
@@ -297,6 +273,47 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/JobsHistory"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+      tags:
+        - Jobs History
+  /api/v1/jobs/{uuid}/history/:
+    get:
+      operationId: Get a Job History
+      description: Get a Job execution history
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobsHistory"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+      tags:
+        - Jobs History
+    delete:
+      operationId: Delete a Job history
+      description: Delete a Job execution history
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "204":
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"

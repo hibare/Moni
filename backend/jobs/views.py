@@ -34,6 +34,20 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
         else:
             raise NotFound()
 
+    @history.mapping.delete
+    def history_delete(self, request, **kwargs):
+        """Delete Job execution history"""
+
+        uuid = self.kwargs['uuid']
+
+        queryset = JobsHistory.objects.filter(uuid=uuid)
+
+        if queryset.exists():
+            queryset.delete()
+            return Response({"detail": "Job history deleted"}, status=status.HTTP_200_OK)
+        else:
+            raise NotFound()
+
     @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def pause(self, request, **kwargs):
         """Pause job"""
