@@ -43,8 +43,8 @@ class Gotify:
                          response.status, response.data)
 
             if response.status == 200:
-                return True
-            return False
-        except Exception:
+                return True, response.status, None
+            return False, response.status, None
+        except Exception as err:
             logger.exception("Gotify notification exception")
-            return False
+            return False, None, repr(err)
