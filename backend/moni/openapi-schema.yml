@@ -1,8 +1,25 @@
 openapi: 3.0.2
 info:
   title: "Moni"
-  version: "1.0.0"
-  description: "Moni - A HTTP service monitoring solution OpenAPI schema"
+  version: "0.0.0"
+  description: |
+    Moni - A HTTP service monitoring solution OpenAPI schema.
+    Checkout project on [Github](https://github.com/hibare/Moni).
+  license:
+    name: MIT
+tags:
+  - name: Auth Token
+    description: API's to manage authentication token.
+  - name: Jobs
+    description: |
+      API's to manage Jobs.
+      Each job an individual monitor to monitor a single service.
+  - name: Jobs History
+    description: API's to manage jobs history.
+  - name: Notifications
+    description: |
+      API's to manage all notification services.
+      Notifications are used by Jobs to send out alert for undesired monitoring responses.
 paths:
   /api/v1/accounts/token/:
     post:
