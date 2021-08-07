@@ -218,7 +218,7 @@ paths:
         - Jobs
   /api/v1/jobs/{uuid}/history/:
     get:
-      operationId: Get Job History
+      operationId: Get a Job History
       description: Get a Job execution history
       parameters:
         - name: uuid
@@ -241,8 +241,8 @@ paths:
       tags:
         - Jobs
     delete:
-      operationId: Delete Job history
-      description: Delete Job execution history
+      operationId: Delete a Job history
+      description: Delete a Job execution history
       parameters:
         - name: uuid
           in: path
