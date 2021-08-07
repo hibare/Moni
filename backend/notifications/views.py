@@ -65,19 +65,19 @@ class NotificationsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
 
             if queryset.type == 'slack':
                 notify = Slack()
-                state = notify.send(queryset.url)
+                state, code, err = notify.send(queryset.url)
 
             elif queryset.type == 'discord':
                 notify = Discord()
-                state = notify.send(queryset.url)
+                state, code, err = notify.send(queryset.url)
 
             elif queryset.type == 'webhook':
                 notify = Webhook()
-                state = notify.send(queryset.url)
+                state, code, err = notify.send(queryset.url)
 
             elif queryset.type == 'gotify':
                 notify = Gotify()
-                state = notify.send(queryset.url)
+                state, code, err = notify.send(queryset.url)
 
             if state:
                 return Response({"detail": "Success"}, status=status.HTTP_200_OK)
