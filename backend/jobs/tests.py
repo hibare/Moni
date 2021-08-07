@@ -68,13 +68,13 @@ class JobsTests(TestCase):
 class NotificationTests(TestCase):
 
     def test_notification_url_success(self):
-        """Validate notification URL (success)"""
+        """Validate a notification URL (success)"""
 
         url = "mailto://mySendingUsername:mySendingPassword@example.com?to=receivingAddress@example.com"
         self.assertEqual(apprise_url_validator(url), True)
 
     def test_notification_url_failure(self):
-        """Validate notification URL (failure)"""
+        """Validate a notification URL (failure)"""
 
         url = "mailt://mySendingUsername:mySendingPassword@example.com?to=receivingAddress@example.com"
 

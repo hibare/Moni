@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import Notifications, NotificationsHistory
 
 
-class NotificationSerializer(serializers.ModelSerializer):
+class NotificationsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notifications

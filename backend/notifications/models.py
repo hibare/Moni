@@ -1,4 +1,4 @@
-"""Notification models"""
+"""Notifications models"""
 
 from datetime import timedelta
 from django.utils import timezone
@@ -26,7 +26,7 @@ class Notifications(models.Model):
         indexes = [
             models.Index(fields=['uuid']),
         ]
-        verbose_name = "Notification"
+        verbose_name = "Notifications"
         verbose_name_plural = "Notifications"
 
 
@@ -41,7 +41,7 @@ class NotificationsHistoryManager(models.Manager):
 
 
 class NotificationsHistory(models.Model):
-    """Notification execution history"""
+    """Notifications execution history"""
 
     timestamp = models.DateTimeField(auto_now_add=True)
     uuid = models.ForeignKey(

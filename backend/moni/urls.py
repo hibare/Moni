@@ -24,7 +24,7 @@ urlpatterns = [
     path('__health/', health_v, name='health'),
     path('api/v1/accounts/', include('accounts.urls')),
     path('api/v1/jobs/', include('jobs.urls')),
-    path('api/v1/notification/', include('notification.urls')),
+    path('api/v1/notifications/', include('notifications.urls')),
     path('openapi/', OpenAPISchemaView.as_view(), name='openapi-schema'),
     path('redoc/', ReDocView.as_view(), name='redoc'),
     path('swagger/', SwaggerUIView.as_view(), name='swagger-ui'),
