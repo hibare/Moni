@@ -21,6 +21,8 @@ tags:
     description: |
       API's to manage all notifications services.
       Notifications are used by Jobs to send out alert for undesired monitoring responses.
+  - name: Notifications History
+    description: API to manage notifications history.
 paths:
   /api/v1/accounts/token/:
     post:
@@ -484,9 +486,25 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
+  /api/v1/notifications/history/:
+    get:
+      operationId: List notificaitons history
+      description: List notificaitons history
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NotificationsHistory"
+          description: ""
+      tags:
+        - Notifications History
   /api/v1/notifications/{uuid}/history/:
     get:
-      operationId: historyNotifications
+      operationId: Get a notification history
       description: Return a notification execution history
       parameters:
         - name: uuid
@@ -509,7 +527,7 @@ paths:
       tags:
         - Notifications History
     delete:
-      operationId: historyDeleteNotifications
+      operationId: Delete a notification history
       description: Delete a notification execution history
       parameters:
         - name: uuid
