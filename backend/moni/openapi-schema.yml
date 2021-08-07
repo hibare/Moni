@@ -5,19 +5,6 @@ info:
   description: "Moni - A HTTP service monitoring solution OpenAPI schema"
 paths:
   /api/v1/accounts/token/:
-    get:
-      operationId: Retrieve API token
-      description: Retrieve API token
-      parameters: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthToken"
-          description: ""
-      tags:
-        - Auth Token
     post:
       operationId: Create / Get Token
       description: Create or get API Token
@@ -34,6 +21,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthToken"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Auth Token
     put:
@@ -47,6 +36,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthToken"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Auth Token
     delete:
@@ -56,6 +47,8 @@ paths:
       responses:
         "204":
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Auth Token
   /api/v1/jobs/:
@@ -72,6 +65,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/Jobs"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
     post:
@@ -96,6 +91,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Jobs"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/:
@@ -116,6 +113,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Jobs"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
     put:
@@ -146,6 +145,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Jobs"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
     patch:
@@ -176,6 +177,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Jobs"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
     delete:
@@ -191,6 +194,8 @@ paths:
       responses:
         "204":
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/history/:
@@ -213,6 +218,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/JobsHistory"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/pause/:
@@ -233,6 +240,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Jobs"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/resume/:
@@ -253,6 +262,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Jobs"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs
   /api/v1/jobs/history/:
@@ -269,6 +280,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/JobsHistory"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs History
   /api/v1/notification/:
@@ -285,6 +298,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/Notification"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
     post:
@@ -309,6 +324,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Notification"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
   /api/v1/notification/{uuid}/:
@@ -329,6 +346,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Notification"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
     put:
@@ -359,6 +378,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Notification"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
     patch:
@@ -389,6 +410,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Notification"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
     delete:
@@ -404,6 +427,8 @@ paths:
       responses:
         "204":
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
   /api/v1/notification/{uuid}/test/:
@@ -420,9 +445,21 @@ paths:
       responses:
         "200":
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
+security:
+  - bearerAuth: []
 components:
+  responses:
+    UnauthorizedError:
+      description: API token is missing or invalid
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      description: API uses bearer authentication mechanism
   schemas:
     AuthToken:
       type: object
