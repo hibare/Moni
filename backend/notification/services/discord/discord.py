@@ -43,8 +43,8 @@ class Discord:
                          response.status, response.data)
 
             if response.status == 204:
-                return True
-            return False
-        except Exception:
+                return True, response.status, None
+            return False, response.status, None
+        except Exception as err:
             logger.exception("Discord notification exception")
-            return False
+            return False, None, repr(err)

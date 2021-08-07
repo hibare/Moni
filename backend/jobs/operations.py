@@ -7,10 +7,7 @@ from typing import Dict, Tuple, Union
 import urllib3
 from jobs.models import Jobs, JobsHistory
 from jobs.scheduler import scheduler
-from notification.services.slack.slack import Slack
-from notification.services.discord.discord import Discord
-from notification.services.webhook.webhook import Webhook
-from notification.services.gotify.gotify import Gotify
+from notification.services.notify import Notify
 
 logger = logging.getLogger(__name__)
 
@@ -85,29 +82,8 @@ def executor(id: str) -> None:
         # Notify failure
         if notification_urls and not success:
             for notification_url in notification_urls:
-                if notification_url.type == 'slack':
-                    notify = Slack()
-                    notify.prep_payload(title, url, success,
-                                        success_status, status_code, error)
-                    notify.send(notification_url.url)
-
-                if notification_url.type == 'discord':
-                    notify = Discord()
-                    notify.prep_payload(title, url, success,
-                                        success_status, status_code, error)
-                    notify.send(notification_url.url)
-
-                if notification_url.type == 'webhook':
-                    notify = Webhook()
-                    notify.prep_payload(title, url, success,
-                                        success_status, status_code, error)
-                    notify.send(notification_url.url)
-
-                if notification_url.type == 'gotify':
-                    notify = Gotify()
-                    notify.prep_payload(title, url, success,
-                                        success_status, status_code, error)
-                    notify.send(notification_url.url)
+                Notify.notify(notification_url, title, url,
+                              success, status_code, error)
 
         # Record job execution history
         _ = JobsHistory.objects.create(
