@@ -29,6 +29,7 @@ paths:
       operationId: Create / Get Token
       description: Create or get API Token
       parameters: []
+      security: []
       requestBody:
         content:
           application/json:
@@ -41,8 +42,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthToken"
           description: ""
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
       tags:
         - Auth Token
     put:
@@ -549,6 +550,8 @@ components:
   responses:
     UnauthorizedError:
       description: API token is missing or invalid
+    BadRequestError:
+      description: Bad request, missing / invalid request parameters
   securitySchemes:
     bearerAuth: # arbitrary name for the security scheme
       type: http
