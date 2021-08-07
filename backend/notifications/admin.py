@@ -3,7 +3,7 @@
 from typing import Optional
 from django.contrib import admin
 from django.http.request import HttpRequest
-from notification.models import Notifications, NotificationsHistory
+from notifications.models import Notifications, NotificationsHistory
 
 
 @admin.register(Notifications)

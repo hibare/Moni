@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django_apscheduler',
     'accounts',
     'jobs',
-    'notification'
+    'notifications'
 ]
 
 MIDDLEWARE = [

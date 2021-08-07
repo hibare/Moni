@@ -19,8 +19,10 @@ tags:
     description: API's to manage jobs history.
   - name: Notifications
     description: |
-      API's to manage all notification services.
+      API's to manage all notifications services.
       Notifications are used by Jobs to send out alert for undesired monitoring responses.
+  - name: Notifications History
+    description: API to manage notifications history.
 paths:
   /api/v1/accounts/token/:
     post:
@@ -319,7 +321,7 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Jobs History
-  /api/v1/notification/:
+  /api/v1/notifications/:
     get:
       operationId: List Notifications
       description: List all Notifications
@@ -331,7 +333,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Notification"
+                  $ref: "#/components/schemas/Notifications"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
@@ -345,25 +347,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notification"
+                $ref: "#/components/schemas/Notifications"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
-  /api/v1/notification/{uuid}/:
+  /api/v1/notifications/{uuid}/:
     get:
       operationId: Get a Notification
       description: Get a Notification details
@@ -379,7 +381,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notification"
+                $ref: "#/components/schemas/Notifications"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
@@ -399,19 +401,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notification"
+                $ref: "#/components/schemas/Notifications"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
@@ -431,19 +433,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/Notifications"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notification"
+                $ref: "#/components/schemas/Notifications"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
@@ -466,7 +468,7 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
-  /api/v1/notification/{uuid}/test/:
+  /api/v1/notifications/{uuid}/test/:
     post:
       operationId: Test a Notification
       description: Test a Notification endpoint
@@ -484,9 +486,25 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications
-  /api/v1/notification/{uuid}/history/:
+  /api/v1/notifications/history/:
     get:
-      operationId: historyNotifications
+      operationId: List notificaitons history
+      description: List notificaitons history
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NotificationsHistory"
+          description: ""
+      tags:
+        - Notifications History
+  /api/v1/notifications/{uuid}/history/:
+    get:
+      operationId: Get a notification history
       description: Return a notification execution history
       parameters:
         - name: uuid
@@ -509,7 +527,7 @@ paths:
       tags:
         - Notifications History
     delete:
-      operationId: historyDeleteNotifications
+      operationId: Delete a notification history
       description: Delete a notification execution history
       parameters:
         - name: uuid
@@ -576,7 +594,7 @@ components:
           type: boolean
         headers:
           type: object
-        notification_urls:
+        notifications:
           type: array
           items:
             type: object
@@ -646,7 +664,7 @@ components:
         error:
           type: string
           readOnly: true
-    Notification:
+    Notifications:
       type: object
       properties:
         uuid:

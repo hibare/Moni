@@ -1,4 +1,4 @@
-"""Notification Views"""
+"""Notifications Views"""
 
 import logging
 from rest_framework import viewsets, mixins, generics, status
@@ -6,22 +6,22 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
-from notification.serializers import NotificationSerializer, NotificationsHistorySerializer
-from notification.models import Notifications, NotificationsHistory
-from notification.services.slack.slack import Slack
-from notification.services.discord.discord import Discord
-from notification.services.webhook.webhook import Webhook
-from notification.services.gotify.gotify import Gotify
+from notifications.serializers import NotificationsSerializer, NotificationsHistorySerializer
+from notifications.models import Notifications, NotificationsHistory
+from notifications.services.slack.slack import Slack
+from notifications.services.discord.discord import Discord
+from notifications.services.webhook.webhook import Webhook
+from notifications.services.gotify.gotify import Gotify
 
 logger = logging.getLogger(__name__)
 
 
-class NotificationViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    """Notification views"""
+class NotificationsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """Notifications views"""
 
     lookup_field = "uuid"
     permission_classes = (IsAuthenticated,)
-    serializer_class = NotificationSerializer
+    serializer_class = NotificationsSerializer
     queryset = Notifications.objects.all()
 
     @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])

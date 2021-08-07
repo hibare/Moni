@@ -7,7 +7,7 @@ from typing import Dict, Tuple, Union
 import urllib3
 from jobs.models import Jobs, JobsHistory
 from jobs.scheduler import scheduler
-from notification.services.notify import Notify
+from notifications.services.notify import Notify
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ def executor(id: str) -> None:
         verify_ssl = job.verify_ssl
         success_status = job.success_status
         check_redirect = job.check_redirect
-        notification_urls = job.notification_urls.all()
+        notifications = job.notifications.all()
 
         status_code, response, elapsed_seconds, error = request(
             url, headers, verify_ssl, check_redirect)
@@ -80,9 +80,9 @@ def executor(id: str) -> None:
         success = (status_code in success_status) and error is None
 
         # Notify failure
-        if notification_urls and not success:
-            for notification_url in notification_urls:
-                Notify.notify(notification_url, title, url,
+        if notifications and not success:
+            for notification in notifications:
+                Notify.notify(notification, title, url,
                               success, status_code, error)
 
         # Record job execution history

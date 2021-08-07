@@ -2,11 +2,11 @@
 
 import logging
 from typing import List
-from notification.models import Notifications, NotificationsHistory
-from notification.services.slack.slack import Slack
-from notification.services.discord.discord import Discord
-from notification.services.webhook.webhook import Webhook
-from notification.services.gotify.gotify import Gotify
+from notifications.models import Notifications, NotificationsHistory
+from notifications.services.slack.slack import Slack
+from notifications.services.discord.discord import Discord
+from notifications.services.webhook.webhook import Webhook
+from notifications.services.gotify.gotify import Gotify
 
 logger = logging.getLogger(__name__)
 

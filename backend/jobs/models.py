@@ -7,7 +7,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from model_utils import FieldTracker
 from moni.utils.funcs import get_str_uuid
-from notification.models import Notifications
+from notifications.models import Notifications
 
 
 def default_success_status() -> List[int]:
@@ -25,8 +25,8 @@ class Jobs(models.Model):
     title = models.CharField(max_length=50)
     state = models.BooleanField(default=True)
     headers = models.JSONField(default=dict)
-    notification_urls = models.ManyToManyField(
-        Notifications, related_name="jobs_notification", db_column='uuid', null=True)
+    notifications = models.ManyToManyField(
+        Notifications, related_name="jobs_notification", db_column='uuid')
     verify_ssl = models.BooleanField(default=True)
     interval = models.PositiveIntegerField(default=15)
     success_status = ArrayField(
