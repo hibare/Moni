@@ -218,7 +218,7 @@ paths:
         - Jobs
   /api/v1/jobs/{uuid}/history/:
     get:
-      operationId: Job History
+      operationId: Get Job History
       description: Get a Job execution history
       parameters:
         - name: uuid
@@ -235,6 +235,23 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/JobsHistory"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+      tags:
+        - Jobs
+    delete:
+      operationId: Delete Job history
+      description: Delete Job execution history
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "204":
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
