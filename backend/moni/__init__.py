@@ -1,3 +1,3 @@
-__version__ = '0.1.6-alpha'
+__version__ = '0.1.7-alpha'
 VERSION = __version__  # synonym
 TITLE = 'Moni'
