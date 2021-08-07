@@ -7,6 +7,7 @@ info:
     Checkout project on [Github](https://github.com/hibare/Moni).
   license:
     name: MIT
+    url: https://github.com/hibare/Moni/blob/master/LICENSE
 tags:
   - name: Auth Token
     description: API's to manage authentication token.
