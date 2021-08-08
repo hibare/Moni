@@ -299,6 +299,30 @@ paths:
           description: "No such job"
       tags:
         - Jobs
+  /api/v1/jobs/{uuid}/response/:
+    get:
+      operationId: Job response time
+      description: Job response time (avg. seconds)
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
+      tags:
+        - Jobs
   /api/v1/jobs/history/:
     get:
       operationId: List jobs execution history

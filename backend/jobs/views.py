@@ -2,6 +2,7 @@
 
 import logging
 from collections import Counter
+from statistics import mean
 from rest_framework import viewsets, mixins, generics, status
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
@@ -103,6 +104,21 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
 
             return Response({"uptime": uptime}, status=status.HTTP_200_OK)
 
+        except Jobs.DoesNotExist:
+            raise NotFound
+
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def response(self, request, **kwargs):
+        """Job response time (avg. seconds)"""
+
+        try:
+            uuid = self.kwargs['uuid']
+            response_list = JobsHistory.objects.filter(uuid=uuid).exclude(
+                response_time__isnull=True).values_list('response_time', flat=True)
+
+            response = round(mean(response_list), 2)
+
+            return Response({"response": response}, status=status.HTTP_200_OK)
         except Jobs.DoesNotExist:
             raise NotFound
 
