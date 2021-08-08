@@ -48,11 +48,11 @@ def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redir
         return response.status, response.data.decode(), elapsed_seconds, None
 
     except UnicodeDecodeError as e:
-        return response.status, response.data, None, repr(e)
+        return response.status, response.data, None, str(e)
 
     except Exception as err:
         logger.exception("URL=%s", url)
-        return None, None, None, repr(err)
+        return None, None, None, str(err)
 
 
 def executor(id: str) -> None:
@@ -74,16 +74,16 @@ def executor(id: str) -> None:
         status_code, response, elapsed_seconds, error = request(
             url, headers, verify_ssl, check_redirect)
 
-        logger.info("Response id=%s, url=%s, status_code=%s, elapsed_seconds=%s",
-                    id, url, status_code, elapsed_seconds)
-
         success = (status_code in success_status) and error is None
+
+        logger.info("Response id=%s, url=%s, status_code=%s, elapsed_seconds=%s, success=%s, error=%s",
+                    id, url, status_code, elapsed_seconds, success, error)
 
         # Notify failure
         if notifications and not success:
             for notification in notifications:
                 Notify.notify(notification, title, url,
-                              success, status_code, error)
+                              success, success_status, status_code, error)
 
         # Record job execution history
         _ = JobsHistory.objects.create(

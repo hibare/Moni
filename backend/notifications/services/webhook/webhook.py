@@ -34,8 +34,8 @@ class Webhook:
     def send(self, webhook: str) -> bool:
         try:
             response = requests_post(webhook, self.payload, self.HEADERS)
-            logger.debug("Response from webhook, status_code=%s, response=%s",
-                         response.status, response.data)
+            logger.info("Response from webhook, status_code=%s, response=%s",
+                        response.status, response.data)
 
             if response.status == 200:
                 return True, response.status, None

@@ -30,7 +30,7 @@ class NotificationsHistoryAdmin(admin.ModelAdmin):
     """Notifications admin class"""
 
     empty_value_display = '-empty-'
-    list_display = ['timestamp', 'uuid', 'status_code', 'error']
+    list_display = ['timestamp', 'uuid', 'status', 'status_code', 'error']
     list_filter = ['uuid', 'status_code']
 
     def has_add_permission(self, request: HttpRequest) -> bool:
