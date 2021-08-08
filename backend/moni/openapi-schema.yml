@@ -291,7 +291,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Jobs"
+                $ref: "#/components/schemas/JobsUptime"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
@@ -315,7 +315,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Jobs"
+                $ref: "#/components/schemas/JobsResponse"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
@@ -557,7 +557,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notifications"
+                $ref: "#/components/schemas/NotificationsDelivery"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
@@ -578,11 +578,17 @@ paths:
             type: string
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsTest"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           description: "No such notification"
+        "500":
+          description: "Request error / notificaiton test failed"
       tags:
         - Notifications
   /api/v1/notifications/history/:
@@ -749,6 +755,22 @@ components:
       required:
         - url
         - title
+    JobsUptime:
+      type: object
+      properties:
+        uptime:
+          type: string
+          readOnly: true
+      required:
+        - uptime
+    JobsResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          readOnly: true
+      required:
+        - response
     JobsHistory:
       type: object
       properties:
@@ -801,6 +823,30 @@ components:
         - url
         - type
         - description
+    NotificationsDelivery:
+      type: object
+      properties:
+        delivery:
+          type: string
+          readOnly: true
+      required:
+        - delivery
+    NotificationsTest:
+      type: object
+      properties:
+        status:
+          type: boolean
+          readOnly: true
+        status_code:
+          type: integer
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+      required:
+        - status
+        - status_code
+        - error
     NotificationsHistory:
       type: object
       properties:

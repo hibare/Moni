@@ -94,13 +94,18 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
 
         try:
             uuid = self.kwargs['uuid']
+
             success_list = JobsHistory.objects.filter(
                 uuid=uuid).values_list('success', flat=True)
 
-            success_counter = Counter(success_list)
+            if success_list.exists():
+                success_counter = Counter(success_list)
 
-            uptime = round(success_counter[True] /
-                           len(success_list) * 100.0, 2)
+                uptime = round(success_counter[True] /
+                               len(success_list) * 100.0, 2)
+                uptime = str(uptime) + '%'
+            else:
+                uptime = "-"
 
             return Response({"uptime": uptime}, status=status.HTTP_200_OK)
 
@@ -116,7 +121,11 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
             response_list = JobsHistory.objects.filter(uuid=uuid).exclude(
                 response_time__isnull=True).values_list('response_time', flat=True)
 
-            response = round(mean(response_list), 2)
+            if response_list.exists():
+                response = round(mean(response_list), 2)
+                response = str(response) + 'sec'
+            else:
+                response = "-"
 
             return Response({"response": response}, status=status.HTTP_200_OK)
         except Jobs.DoesNotExist:

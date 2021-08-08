@@ -60,10 +60,16 @@ class NotificationsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
             status_list = NotificationsHistory.objects.filter(
                 uuid=uuid).values_list('status', flat=True)
 
-            status_counter = Counter(status_list)
+            if status_list.exists():
 
-            delivery = round(status_counter[True] /
-                             len(status_list) * 100.0, 2)
+                status_counter = Counter(status_list)
+
+                delivery = round(status_counter[True] /
+                                 len(status_list) * 100.0, 2)
+
+                delivery = str(delivery) + '%'
+            else:
+                delivery = "-"
 
             return Response({"delivery": delivery}, status=status.HTTP_200_OK)
 
