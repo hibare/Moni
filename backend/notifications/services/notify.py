@@ -16,6 +16,8 @@ class Notify:
 
     @staticmethod
     def notify(notification_obj: Notifications, title: str, url: str, success: bool, success_status: List, status_code: int, error: str = None):
+        """Prepare & send notification"""
+
         if notification_obj.type == 'slack':
             notify = Slack()
             notify.prep_payload(title, url, success,
@@ -55,3 +57,31 @@ class Notify:
             status_code=n_status_code,
             error=n_error,
         )
+
+    @staticmethod
+    def test(notification_obj: Notifications):
+        """Test notification"""
+
+        n_status = n_status_code = n_error = None
+
+        if notification_obj.type == 'slack':
+            notify = Slack()
+            n_status, n_status_code, n_error = notify.send(
+                notification_obj.url)
+
+        elif notification_obj.type == 'discord':
+            notify = Discord()
+            n_status, n_status_code, n_error = notify.send(
+                notification_obj.url)
+
+        elif notification_obj.type == 'webhook':
+            notify = Webhook()
+            n_status, n_status_code, n_error = notify.send(
+                notification_obj.url)
+
+        elif notification_obj.type == 'gotify':
+            notify = Gotify()
+            n_status, n_status_code, n_error = notify.send(
+                notification_obj.url)
+
+        return n_status, n_status_code, n_error

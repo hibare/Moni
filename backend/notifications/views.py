@@ -8,10 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
 from notifications.serializers import NotificationsSerializer, NotificationsHistorySerializer
 from notifications.models import Notifications, NotificationsHistory
-from notifications.services.slack.slack import Slack
-from notifications.services.discord.discord import Discord
-from notifications.services.webhook.webhook import Webhook
-from notifications.services.gotify.gotify import Gotify
+from notifications.services.notify import Notify
 
 logger = logging.getLogger(__name__)
 
@@ -56,33 +53,27 @@ class NotificationsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
     def test(self, request, **kwargs):
         """Test notification endpoint"""
 
-        state = False
+        n_status = n_status_code = n_error = None
 
         try:
             uuid = self.kwargs['uuid']
 
             queryset = Notifications.objects.get(uuid=uuid)
 
-            if queryset.type == 'slack':
-                notify = Slack()
-                state, code, err = notify.send(queryset.url)
+            n_status, n_status_code, n_error = Notify.test(queryset)
 
-            elif queryset.type == 'discord':
-                notify = Discord()
-                state, code, err = notify.send(queryset.url)
-
-            elif queryset.type == 'webhook':
-                notify = Webhook()
-                state, code, err = notify.send(queryset.url)
-
-            elif queryset.type == 'gotify':
-                notify = Gotify()
-                state, code, err = notify.send(queryset.url)
-
-            if state:
-                return Response({"detail": "Success"}, status=status.HTTP_200_OK)
+            if n_status:
+                return Response({
+                    "status": n_status,
+                    "status_code": n_status_code,
+                    "error": n_error
+                }, status=status.HTTP_200_OK)
             else:
-                return Response({"detail": "Failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({
+                    "status": n_status,
+                    "status_code": n_status_code,
+                    "error": n_error
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Notifications.DoesNotExist:
             raise NotFound
 
