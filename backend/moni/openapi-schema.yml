@@ -74,7 +74,7 @@ paths:
         - Auth Token
   /api/v1/jobs/:
     get:
-      operationId: List all Jobs
+      operationId: List Jobs
       description: List all Jobs
       parameters: []
       responses:
@@ -91,7 +91,7 @@ paths:
       tags:
         - Jobs
     post:
-      operationId: Create new Job
+      operationId: New Job
       description: Create new Job
       parameters: []
       requestBody:
@@ -118,7 +118,7 @@ paths:
         - Jobs
   /api/v1/jobs/{uuid}/:
     get:
-      operationId: Get a Job details
+      operationId: Job details
       description: Get a Job details
       parameters:
         - name: uuid
@@ -136,10 +136,12 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
     put:
-      operationId: Update a Job
+      operationId: Update Job
       description: Update a Job
       parameters:
         - name: uuid
@@ -168,10 +170,12 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
     patch:
-      operationId: Partial update a Job
+      operationId: Partial update Job
       description: Partial update a Job
       parameters:
         - name: uuid
@@ -200,10 +204,12 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
     delete:
-      operationId: Delete a Job
+      operationId: Delete Job
       description: Delete a Job
       parameters:
         - name: uuid
@@ -217,11 +223,13 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/pause/:
     post:
-      operationId: Pause a Job
+      operationId: Pause Job
       description: Pause a Job execution
       parameters:
         - name: uuid
@@ -239,6 +247,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/resume/:
@@ -261,6 +271,56 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
+      tags:
+        - Jobs
+  /api/v1/jobs/{uuid}/uptime/:
+    get:
+      operationId: Job uptime
+      description: Returns a job uptime (Percentage)
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobsUptime"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
+      tags:
+        - Jobs
+  /api/v1/jobs/{uuid}/response/:
+    get:
+      operationId: Job response time
+      description: Job response time (avg. seconds)
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobsResponse"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
   /api/v1/jobs/history/:
@@ -303,6 +363,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Job history not found"
       tags:
         - Jobs History
     delete:
@@ -320,6 +382,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Job history not found"
       tags:
         - Jobs History
   /api/v1/notifications/:
@@ -386,6 +450,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
     put:
@@ -418,6 +484,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
     patch:
@@ -450,6 +518,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
     delete:
@@ -467,6 +537,32 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
+      tags:
+        - Notifications
+  /api/v1/notifications/{uuid}/delivery/:
+    get:
+      operationId: Notification Delivery
+      description: Return notification delivery percentage
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notifications.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsDelivery"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
   /api/v1/notifications/{uuid}/test/:
@@ -482,9 +578,17 @@ paths:
             type: string
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsTest"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
+        "500":
+          description: "Request error / notificaiton test failed"
       tags:
         - Notifications
   /api/v1/notifications/history/:
@@ -501,6 +605,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/NotificationsHistory"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications History
   /api/v1/notifications/{uuid}/history/:
@@ -525,6 +631,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Notification history not found"
       tags:
         - Notifications History
     delete:
@@ -542,6 +650,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Notification history not found"
       tags:
         - Notifications History
 security:
@@ -645,6 +755,22 @@ components:
       required:
         - url
         - title
+    JobsUptime:
+      type: object
+      properties:
+        uptime:
+          type: string
+          readOnly: true
+      required:
+        - uptime
+    JobsResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          readOnly: true
+      required:
+        - response
     JobsHistory:
       type: object
       properties:
@@ -697,6 +823,30 @@ components:
         - url
         - type
         - description
+    NotificationsDelivery:
+      type: object
+      properties:
+        delivery:
+          type: string
+          readOnly: true
+      required:
+        - delivery
+    NotificationsTest:
+      type: object
+      properties:
+        status:
+          type: boolean
+          readOnly: true
+        status_code:
+          type: integer
+          readOnly: true
+        error:
+          type: string
+          readOnly: true
+      required:
+        - status
+        - status_code
+        - error
     NotificationsHistory:
       type: object
       properties:
