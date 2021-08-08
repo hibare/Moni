@@ -1,9 +1,10 @@
 """Notifications Views"""
 
 import logging
+from collections import Counter
 from rest_framework import viewsets, mixins, generics, status
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
 from notifications.serializers import NotificationsSerializer, NotificationsHistorySerializer
@@ -48,6 +49,26 @@ class NotificationsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
             return Response({"detail": "Notification history deleted"}, status=status.HTTP_200_OK)
         else:
             raise NotFound()
+
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def delivery(self, request, **kwargs):
+        """Return notification delivery percentage"""
+
+        try:
+            uuid = self.kwargs['uuid']
+
+            status_list = NotificationsHistory.objects.filter(
+                uuid=uuid).values_list('status', flat=True)
+
+            status_counter = Counter(status_list)
+
+            delivery = round(status_counter[True] /
+                             len(status_list) * 100.0, 2)
+
+            return Response({"delivery": delivery}, status=status.HTTP_200_OK)
+
+        except Notifications.DoesNotExist:
+            raise NotFound
 
     @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def test(self, request, **kwargs):

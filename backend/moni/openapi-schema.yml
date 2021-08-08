@@ -541,6 +541,30 @@ paths:
           description: "No such notification"
       tags:
         - Notifications
+  /api/v1/notifications/{uuid}/delivery/:
+    get:
+      operationId: Notification Delivery
+      description: Return notification delivery percentage
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notifications.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notifications"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
+      tags:
+        - Notifications
   /api/v1/notifications/{uuid}/test/:
     post:
       operationId: Test a Notification
