@@ -136,6 +136,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
     put:
@@ -168,6 +170,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
     patch:
@@ -200,6 +204,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
     delete:
@@ -217,6 +223,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/pause/:
@@ -239,6 +247,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/resume/:
@@ -261,6 +271,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such job"
       tags:
         - Jobs
   /api/v1/jobs/{uuid}/uptime/:
@@ -327,6 +339,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Job history not found"
       tags:
         - Jobs History
     delete:
@@ -344,6 +358,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Job history not found"
       tags:
         - Jobs History
   /api/v1/notifications/:
@@ -410,6 +426,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
     put:
@@ -442,6 +460,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
     patch:
@@ -474,6 +494,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
     delete:
@@ -491,6 +513,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
   /api/v1/notifications/{uuid}/test/:
@@ -509,6 +533,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such notification"
       tags:
         - Notifications
   /api/v1/notifications/history/:
@@ -525,6 +551,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/NotificationsHistory"
           description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
       tags:
         - Notifications History
   /api/v1/notifications/{uuid}/history/:
@@ -549,6 +577,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Notification history not found"
       tags:
         - Notifications History
     delete:
@@ -566,6 +596,8 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Notification history not found"
       tags:
         - Notifications History
 security:
