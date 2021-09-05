@@ -28,7 +28,7 @@ class Jobs(models.Model):
     state = models.BooleanField(default=True)
     headers = models.JSONField(default=dict)
     notifiers = models.ManyToManyField(
-        Notifiers, related_name="jobs_notification", db_column='uuid')
+        Notifiers, related_name="jobs_notifiers", db_column='uuid')
     verify_ssl = models.BooleanField(default=True)
     interval = models.PositiveIntegerField(default=15)
     success_status = ArrayField(
