@@ -13,7 +13,8 @@ class Notifications(models.Model):
         ("slack", "Slack"),
         ("discord", "Discord"),
         ("webhook", "Webhook"),
-        ("gotify", "Gotify")
+        ("gotify", "Gotify"),
+        ("telegram", "Telegram")
     ]
 
     created = models.DateTimeField(auto_now_add=True)

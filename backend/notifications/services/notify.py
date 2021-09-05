@@ -7,6 +7,7 @@ from notifications.services.slack.slack import Slack
 from notifications.services.discord.discord import Discord
 from notifications.services.webhook.webhook import Webhook
 from notifications.services.gotify.gotify import Gotify
+from notifications.services.telegram.telegram import Telegram
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +82,11 @@ class Notify:
 
         elif notification_obj.type == 'gotify':
             notify = Gotify()
+            n_status, n_status_code, n_error = notify.send(
+                notification_obj.url)
+
+        elif notification_obj.type == 'telegram':
+            notify = Telegram()
             n_status, n_status_code, n_error = notify.send(
                 notification_obj.url)
 
