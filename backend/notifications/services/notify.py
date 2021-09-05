@@ -21,36 +21,28 @@ class Notify:
 
         if notification_obj.type == 'slack':
             notify = Slack()
-            notify.prep_payload(title, url, success,
-                                success_status, status_code, error)
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
 
         elif notification_obj.type == 'discord':
             notify = Discord()
-            notify.prep_payload(title, url, success,
-                                success_status, status_code, error)
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
 
         elif notification_obj.type == 'webhook':
             notify = Webhook()
-            notify.prep_payload(title, url, success,
-                                success_status, status_code, error)
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
 
         elif notification_obj.type == 'gotify':
             notify = Gotify()
-            notify.prep_payload(title, url, success,
-                                success_status, status_code, error)
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
+
+        elif notification_obj.type == 'telegram':
+            notify = Telegram()
 
         else:
             logger.error("Unknown notification uuid=%s, type=%s",
                          notification_obj.uuid, notification_obj.type)
             return
+
+        notify.prep_payload(title, url, success,
+                            success_status, status_code, error)
+        n_status, n_status_code, n_error = notify.send(
+            notification_obj.url)
 
         _ = NotificationsHistory.objects.create(
             uuid=notification_obj,
@@ -67,27 +59,25 @@ class Notify:
 
         if notification_obj.type == 'slack':
             notify = Slack()
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
 
         elif notification_obj.type == 'discord':
             notify = Discord()
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
 
         elif notification_obj.type == 'webhook':
             notify = Webhook()
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
 
         elif notification_obj.type == 'gotify':
             notify = Gotify()
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
 
         elif notification_obj.type == 'telegram':
             notify = Telegram()
-            n_status, n_status_code, n_error = notify.send(
-                notification_obj.url)
+
+        else:
+            logger.error("Unknown notification uuid=%s, type=%s",
+                         notification_obj.uuid, notification_obj.type)
+            return n_status, n_status_code, n_error
+
+        n_status, n_status_code, n_error = notify.send(
+            notification_obj.url)
 
         return n_status, n_status_code, n_error
