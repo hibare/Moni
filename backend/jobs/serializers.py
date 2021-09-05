@@ -11,8 +11,7 @@ class JobsSerializer(WritableNestedModelSerializer, serializers.ModelSerializer)
 
     class Meta:
         model = Jobs
-        fields = ['uuid', 'url', 'title', 'state', 'headers',
-                  'notifications', 'verify_ssl', 'interval', 'success_status', 'check_redirect']
+        fields = '__all__'
         read_only_fields = ['uuid']
 
 
@@ -20,6 +19,5 @@ class JobsHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobsHistory
-        fields = ['timestamp', 'uuid', 'status_code',
-                  'success', 'response_time', 'error']
+        fields = '__all__'
         read_only_fields = fields

@@ -19,6 +19,8 @@ def default_success_status() -> List[int]:
 class Jobs(models.Model):
     """Health Check jobs"""
 
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     uuid = models.CharField(
         max_length=40, default=get_str_uuid, primary_key=True)
     url = models.URLField(unique=True)

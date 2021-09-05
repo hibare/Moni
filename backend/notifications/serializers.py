@@ -8,7 +8,7 @@ class NotificationsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notifications
-        fields = ['uuid', 'url', 'type', 'description']
+        fields = '__all__'
         read_only_fields = ['uuid']
 
 
@@ -16,5 +16,5 @@ class NotificationsHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NotificationsHistory
-        fields = ['uuid', 'status', 'status_code', 'error']
+        fields = '__all__'
         read_only_fields = fields
