@@ -4,11 +4,13 @@ import logging
 from typing import List
 import json
 from moni.utils.requests_proxy import requests_post
+from notifications.services import NotificationService
+
 
 logger = logging.getLogger(__name__)
 
 
-class Webhook:
+class Webhook(NotificationService):
     """Webhook notifications"""
 
     def __init__(self) -> None:

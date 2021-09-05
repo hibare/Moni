@@ -5,11 +5,12 @@ import json
 from typing import List
 from django.conf import settings
 from moni.utils.requests_proxy import requests_post
+from notifications.services import NotificationService
 
 logger = logging.getLogger(__name__)
 
 
-class Slack:
+class Slack(NotificationService):
     """Slack notifications"""
 
     def __init__(self) -> None:
