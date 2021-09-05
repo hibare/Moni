@@ -11,3 +11,4 @@ whitenoise
 gunicorn
 drf-writable-nested
 urllib3
+PyYAML
