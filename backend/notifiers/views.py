@@ -2,7 +2,7 @@
 
 import logging
 from collections import Counter
-from rest_framework import viewsets, mixins, generics, status
+from rest_framework import serializers, viewsets, mixins, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +10,8 @@ from rest_framework.exceptions import NotFound
 from notifiers.serializers import NotifiersSerializer, NotifiersHistorySerializer
 from notifiers.models import Notifiers, NotifiersHistory
 from notifiers.services.notify import Notify
+from jobs.models import Jobs
+from jobs.serializers import JobsSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +105,27 @@ class NotifiersViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Up
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Notifiers.DoesNotExist:
             raise NotFound
+
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def jobs(self, request, **kwargs):
+        """Return all jobs using this notifier"""
+
+        try:
+            uuid = self.kwargs['uuid']
+
+            _ = Notifiers.objects.get(
+                uuid=uuid)
+
+            query_set = Jobs.objects.filter(notifiers=uuid)
+
+            if query_set.exists():
+                serializer = JobsSerializer(query_set, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({"detail": "No jobs found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Notifiers.DoesNotExist:
+            return Response({"detail": "Invalid notifier"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class NotifiersHistoryViewSet(generics.ListAPIView, viewsets.GenericViewSet):

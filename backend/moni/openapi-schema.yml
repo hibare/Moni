@@ -591,6 +591,32 @@ paths:
           description: "Request error / notificaiton test failed"
       tags:
         - Notifiers
+  /api/v1/notifiers/{uuid}/jobs/:
+    get:
+      operationId: Get jobs having notifier
+      description: Return all jobs using this notifier
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notifier.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Jobs"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Invalid notifier / No jobs found"
+      tags:
+        - Notifiers
   /api/v1/notifiers/history/:
     get:
       operationId: List notificaitons history
@@ -654,6 +680,7 @@ paths:
           description: "Notifier history not found"
       tags:
         - Notifiers History
+
 security:
   - bearerAuth: []
 components:
