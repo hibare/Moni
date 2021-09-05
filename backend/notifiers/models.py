@@ -48,7 +48,7 @@ class NotifiersHistory(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     uuid = models.ForeignKey(
-        Notifiers, related_name="notifications_uuid", on_delete=models.CASCADE)
+        Notifiers, related_name="notifier_uuid", on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
     status_code = models.IntegerField(null=True)
     error = models.TextField(null=True)
