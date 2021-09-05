@@ -1,31 +1,30 @@
-"""Gotify notification service"""
+"""Discord notification service"""
 
 import logging
 import json
 from typing import List
 from django.conf import settings
 from moni.utils.requests_proxy import requests_post
-from notifications.services import NotificationService
-
+from notifiers.services import NotifierService
 
 logger = logging.getLogger(__name__)
 
 
-class Gotify(NotificationService):
-    """Gotify notifications"""
+class Discord(NotifierService):
+    """Discord notifiers"""
 
     def __init__(self) -> None:
         self.payload = json.dumps({
-            "title": "Moni: Test notification",
-            "message": "Test Message"
+            "content": "Moni: Test notification",
+            "embeds": None
         }).encode("utf-8")
         self.HEADERS = {
             "Content-type": "application/json"
         }
         self.SERVICE_DOWN_TEMPLATE = settings.BASE_DIR / \
-            "notifications/services/gotify/template_service_down.json"
+            "notifiers/services/discord/template_service_down.json"
         self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / \
-            "notifications/services/gotify/template_service_up.json"
+            "notifiers/services/discord/template_service_up.json"
 
     def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str = None) -> None:
         TEMPLATE = self.SERVICE_UP_TEMPLATE if success else self.SERVICE_DOWN_TEMPLATE
@@ -41,12 +40,12 @@ class Gotify(NotificationService):
     def send(self, webhook: str) -> bool:
         try:
             response = requests_post(webhook, self.payload, self.HEADERS)
-            logger.info("Response from Gotify, status_code=%s, response=%s",
+            logger.info("Response from Discord, status_code=%s, response=%s",
                         response.status, response.data)
 
-            if response.status == 200:
+            if response.status == 204:
                 return True, response.status, None
             return False, response.status, None
         except Exception as err:
-            logger.exception("Gotify notification exception")
+            logger.exception("Discord notification exception")
             return False, None, repr(err)

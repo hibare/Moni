@@ -5,13 +5,13 @@ import json
 from typing import List
 from django.conf import settings
 from moni.utils.requests_proxy import requests_post
-from notifications.services import NotificationService
+from notifiers.services import NotifierService
 
 logger = logging.getLogger(__name__)
 
 
-class Slack(NotificationService):
-    """Slack notifications"""
+class Slack(NotifierService):
+    """Slack notifiers"""
 
     def __init__(self) -> None:
         self.payload = json.dumps({
@@ -21,9 +21,9 @@ class Slack(NotificationService):
             "Content-type": "application/json"
         }
         self.SERVICE_DOWN_TEMPLATE = settings.BASE_DIR / \
-            "notifications/services/slack/template_service_down.json"
+            "notifiers/services/slack/template_service_down.json"
         self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / \
-            "notifications/services/slack/template_service_up.json"
+            "notifiers/services/slack/template_service_up.json"
 
     def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str = None) -> None:
         TEMPLATE = self.SERVICE_UP_TEMPLATE if success else self.SERVICE_DOWN_TEMPLATE

@@ -1,31 +1,31 @@
-"""Telegram notification service"""
+"""Gotify notification service"""
 
 import logging
 import json
 from typing import List
 from django.conf import settings
 from moni.utils.requests_proxy import requests_post
-from moni.utils.urls import parse_url
-from notifications.services import NotificationService
+from notifiers.services import NotifierService
+
 
 logger = logging.getLogger(__name__)
 
 
-class Telegram(NotificationService):
-    """Telegram notifications"""
+class Gotify(NotifierService):
+    """Gotify notifiers"""
 
     def __init__(self) -> None:
-        self.payload = {
-            "text": "Moni: Test notification",
-            "parse_mode": "HTML"
-        }
+        self.payload = json.dumps({
+            "title": "Moni: Test notification",
+            "message": "Test Message"
+        }).encode("utf-8")
         self.HEADERS = {
             "Content-type": "application/json"
         }
         self.SERVICE_DOWN_TEMPLATE = settings.BASE_DIR / \
-            "notifications/services/telegram/template_service_down.html"
+            "notifiers/services/gotify/template_service_down.json"
         self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / \
-            "notifications/services/telegram/template_service_up.html"
+            "notifiers/services/gotify/template_service_up.json"
 
     def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str = None) -> None:
         TEMPLATE = self.SERVICE_UP_TEMPLATE if success else self.SERVICE_DOWN_TEMPLATE
@@ -34,28 +34,19 @@ class Telegram(NotificationService):
             template_data = ft.read()
 
         template_data = template_data % (
-            health_check_url, title, expected_status, received_status, error)
+            title, health_check_url, expected_status, received_status, error)
 
-        self.payload['text'] = template_data
+        self.payload = template_data.encode("utf-8")
 
     def send(self, webhook: str) -> bool:
         try:
-            url_obj = parse_url(webhook)
-            chat_id = url_obj.QUERY.get('chat_id')
-
-            if not chat_id:
-                raise Exception("Unable to find chat id")
-
-            self.payload['chat_id'] = chat_id
-            self.payload = json.dumps(self.payload).encode("utf-8")
-
             response = requests_post(webhook, self.payload, self.HEADERS)
-            logger.info("Response from Telegram, status_code=%s, response=%s",
+            logger.info("Response from Gotify, status_code=%s, response=%s",
                         response.status, response.data)
 
             if response.status == 200:
                 return True, response.status, None
             return False, response.status, None
         except Exception as err:
-            logger.exception("Telegram notification exception")
+            logger.exception("Gotify notification exception")
             return False, None, repr(err)

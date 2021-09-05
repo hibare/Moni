@@ -3,9 +3,9 @@ from typing import List
 from abc import ABC, abstractmethod
 
 
-class NotificationService(ABC):
+class NotifierService(ABC):
     """
-        Notification service abstract class
+        Notifier service abstract class
     """
 
     @abstractmethod

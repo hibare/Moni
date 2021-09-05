@@ -7,7 +7,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from model_utils import FieldTracker
 from moni.utils.funcs import get_str_uuid
-from notifications.models import Notifications
+from notifiers.models import Notifiers
 
 
 def default_success_status() -> List[int]:
@@ -27,8 +27,8 @@ class Jobs(models.Model):
     title = models.CharField(max_length=50)
     state = models.BooleanField(default=True)
     headers = models.JSONField(default=dict)
-    notifications = models.ManyToManyField(
-        Notifications, related_name="jobs_notification", db_column='uuid')
+    notifiers = models.ManyToManyField(
+        Notifiers, related_name="jobs_notification", db_column='uuid')
     verify_ssl = models.BooleanField(default=True)
     interval = models.PositiveIntegerField(default=15)
     success_status = ArrayField(
@@ -45,7 +45,7 @@ class Jobs(models.Model):
         verbose_name_plural = "Jobs"
 
 
-class JobHistoryManager(models.Manager):
+class JobsHistoryManager(models.Manager):
     """Job history manager"""
 
     def delete_old_history(self, max_age: int) -> None:
@@ -66,7 +66,7 @@ class JobsHistory(models.Model):
     response_time = models.FloatField(null=True)
     error = models.TextField(null=True)
 
-    objects = JobHistoryManager()
+    objects = JobsHistoryManager()
 
     class Meta:
         indexes = [
