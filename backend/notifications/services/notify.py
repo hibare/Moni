@@ -15,24 +15,22 @@ logger = logging.getLogger(__name__)
 class Notify:
     """Notiy operations"""
 
+    NOTIFIERS = {
+        'slack': Slack,
+        'discord': Discord,
+        'webhook': Webhook,
+        'gotify': Gotify,
+        'telegram': Telegram
+    }
+
     @staticmethod
     def notify(notification_obj: Notifications, title: str, url: str, success: bool, success_status: List, status_code: int, error: str = None):
         """Prepare & send notification"""
 
-        if notification_obj.type == 'slack':
-            notify = Slack()
+        notifier = Notify.NOTIFIERS.get(notification_obj.type, None)
 
-        elif notification_obj.type == 'discord':
-            notify = Discord()
-
-        elif notification_obj.type == 'webhook':
-            notify = Webhook()
-
-        elif notification_obj.type == 'gotify':
-            notify = Gotify()
-
-        elif notification_obj.type == 'telegram':
-            notify = Telegram()
+        if notifier:
+            notify = notifier()
 
         else:
             logger.error("Unknown notification uuid=%s, type=%s",
@@ -57,20 +55,10 @@ class Notify:
 
         n_status = n_status_code = n_error = None
 
-        if notification_obj.type == 'slack':
-            notify = Slack()
+        notifier = Notify.NOTIFIERS.get(notification_obj.type, None)
 
-        elif notification_obj.type == 'discord':
-            notify = Discord()
-
-        elif notification_obj.type == 'webhook':
-            notify = Webhook()
-
-        elif notification_obj.type == 'gotify':
-            notify = Gotify()
-
-        elif notification_obj.type == 'telegram':
-            notify = Telegram()
+        if notifier:
+            notify = notifier()
 
         else:
             logger.error("Unknown notification uuid=%s, type=%s",
