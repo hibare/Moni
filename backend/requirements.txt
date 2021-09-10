@@ -4,8 +4,6 @@
 #
 #    pip-compile requirements.in
 #
---trusted-host pypi.org
-
 apscheduler==3.7.0
     # via django-apscheduler
 asgiref==3.4.1
@@ -45,7 +43,7 @@ pyyaml==5.4.1
     # via -r requirements.in
 six==1.16.0
     # via apscheduler
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via django
 tzlocal==2.1
     # via apscheduler
