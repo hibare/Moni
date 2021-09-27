@@ -9,8 +9,10 @@ info:
     name: MIT
     url: https://github.com/hibare/Moni/blob/master/LICENSE
 tags:
-  - name: Auth Token
+  - name: API Token
     description: API's to manage authentication token.
+  - name: JWT Token
+    description: API to manage JWT auth.
   - name: Jobs
     description: |
       API's to manage Jobs.
@@ -34,18 +36,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AuthToken"
+              $ref: "#/components/schemas/APIToken"
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthToken"
+                $ref: "#/components/schemas/APIToken"
           description: ""
         "400":
           $ref: "#/components/responses/BadRequestError"
       tags:
-        - Auth Token
+        - API Token
     put:
       operationId: Regenerate API Token
       description: Regenerate API token
@@ -55,12 +57,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthToken"
+                $ref: "#/components/schemas/APIToken"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
       tags:
-        - Auth Token
+        - API Token
     delete:
       operationId: Delete API token
       description: Delete API token
@@ -71,7 +73,94 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
       tags:
-        - Auth Token
+        - API Token
+  /api/v1/accounts/jwt/:
+    post:
+      operationId: Obtain JWT
+      description:
+        "Takes a set of user credentials and returns an access and refresh
+        JSON web
+
+        token pair to prove the authentication of those credentials."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JWTTokenObtainPair"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/JWTTokenObtainPair"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/JWTTokenObtainPair"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JWTTokenObtainPair"
+          description: ""
+      tags:
+        - JWT Token
+  /api/v1/accounts/jwt/refresh/:
+    post:
+      operationId: Refresh JWT
+      description:
+        "Takes a refresh type JSON web token and returns an access type
+        JSON web
+
+        token if the refresh token is valid."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JWTTokenRefresh"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/JWTTokenRefresh"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/JWTTokenRefresh"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JWTTokenRefresh"
+          description: ""
+      tags:
+        - JWT Token
+  /api/v1/accounts/jwt/verify/:
+    post:
+      operationId: Verify JWT
+      description:
+        "Takes a token and indicates if it is valid.  This view provides
+        no
+
+        information about a token's fitness for a particular use."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JWTTokenVerify"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/JWTTokenVerify"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/JWTTokenVerify"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JWTTokenVerify"
+          description: ""
+      tags:
+        - JWT Token
   /api/v1/jobs/:
     get:
       operationId: List Jobs
@@ -695,7 +784,7 @@ components:
       scheme: bearer
       description: API uses bearer authentication mechanism
   schemas:
-    AuthToken:
+    APIToken:
       type: object
       properties:
         username:
@@ -710,6 +799,35 @@ components:
       required:
         - username
         - password
+    JWTTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+        - username
+        - password
+    JWTTokenRefresh:
+      type: object
+      properties:
+        refresh:
+          type: string
+        access:
+          type: string
+          readOnly: true
+      required:
+        - refresh
+    JWTTokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
+
     Jobs:
       type: object
       properties:
