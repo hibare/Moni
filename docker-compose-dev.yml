@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=pwd0123456789
       - POSTGRES_DB=moni
     ports:
-      - "5432:5432"
+      - 127.0.0.1:5432:5432
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
     logging:
@@ -25,7 +25,7 @@ services:
     container_name: adminer
     hostname: adminer
     ports:
-      - "8090:8080"
+      - 127.0.0.1:8090:8080
     healthcheck:
       test: "curl -f localhost:8080 || false"
       interval: 30s
@@ -43,8 +43,19 @@ services:
     container_name: gotify
     hostname: gotify
     ports:
-      - 8080:80
+      - 127.0.0.1:8080:80
     environment:
       - GOTIFY_DEFAULTUSER_PASS=password
     volumes:
       - "./volumes/gotify:/app/data"
+
+  moni:
+    build: .
+    container_name: moni
+    hostname: moni
+    env_file: docker.env
+    ports:
+      - 127.0.0.1:5000:8000
+    depends_on: 
+      - postgres
+      - gotify

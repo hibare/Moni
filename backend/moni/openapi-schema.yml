@@ -17,12 +17,12 @@ tags:
       Each job an individual monitor to monitor a single service.
   - name: Jobs History
     description: API's to manage jobs history.
-  - name: Notifications
+  - name: Notifiers
     description: |
-      API's to manage all notifications services.
-      Notifications are used by Jobs to send out alert for undesired monitoring responses.
-  - name: Notifications History
-    description: API to manage notifications history.
+      API's to manage all notifiers services.
+      Notifiers are used by Jobs to send out alert for undesired monitoring responses.
+  - name: Notifiers History
+    description: API to manage notifiers history.
 paths:
   /api/v1/accounts/token/:
     post:
@@ -386,10 +386,10 @@ paths:
           description: "Job history not found"
       tags:
         - Jobs History
-  /api/v1/notifications/:
+  /api/v1/notifiers/:
     get:
-      operationId: List Notifications
-      description: List all Notifications
+      operationId: List Notifiers
+      description: List all Notifiers
       parameters: []
       responses:
         "200":
@@ -398,47 +398,47 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Notifications"
+                  $ref: "#/components/schemas/Notifiers"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
       tags:
-        - Notifications
+        - Notifiers
     post:
-      operationId: Create Notificaiton
-      description: Create new Notification
+      operationId: Create a Notifier
+      description: Create new Notifier
       parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notifications"
+                $ref: "#/components/schemas/Notifiers"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
       tags:
-        - Notifications
-  /api/v1/notifications/{uuid}/:
+        - Notifiers
+  /api/v1/notifiers/{uuid}/:
     get:
-      operationId: Get a Notification
-      description: Get a Notification details
+      operationId: Get a Notifier
+      description: Get a Notifier details
       parameters:
         - name: uuid
           in: path
           required: true
-          description: A unique value identifying this Notification.
+          description: A unique value identifying this Notifier.
           schema:
             type: string
       responses:
@@ -446,90 +446,90 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notifications"
+                $ref: "#/components/schemas/Notifiers"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
-          description: "No such notification"
+          description: "No such notifier"
       tags:
-        - Notifications
+        - Notifiers
     put:
-      operationId: Upate Notification
-      description: Update a Notification details
+      operationId: Upate Notifier
+      description: Update a Notifier details
       parameters:
         - name: uuid
           in: path
           required: true
-          description: A unique value identifying this Notification.
+          description: A unique value identifying this Notifier.
           schema:
             type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notifications"
+                $ref: "#/components/schemas/Notifiers"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
-          description: "No such notification"
+          description: "No such notifier"
       tags:
-        - Notifications
+        - Notifiers
     patch:
-      operationId: Partial update Notification
-      description: Partial update a Notification details
+      operationId: Partial update Notifier
+      description: Partial update a Notifier details
       parameters:
         - name: uuid
           in: path
           required: true
-          description: A unique value identifying this Notification.
+          description: A unique value identifying this Notifier.
           schema:
             type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Notifications"
+              $ref: "#/components/schemas/Notifiers"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notifications"
+                $ref: "#/components/schemas/Notifiers"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
-          description: "No such notification"
+          description: "No such notifier"
       tags:
-        - Notifications
+        - Notifiers
     delete:
-      operationId: Delete Notification
-      description: Delete a Notification
+      operationId: Delete Notifier
+      description: Delete a Notifier
       parameters:
         - name: uuid
           in: path
           required: true
-          description: A unique value identifying this Notification.
+          description: A unique value identifying this Notifier.
           schema:
             type: string
       responses:
@@ -538,18 +538,18 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
-          description: "No such notification"
+          description: "No such notifier"
       tags:
-        - Notifications
-  /api/v1/notifications/{uuid}/delivery/:
+        - Notifiers
+  /api/v1/notifiers/{uuid}/delivery/:
     get:
-      operationId: Notification Delivery
-      description: Return notification delivery percentage
+      operationId: Notifier Delivery
+      description: Return notifier delivery percentage
       parameters:
         - name: uuid
           in: path
           required: true
-          description: A unique value identifying this Notifications.
+          description: A unique value identifying this Notifiers.
           schema:
             type: string
       responses:
@@ -562,18 +562,18 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
-          description: "No such notification"
+          description: "No such notifier"
       tags:
-        - Notifications
-  /api/v1/notifications/{uuid}/test/:
+        - Notifiers
+  /api/v1/notifiers/{uuid}/test/:
     post:
-      operationId: Test a Notification
-      description: Test a Notification endpoint
+      operationId: Test a Notifier
+      description: Test a Notifier endpoint
       parameters:
         - name: uuid
           in: path
           required: true
-          description: A unique value identifying this Notification.
+          description: A unique value identifying this Notifier.
           schema:
             type: string
       responses:
@@ -586,12 +586,38 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
-          description: "No such notification"
+          description: "No such notifier"
         "500":
           description: "Request error / notificaiton test failed"
       tags:
-        - Notifications
-  /api/v1/notifications/history/:
+        - Notifiers
+  /api/v1/notifiers/{uuid}/jobs/:
+    get:
+      operationId: Get jobs having notifier
+      description: Return all jobs using this notifier
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Notifier.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Jobs"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Invalid notifier / No jobs found"
+      tags:
+        - Notifiers
+  /api/v1/notifiers/history/:
     get:
       operationId: List notificaitons history
       description: List notificaitons history
@@ -603,21 +629,21 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/NotificationsHistory"
+                  $ref: "#/components/schemas/NotifiersHistory"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
       tags:
-        - Notifications History
-  /api/v1/notifications/{uuid}/history/:
+        - Notifiers History
+  /api/v1/notifiers/{uuid}/history/:
     get:
-      operationId: Get a notification history
-      description: Return a notification execution history
+      operationId: Get a notifier history
+      description: Return a notifier execution history
       parameters:
         - name: uuid
           in: path
           required: true
-          description: A unique value identifying this Notification.
+          description: A unique value identifying this Notifier.
           schema:
             type: string
       responses:
@@ -627,22 +653,22 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/NotificationsHistory"
+                  $ref: "#/components/schemas/NotifiersHistory"
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
-          description: "Notification history not found"
+          description: "Notifier history not found"
       tags:
-        - Notifications History
+        - Notifiers History
     delete:
-      operationId: Delete a notification history
-      description: Delete a notification execution history
+      operationId: Delete a notifier history
+      description: Delete a notifier execution history
       parameters:
         - name: uuid
           in: path
           required: true
-          description: A unique value identifying this Notification.
+          description: A unique value identifying this Notifier.
           schema:
             type: string
       responses:
@@ -651,9 +677,10 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
-          description: "Notification history not found"
+          description: "Notifier history not found"
       tags:
-        - Notifications History
+        - Notifiers History
+
 security:
   - bearerAuth: []
 components:
@@ -707,7 +734,7 @@ components:
           type: boolean
         headers:
           type: object
-        notifications:
+        notifiers:
           type: array
           items:
             type: object
@@ -793,7 +820,7 @@ components:
         error:
           type: string
           readOnly: true
-    Notifications:
+    Notifiers:
       type: object
       properties:
         uuid:
@@ -847,7 +874,7 @@ components:
         - status
         - status_code
         - error
-    NotificationsHistory:
+    NotifiersHistory:
       type: object
       properties:
         uuid:

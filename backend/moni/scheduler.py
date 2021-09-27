@@ -7,7 +7,7 @@ from apscheduler.triggers.cron import CronTrigger
 from django_apscheduler.jobstores import register_events
 from django_apscheduler.models import DjangoJobExecution
 from jobs.models import JobsHistory
-from django_apscheduler.models import DjangoJob
+from notifiers.models import NotifiersHistory
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +31,12 @@ def delete_old_job_history(max_age=604800):
     JobsHistory.objects.delete_old_history(max_age)
 
 
+def delete_old_notifier_history(max_age=604800):
+    """This job delete all notifier history older than `max_age` from the database"""
+
+    NotifiersHistory.objects.delete_old_history(max_age)
+
+
 def start(default_jobs=True):
     """Start Scheduler"""
 
@@ -43,27 +49,40 @@ def start(default_jobs=True):
         scheduler.add_job(
             delete_old_job_executions,
             trigger=CronTrigger(
-                day_of_week="mon", hour="00", minute="00"
-            ),  # Midnight on Monday, before start of the next work week.
+                hour="00", minute="00"
+            ),  # Everyday midnight
             id="delete_old_job_executions",
             max_instances=1,
             replace_existing=True,
         )
         logger.info(
-            "Added weekly job: 'delete_old_job_executions'."
+            "Added daily job: 'delete_old_job_executions'."
         )
 
         scheduler.add_job(
             delete_old_job_history,
             trigger=CronTrigger(
-                day_of_week="mon", hour="00", minute="00"
-            ),  # Midnight on Monday, before start of the next work week.
+                hour="00", minute="00"
+            ),  # Everyday midnight
             id="delete_old_job_history",
             max_instances=1,
             replace_existing=True,
         )
         logger.info(
-            "Added weekly job: 'delete_old_job_history'."
+            "Added daily job: 'delete_old_job_history'."
+        )
+
+        scheduler.add_job(
+            delete_old_notifier_history,
+            trigger=CronTrigger(
+                hour="00", minute="00"
+            ),  # Everyday midnight
+            id="delete_old_notifier_history",
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info(
+            "Added daily job: 'delete_old_notifier_history'."
         )
 
     # scheduler.add_job(test_job,

@@ -6,13 +6,13 @@
 #
 --trusted-host pypi.org
 
-apscheduler==3.7.0
+apscheduler==3.8.0
     # via django-apscheduler
 asgiref==3.4.1
     # via django
 dj-database-url==0.5.0
     # via -r requirements.in
-django==3.2.6
+django==3.2.7
     # via
     #   -r requirements.in
     #   django-apscheduler
@@ -21,7 +21,7 @@ django==3.2.6
     #   djangorestframework
 django-apscheduler==0.6.0
     # via -r requirements.in
-django-filter==2.4.0
+django-filter==21.1
     # via -r requirements.in
 django-model-utils==4.1.1
     # via -r requirements.in
@@ -45,11 +45,11 @@ pyyaml==5.4.1
     # via -r requirements.in
 six==1.16.0
     # via apscheduler
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via django
 tzlocal==2.1
     # via apscheduler
-urllib3==1.26.6
+urllib3==1.26.7
     # via -r requirements.in
 whitenoise==5.3.0
     # via -r requirements.in

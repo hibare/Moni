@@ -16,7 +16,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'moni.settings')
 application = get_wsgi_application()
 
 from django.conf import settings
-from jobs import scheduler
+from moni import scheduler
 
 if settings.SCHEDULER_AUTOSTART:
     scheduler.start()

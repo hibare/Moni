@@ -1,63 +1,65 @@
-"""Notifications Views"""
+"""Notifiers Views"""
 
 import logging
 from collections import Counter
-from rest_framework import viewsets, mixins, generics, status
+from rest_framework import serializers, viewsets, mixins, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
-from notifications.serializers import NotificationsSerializer, NotificationsHistorySerializer
-from notifications.models import Notifications, NotificationsHistory
-from notifications.services.notify import Notify
+from notifiers.serializers import NotifiersSerializer, NotifiersHistorySerializer
+from notifiers.models import Notifiers, NotifiersHistory
+from notifiers.services.notify import Notify
+from jobs.models import Jobs
+from jobs.serializers import JobsSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class NotificationsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    """Notifications views"""
+class NotifiersViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """Notifiers views"""
 
     lookup_field = "uuid"
     permission_classes = (IsAuthenticated,)
-    serializer_class = NotificationsSerializer
-    queryset = Notifications.objects.all()
+    serializer_class = NotifiersSerializer
+    queryset = Notifiers.objects.all()
 
     @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
     def history(self, request, **kwargs):
-        """Return a notification execution history"""
+        """Return a notifier execution history"""
 
         uuid = self.kwargs['uuid']
 
-        queryset = NotificationsHistory.objects.filter(uuid=uuid)
+        queryset = NotifiersHistory.objects.filter(uuid=uuid)
 
         if queryset.exists():
-            serializer = NotificationsHistorySerializer(queryset, many=True)
+            serializer = NotifiersHistorySerializer(queryset, many=True)
             return Response(serializer.data)
         else:
             raise NotFound()
 
     @history.mapping.delete
     def history_delete(self, request, **kwargs):
-        """Delete a notification execution history"""
+        """Delete a notifier execution history"""
 
         uuid = self.kwargs['uuid']
 
-        queryset = NotificationsHistory.objects.filter(uuid=uuid)
+        queryset = NotifiersHistory.objects.filter(uuid=uuid)
 
         if queryset.exists():
             queryset.delete()
-            return Response({"detail": "Notification history deleted"}, status=status.HTTP_200_OK)
+            return Response({"detail": "Notifier history deleted"}, status=status.HTTP_200_OK)
         else:
             raise NotFound()
 
     @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
     def delivery(self, request, **kwargs):
-        """Return notification delivery percentage"""
+        """Return notifier delivery percentage"""
 
         try:
             uuid = self.kwargs['uuid']
 
-            status_list = NotificationsHistory.objects.filter(
+            status_list = NotifiersHistory.objects.filter(
                 uuid=uuid).values_list('status', flat=True)
 
             if status_list.exists():
@@ -73,19 +75,19 @@ class NotificationsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
 
             return Response({"delivery": delivery}, status=status.HTTP_200_OK)
 
-        except Notifications.DoesNotExist:
+        except Notifiers.DoesNotExist:
             raise NotFound
 
     @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def test(self, request, **kwargs):
-        """Test notification endpoint"""
+        """Test notifier endpoint"""
 
         n_status = n_status_code = n_error = None
 
         try:
             uuid = self.kwargs['uuid']
 
-            queryset = Notifications.objects.get(uuid=uuid)
+            queryset = Notifiers.objects.get(uuid=uuid)
 
             n_status, n_status_code, n_error = Notify.test(queryset)
 
@@ -101,18 +103,39 @@ class NotificationsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
                     "status_code": n_status_code,
                     "error": n_error
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except Notifications.DoesNotExist:
+        except Notifiers.DoesNotExist:
             raise NotFound
 
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def jobs(self, request, **kwargs):
+        """Return all jobs using this notifier"""
 
-class NotificationsHistoryViewSet(generics.ListAPIView, viewsets.GenericViewSet):
+        try:
+            uuid = self.kwargs['uuid']
+
+            _ = Notifiers.objects.get(
+                uuid=uuid)
+
+            query_set = Jobs.objects.filter(notifiers=uuid)
+
+            if query_set.exists():
+                serializer = JobsSerializer(query_set, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({"detail": "No jobs found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Notifiers.DoesNotExist:
+            return Response({"detail": "Invalid notifier"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class NotifiersHistoryViewSet(generics.ListAPIView, viewsets.GenericViewSet):
     """
     Notificaitons History ViewSet
 
-    /api/v1/notifications/history/
+    /api/v1/notifiers/history/
     """
 
     lookup_field = "uuid"
     permission_classes = (IsAuthenticated,)
-    serializer_class = NotificationsHistorySerializer
-    queryset = NotificationsHistory.objects.all()
+    serializer_class = NotifiersHistorySerializer
+    queryset = NotifiersHistory.objects.all()
