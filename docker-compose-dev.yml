@@ -48,6 +48,13 @@ services:
       - GOTIFY_DEFAULTUSER_PASS=password
     volumes:
       - "./volumes/gotify:/app/data"
+  
+  httpbin:
+    image: kennethreitz/httpbin
+    container_name: httpbin
+    hostname: httpbin
+    ports:
+      - 127.0.0.1:8082:80
 
   moni:
     build: .

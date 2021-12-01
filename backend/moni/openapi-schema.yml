@@ -9,10 +9,10 @@ info:
     name: MIT
     url: https://github.com/hibare/Moni/blob/master/LICENSE
 tags:
-  - name: API Token
+  - name: Accounts
+    description: API's to manage user details.
+  - name: Token
     description: API's to manage authentication token.
-  - name: JWT Token
-    description: API to manage JWT auth.
   - name: Jobs
     description: |
       API's to manage Jobs.
@@ -26,6 +26,53 @@ tags:
   - name: Notifiers History
     description: API to manage notifiers history.
 paths:
+  /api/v1/accounts/:
+    get:
+      operationId: Get User
+      description: Get User details
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Accounts"
+          description: ""
+      tags:
+        - Accounts
+    patch:
+      operationId: Update user
+      description: Update user detauls
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Accounts"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Accounts"
+          description: ""
+      tags:
+        - Accounts
+  /api/v1/accounts/password/:
+    put:
+      operationId: Change Password
+      description: Change Password
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePassword"
+      responses:
+        "200":
+          description: "Password chaged"
+      tags:
+        - Accounts
   /api/v1/accounts/token/:
     post:
       operationId: Create / Get Token
@@ -47,7 +94,7 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequestError"
       tags:
-        - API Token
+        - Token
     put:
       operationId: Regenerate API Token
       description: Regenerate API token
@@ -62,7 +109,7 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
       tags:
-        - API Token
+        - Token
     delete:
       operationId: Delete API token
       description: Delete API token
@@ -73,7 +120,7 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
       tags:
-        - API Token
+        - Token
   /api/v1/accounts/jwt/:
     post:
       operationId: Obtain JWT
@@ -102,7 +149,7 @@ paths:
                 $ref: "#/components/schemas/JWTTokenObtainPair"
           description: ""
       tags:
-        - JWT Token
+        - Token
   /api/v1/accounts/jwt/refresh/:
     post:
       operationId: Refresh JWT
@@ -131,7 +178,7 @@ paths:
                 $ref: "#/components/schemas/JWTTokenRefresh"
           description: ""
       tags:
-        - JWT Token
+        - Token
   /api/v1/accounts/jwt/verify/:
     post:
       operationId: Verify JWT
@@ -160,7 +207,7 @@ paths:
                 $ref: "#/components/schemas/JWTTokenVerify"
           description: ""
       tags:
-        - JWT Token
+        - Token
   /api/v1/jobs/:
     get:
       operationId: List Jobs
@@ -412,6 +459,30 @@ paths:
           description: "No such job"
       tags:
         - Jobs
+  /api/v1/jobs/{uuid}/favicon/:
+    get:
+      operationId: favicon
+      description: "Update favicon URL with the latest one."
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A unique value identifying this Jobs.
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Job not found"
+      tags:
+        - Jobs
   /api/v1/jobs/history/:
     get:
       operationId: List jobs execution history
@@ -517,6 +588,35 @@ paths:
           description: ""
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+      tags:
+        - Notifiers
+  /api/v1/notifiers/test/:
+    post:
+      operationId: Test a notifier
+      description: Test notifier wihtout saving
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notifiers"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Notifiers"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Notifiers"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsTest"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          description: "Request error / notificaiton test failed"
       tags:
         - Notifiers
   /api/v1/notifiers/{uuid}/:
@@ -784,6 +884,30 @@ components:
       scheme: bearer
       description: API uses bearer authentication mechanism
   schemas:
+    Accounts:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+    ChangePassword:
+      type: object
+      properties:
+        old_password:
+          type: string
+        new_password:
+          type: string
+        new_password_confirm:
+          type: string
     APIToken:
       type: object
       properties:
@@ -804,9 +928,34 @@ components:
       properties:
         username:
           type: string
+          writeOnly: true
         password:
           type: string
           writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+        firstname:
+          type: string
+          readOnly: true
+        lastname:
+          type: string
+          readOnly: true
+        fullname:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          readOnly: true
+        is_staff:
+          type: boolean
+          readOnly: true
+        is_superuser:
+          type: boolean
+          readOnly: true
       required:
         - username
         - password
@@ -855,36 +1004,10 @@ components:
         notifiers:
           type: array
           items:
-            type: object
-            properties:
-              uuid:
-                type: string
-                readOnly: true
-              url:
-                type: string
-                format: uri
-                maxLength: 200
-                pattern:
-                  "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:0|25[0-5]|2[0-4]\\\
-                  d|1\\d?\\d?|[1-9]\\d?)(?:\\.(?:0|25[0-5]|2[0-4]\\d|1\\d?\\d?|[1-9]\\\
-                  d?)){3}|\\[[0-9a-f:.]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF\
-                  0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\\
-                  .(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\\
-                  d{2,5})?(?:[/?#][^\\s]*)?\\z"
-              type:
-                enum:
-                  - slack
-                  - discord
-                  - webhook
-                  - gotify
-                type: string
-              description:
-                type: string
-            required:
-              - url
-              - type
-              - description
+            type: string
         verify_ssl:
+          type: boolean
+        healthy:
           type: boolean
         interval:
           type: integer
@@ -897,6 +1020,8 @@ components:
             maximum: 2147483647
         check_redirect:
           type: boolean
+        favicon_url:
+          type: string
       required:
         - url
         - title
@@ -996,6 +1121,9 @@ components:
       type: object
       properties:
         uuid:
+          type: string
+          readOnly: true
+        timestamp:
           type: string
           readOnly: true
         status:

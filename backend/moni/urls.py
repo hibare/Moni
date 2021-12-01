@@ -16,9 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from .views import health_v, version_v, OpenAPISchemaView, ReDocView, SwaggerUIView
+from django.views.generic.base import RedirectView
+from .views import index_v, health_v, version_v, OpenAPISchemaView, ReDocView, SwaggerUIView
 
 urlpatterns = [
+    path('', index_v, name='index'),
+    path('favicon.ico/', RedirectView.as_view(
+        url='/static/img/favicon.ico',
+        permanent=True
+    ), name='favicon'),
     path('admin/', admin.site.urls),
     path('__version/', version_v, name='version'),
     path('__health/', health_v, name='health'),

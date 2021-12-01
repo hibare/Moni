@@ -24,16 +24,19 @@ class Jobs(models.Model):
     uuid = models.CharField(
         max_length=40, default=get_str_uuid, primary_key=True)
     url = models.URLField(unique=True)
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=15)
+    # Job state aka, enabled or disabled
     state = models.BooleanField(default=True)
     headers = models.JSONField(default=dict)
     notifiers = models.ManyToManyField(
-        Notifiers, related_name="jobs_notifiers", db_column='uuid')
+        Notifiers, related_name="jobs_notifiers", db_column='uuid', blank=True)
     verify_ssl = models.BooleanField(default=True)
     interval = models.PositiveIntegerField(default=15)
     success_status = ArrayField(
         models.PositiveIntegerField(), default=default_success_status)
     check_redirect = models.BooleanField(default=True)
+    healthy = models.BooleanField(default=False)
+    favicon_url = models.URLField(null=True)
 
     tracker = FieldTracker()
 
@@ -43,6 +46,9 @@ class Jobs(models.Model):
         ]
         verbose_name = "Jobs"
         verbose_name_plural = "Jobs"
+
+    def __str__(self) -> str:
+        return self.uuid
 
 
 class JobsHistoryManager(models.Manager):
@@ -75,3 +81,6 @@ class JobsHistory(models.Model):
         ]
         verbose_name = "Jobs History"
         verbose_name_plural = "Jobs History"
+
+    def __str__(self) -> str:
+        return self.uuid

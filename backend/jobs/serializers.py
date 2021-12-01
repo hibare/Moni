@@ -1,18 +1,18 @@
 """Jobs Serializer"""
 
 from rest_framework import serializers
-from drf_writable_nested.serializers import WritableNestedModelSerializer
 from .models import Jobs, JobsHistory
-from notifiers.serializers import NotifiersSerializer
+from notifiers.models import Notifiers
 
 
-class JobsSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
-    notifiers = NotifiersSerializer(many=True, required=False)
+class JobsSerializer(serializers.ModelSerializer):
+    notifiers = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Notifiers.objects.all())
 
     class Meta:
         model = Jobs
         fields = '__all__'
-        read_only_fields = ['uuid']
+        read_only_fields = ['uuid', 'healthy']
 
 
 class JobsHistorySerializer(serializers.ModelSerializer):

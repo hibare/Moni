@@ -10,6 +10,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from jobs.models import Jobs, JobsHistory
 from jobs.serializers import JobsSerializer, JobsHistorySerializer
+from moni.utils.favicon import Favicon
 
 logger = logging.getLogger(__name__)
 
@@ -28,13 +29,10 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
 
         uuid = self.kwargs['uuid']
 
-        queryset = JobsHistory.objects.filter(uuid=uuid)
+        queryset = JobsHistory.objects.filter(uuid=uuid).order_by('-timestamp')
 
-        if queryset.exists():
-            serializer = JobsHistorySerializer(queryset, many=True)
-            return Response(serializer.data)
-        else:
-            raise NotFound()
+        serializer = JobsHistorySerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @history.mapping.delete
     def history_delete(self, request, **kwargs):
@@ -46,7 +44,7 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
 
         if queryset.exists():
             queryset.delete()
-            return Response({"detail": "Job history deleted"}, status=status.HTTP_200_OK)
+            return Response({"detail": "Job history deleted"}, status=status.HTTP_204_NO_CONTENT)
         else:
             raise NotFound()
 
@@ -123,11 +121,32 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
 
             if response_list.exists():
                 response = round(mean(response_list), 2)
-                response = str(response) + 'sec'
+                response = str(response) + ' sec'
             else:
                 response = "-"
 
             return Response({"response": response}, status=status.HTTP_200_OK)
+        except Jobs.DoesNotExist:
+            raise NotFound
+
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def favicon(self, request, **kwargs):
+        """
+        Update favicon URL with the latest one.
+        Send status 200 irrespective of actual status.
+        """
+
+        try:
+            uuid = self.kwargs['uuid']
+
+            job = self.queryset.get(uuid=uuid)
+
+            favicon_url = Favicon.get_favicon_url(job.url)
+
+            job.favicon_url = favicon_url
+            job.save()
+
+            return Response(self.serializer_class(job).data)
         except Jobs.DoesNotExist:
             raise NotFound
 

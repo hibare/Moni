@@ -11,9 +11,10 @@ class JobsAdmin(admin.ModelAdmin):
     """Job admin class"""
 
     empty_value_display = '-empty-'
-    list_display = ['uuid', 'url', 'title',
-                    'state', 'verify_ssl', 'interval']
-    list_filter = ['state', 'verify_ssl', 'interval']
+    list_display = ['uuid', 'url', 'title', 'healthy',
+                    'state', 'verify_ssl', 'interval', 'favicon_url', 'check_redirect', 'success_status', 'headers']
+    list_filter = ['state', 'verify_ssl',
+                   'interval', 'healthy', 'check_redirect']
 
     def has_add_permission(self, request: HttpRequest) -> bool:
         return False

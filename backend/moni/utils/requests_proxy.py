@@ -9,7 +9,7 @@ import urllib3
 logger = logging.getLogger(__name__)
 
 
-def requests_get(url: str, headers: Dict = dict, timeout: int = 20, verify_ssl: bool = True, check_redirect: bool = True):
+def requests_get(url: str, headers: Dict = None, timeout: int = 20, verify_ssl: bool = True, redirect: bool = True) -> urllib3.response:
     """urllib3 GET request proxy"""
 
     if verify_ssl:
@@ -19,13 +19,16 @@ def requests_get(url: str, headers: Dict = dict, timeout: int = 20, verify_ssl: 
 
     http = urllib3.PoolManager(cert_reqs=cert_reqs)
 
+    if headers is None:
+        headers = {}
+
     start = time.time()
     response = http.request(
         'GET',
         url,
         headers=headers,
         timeout=timeout,
-        redirect=check_redirect
+        redirect=redirect
     )
     end = time.time()
     elapsed_seconds = end - start
@@ -36,7 +39,7 @@ def requests_get(url: str, headers: Dict = dict, timeout: int = 20, verify_ssl: 
     return response
 
 
-def requests_post(url: str, body: str, headers: Dict, timeout: int = 20, verify_ssl: bool = True, check_redirect: bool = True):
+def requests_post(url: str, body: str, headers: Dict, timeout: int = 20, verify_ssl: bool = True, redirect: bool = True) -> urllib3.response:
     """urllib3 GET request proxy"""
 
     if verify_ssl:
@@ -53,7 +56,7 @@ def requests_post(url: str, body: str, headers: Dict, timeout: int = 20, verify_
         headers=headers,
         timeout=timeout,
         body=body,
-        redirect=check_redirect
+        redirect=redirect
     )
     end = time.time()
     elapsed_seconds = end - start

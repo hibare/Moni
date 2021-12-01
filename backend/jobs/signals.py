@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django_apscheduler.models import DjangoJobExecution
 from jobs.models import Jobs
 from jobs.operations import JobOps
+from moni.utils.favicon import Favicon
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 @receiver(post_save, sender=Jobs)
 def job_post_save(sender, instance, created, **kwargs):
     """
+    Create Job when a new job entry is made & update favicon URL.
     Update scheduled job when job record is updated.
     When state is changed:
         state=True, set job status active, resume job
@@ -23,6 +25,9 @@ def job_post_save(sender, instance, created, **kwargs):
 
     if created:
         JobOps.add(instance.uuid)
+
+        favicon_url = Favicon.get_favicon_url(instance.url)
+        Jobs.objects.filter(uuid=instance.uuid).update(favicon_url=favicon_url)
     else:
         if instance.tracker.has_changed('state'):
             if instance.state:

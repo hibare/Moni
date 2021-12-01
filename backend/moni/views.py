@@ -2,6 +2,7 @@
 
 import logging
 import yaml
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.conf import settings
 from django.conf import settings
@@ -11,6 +12,11 @@ from rest_framework import renderers
 from rest_framework import permissions
 
 logger = logging.getLogger(__name__)
+
+
+def index_v(request):
+    """Index view"""
+    return render(request, 'index.html')
 
 
 def health_v(request):
@@ -78,7 +84,7 @@ class ReDocView(APIView):
         Return ReDoc template. 
         """
 
-        return Response({'schema_url': 'openapi-schema'}, template_name='moni/redoc.html')
+        return Response({'schema_url': 'openapi-schema'}, template_name='redoc.html')
 
 
 class SwaggerUIView(APIView):
@@ -97,4 +103,4 @@ class SwaggerUIView(APIView):
         Return ReDoc template. 
         """
 
-        return Response({'schema_url': 'openapi-schema'}, template_name='moni/swagger-ui.html')
+        return Response({'schema_url': 'openapi-schema'}, template_name='swagger-ui.html')
