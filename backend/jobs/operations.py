@@ -1,6 +1,7 @@
 """Job Operations"""
 
 import time
+import datetime
 import ssl
 import logging
 from typing import Dict, Tuple, Union
@@ -179,3 +180,13 @@ class JobOps:
         except Exception:
             logger.exception("Failed to reschedule job, id=%s", id)
             return False
+
+    @staticmethod
+    def run(id: str) -> None:
+        """Run a job now"""
+
+        try:
+            scheduler.get_job(job_id=id).modify(
+                next_run_time=datetime.datetime.now())
+        except Exception:
+            logger.exception("Failed to run job, id=%s", id)

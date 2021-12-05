@@ -21,7 +21,6 @@ def job_post_save(sender, instance, created, **kwargs):
         state=False, set job status inactive, pause job
     When internval changed, reschedule job
     """
-    logger.info("Instance=%s, created=%s", instance, created)
 
     if created:
         JobOps.add(instance.uuid)
@@ -38,8 +37,11 @@ def job_post_save(sender, instance, created, **kwargs):
         if instance.tracker.has_changed('interval'):
             JobOps.reschedule(instance.uuid, instance.interval)
 
+    if instance.state and (created or instance.tracker.has_changed('state') or instance.tracker.has_changed('url')):
+        JobOps.run(instance.uuid)
 
-@receiver(post_delete, sender=Jobs)
+
+@ receiver(post_delete, sender=Jobs)
 def job_post_delete(sender, instance, **kwargs):
     """Delete scheduled job when the job record is deleted"""
 
@@ -47,7 +49,7 @@ def job_post_delete(sender, instance, **kwargs):
     JobOps.remove(instance.uuid)
 
 
-@receiver(post_save, sender=DjangoJobExecution)
+@ receiver(post_save, sender=DjangoJobExecution)
 def delete_execution_record(sender, instance, created, **kwargs):
     """
     Django APScheduler stores execution reccords in DB. As app is storing custom execution records, this is no longer needed.
