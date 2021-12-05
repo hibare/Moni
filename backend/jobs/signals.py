@@ -38,7 +38,7 @@ def job_post_save(sender, instance, created, **kwargs):
             JobOps.reschedule(instance.uuid, instance.interval)
 
     if instance.state and (created or instance.tracker.has_changed('state') or instance.tracker.has_changed('url')):
-        executor(instance.uuid)
+        JobOps.run(instance.uuid)
 
 
 @ receiver(post_delete, sender=Jobs)
