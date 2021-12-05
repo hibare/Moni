@@ -5,7 +5,7 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django_apscheduler.models import DjangoJobExecution
 from jobs.models import Jobs
-from jobs.operations import JobOps
+from jobs.operations import JobOps, executor
 from moni.utils.favicon import Favicon
 
 logger = logging.getLogger(__name__)
@@ -38,14 +38,13 @@ def job_post_save(sender, instance, created, **kwargs):
             JobOps.reschedule(instance.uuid, instance.interval)
 
     if instance.state and (created or instance.tracker.has_changed('state') or instance.tracker.has_changed('url')):
-        JobOps.run(instance.uuid)
+        executor(instance.uuid)
 
 
 @ receiver(post_delete, sender=Jobs)
 def job_post_delete(sender, instance, **kwargs):
     """Delete scheduled job when the job record is deleted"""
 
-    logger.info("Instance=%s", instance)
     JobOps.remove(instance.uuid)
 
 
