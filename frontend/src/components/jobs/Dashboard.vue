@@ -4,7 +4,22 @@
       <v-col cols="12" sm="12" md="12" lg="12">
         <job-add @jobAddedEvent="jobAddedEventHandler" />
       </v-col>
+
       <v-col
+        v-if="jobs.length < 1"
+        align="center"
+        justify="center"
+        cols="12"
+        sm="4"
+        md="3"
+        lg="3"
+        class="mt-16"
+      >
+        <span><v-icon>mdi-memory</v-icon> No jobs found</span>
+      </v-col>
+
+      <v-col
+        v-else
         cols="12"
         sm="4"
         md="3"
@@ -84,7 +99,6 @@ export default {
         .get("/api/v1/jobs/")
         .then((result) => {
           this.jobs = result.data;
-          console.log(this.jobs);
         })
         .finally(() => {
           this.jobLoader = false;
