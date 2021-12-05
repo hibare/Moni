@@ -301,6 +301,7 @@ export default {
       this.addJobDialog = false;
       this.$refs.addJobForm.reset();
       this.jobItem = Object.assign({}, this.jobDefaultItem);
+      this.step = 1;
       this.$refs.addJobForm.resetValidation();
     },
 
