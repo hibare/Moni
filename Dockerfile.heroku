@@ -1,1 +1,1 @@
-FROM hibare/moni:0.3.8-alpha
+FROM hibare/moni:0.3.9-alpha
