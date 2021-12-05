@@ -24,7 +24,7 @@ class Notifiers(models.Model):
     url = models.URLField(unique=True)
     type = models.CharField(max_length=10, choices=NOTIFIER_TYPES)
     title = models.CharField(max_length=15)
-    description = models.TextField()
+    description = models.TextField(default="", blank=True)
 
     class Meta:
         indexes = [

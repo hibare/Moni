@@ -4,7 +4,22 @@
       <v-col cols="12" sm="12" md="12" lg="12">
         <job-add @jobAddedEvent="jobAddedEventHandler" />
       </v-col>
+
       <v-col
+        v-if="jobs.length < 1"
+        align="center"
+        justify="center"
+        cols="12"
+        sm="4"
+        md="3"
+        lg="3"
+        class="mt-16"
+      >
+        <span><v-icon>mdi-memory</v-icon> No jobs found</span>
+      </v-col>
+
+      <v-col
+        v-else
         cols="12"
         sm="4"
         md="3"
@@ -49,7 +64,7 @@
                 >mdi-circle-medium</v-icon
               >
             </v-card-title>
-            <v-card-text>{{ item.url }}</v-card-text>
+            <v-card-text>{{ maskURL(item.url) }}</v-card-text>
           </v-card>
         </v-hover>
       </v-col>
@@ -70,6 +85,7 @@ export default {
     items: [1, 2, 3, 4, 5, 6, 7],
     jobs: [],
     jobLoader: false,
+    MAX_URL_CHARS: 45,
   }),
 
   created() {
@@ -83,7 +99,6 @@ export default {
         .get("/api/v1/jobs/")
         .then((result) => {
           this.jobs = result.data;
-          console.log(this.jobs);
         })
         .finally(() => {
           this.jobLoader = false;
@@ -92,6 +107,12 @@ export default {
 
     jobAddedEventHandler(data) {
       this.jobs.push(data);
+    },
+
+    maskURL(url) {
+      if (url.length >= this.MAX_URL_CHARS)
+        return url.slice(0, this.MAX_URL_CHARS) + "...";
+      return url;
     },
   },
 };

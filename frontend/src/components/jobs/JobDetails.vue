@@ -102,7 +102,45 @@
               <span>Delete Job</span>
             </v-tooltip>
           </v-card-title>
-          <v-card-subtitle class="my-1">{{ job.url }}</v-card-subtitle>
+          <v-card-subtitle class="mt-2 mb-1 ml-4">
+            <v-row>{{ job.url }}</v-row>
+            <v-row class="subtitle mt-6">
+              <span class="pr-3"
+                ><v-icon small color="blue lighten-1" class="mr-1 pb-1"
+                  >mdi-update</v-icon
+                >{{ job.interval }} Min.</span
+              >
+              <span class="pr-3"
+                ><v-icon small color="yellow lighten-1" class="mr-1 pb-1"
+                  >mdi-format-list-checks</v-icon
+                >{{ job.success_status.join(", ") }}</span
+              >
+              <span class="pr-2"
+                ><v-icon
+                  v-if="job.verify_ssl"
+                  small
+                  color="green lighten-1"
+                  class="mr-1 pb-1"
+                  >mdi-shield</v-icon
+                >
+                <v-icon v-else small color="red lighten-1" class="mr-1 pb-1"
+                  >mdi-shield-alert</v-icon
+                ></span
+              >
+              <span class="pr-3"
+                ><v-icon
+                  v-if="job.check_redirect"
+                  small
+                  color="green lighten-1"
+                  class="mr-1 pb-1"
+                  >mdi-repeat</v-icon
+                >
+                <v-icon v-else small color="red lighten-1" class="mr-1 pb-1"
+                  >mdi-repeat-off</v-icon
+                ></span
+              >
+            </v-row>
+          </v-card-subtitle>
           <v-card-text> </v-card-text>
         </v-card>
 
