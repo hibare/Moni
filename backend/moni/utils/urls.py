@@ -22,6 +22,21 @@ def format_url(url: str) -> str:
     return url
 
 
+def get_base_url(url: str) -> str:
+    """
+    Return base URL for given URL.
+
+    Example:
+    Return http://example.com for input http://example.com/path/path
+
+    Return scheme://netloc
+    """
+
+    url = format_url(url)
+    parsed = parse_url(url)
+    return'{uri.SCHEME}://{uri.NETLOC}/'.format(uri=parsed)
+
+
 def parse_url(url: str) -> dict:
     """Parse a URL into components & return as dict"""
 

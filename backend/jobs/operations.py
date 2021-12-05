@@ -12,7 +12,7 @@ from notifiers.services.notify import Notify
 logger = logging.getLogger(__name__)
 
 
-def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redirect: bool = True) -> Tuple[Union[int, None], Union[str, None], Union[float, None]]:
+def request(url: str, headers: Dict = None, verify_ssl: bool = True, check_redirect: bool = False) -> Tuple[Union[int, None], Union[str, None], Union[float, None]]:
     """
     HTTP Request executor
 
@@ -22,6 +22,9 @@ def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redir
     DEFAULT_HEADERS = {
         "Cache-Control": "no-cache"
     }
+
+    if headers is None:
+        headers = {}
 
     headers.update(DEFAULT_HEADERS)
 
@@ -39,16 +42,13 @@ def request(url: str, headers: Dict = dict, verify_ssl: bool = True, check_redir
             url,
             headers=headers,
             timeout=10,
-            redirect=check_redirect
+            redirect=not check_redirect
         )
         end = time.time()
 
         elapsed_seconds = end - start
 
-        return response.status, response.data.decode(), elapsed_seconds, None
-
-    except UnicodeDecodeError as e:
-        return response.status, response.data, None, str(e)
+        return response.status, response.data, elapsed_seconds, None
 
     except Exception as err:
         logger.exception("URL=%s", url)
@@ -93,6 +93,10 @@ def executor(id: str) -> None:
             response_time=elapsed_seconds,
             error=error
         )
+
+        # Update job health status
+        job.healthy = success
+        job.save()
 
     except Exception:
         logger.exception("Failed to execute healthcheck, id=%s", id)

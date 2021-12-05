@@ -2,12 +2,12 @@
 
 import logging
 from collections import Counter
-from rest_framework import serializers, viewsets, mixins, generics, status
+from rest_framework import viewsets, mixins, generics, status
 from rest_framework.response import Response
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
-from notifiers.serializers import NotifiersSerializer, NotifiersHistorySerializer
+from notifiers.serializers import NotifiersSerializer, NotifiersHistorySerializer, NotifierTestSerializer
 from notifiers.models import Notifiers, NotifiersHistory
 from notifiers.services.notify import Notify
 from jobs.models import Jobs
@@ -24,19 +24,31 @@ class NotifiersViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Up
     serializer_class = NotifiersSerializer
     queryset = Notifiers.objects.all()
 
+    def list(self, request, *args, **kwargs):
+        """Override default list method.
+        Check for type & filter based on it.
+        Default apply no filter
+        """
+        queryset = self.get_queryset()
+
+        if request.query_params.get('type'):
+            result = queryset.filter(type=request.query_params.get('type'))
+        else:
+            result = queryset
+        serializer = self.serializer_class(result, many=True)
+        return Response(serializer.data)
+
     @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
     def history(self, request, **kwargs):
         """Return a notifier execution history"""
 
         uuid = self.kwargs['uuid']
 
-        queryset = NotifiersHistory.objects.filter(uuid=uuid)
+        queryset = NotifiersHistory.objects.filter(
+            uuid=uuid).order_by('-timestamp')
 
-        if queryset.exists():
-            serializer = NotifiersHistorySerializer(queryset, many=True)
-            return Response(serializer.data)
-        else:
-            raise NotFound()
+        serializer = NotifiersHistorySerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @history.mapping.delete
     def history_delete(self, request, **kwargs):
@@ -48,7 +60,7 @@ class NotifiersViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Up
 
         if queryset.exists():
             queryset.delete()
-            return Response({"detail": "Notifier history deleted"}, status=status.HTTP_200_OK)
+            return Response({"detail": "Notifier history deleted"}, status=status.HTTP_204_NO_CONTENT)
         else:
             raise NotFound()
 
@@ -78,9 +90,30 @@ class NotifiersViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Up
         except Notifiers.DoesNotExist:
             raise NotFound
 
-    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
-    def test(self, request, **kwargs):
-        """Test notifier endpoint"""
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def jobs(self, request, **kwargs):
+        """Return all jobs using this notifier"""
+
+        try:
+            uuid = self.kwargs['uuid']
+
+            _ = Notifiers.objects.get(
+                uuid=uuid)
+
+            query_set = Jobs.objects.filter(notifiers=uuid)
+
+            serializer = JobsSerializer(query_set, many=True)
+            return Response(serializer.data)
+
+        except Notifiers.DoesNotExist:
+            return Response({"detail": "Invalid notifier"}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(methods=['post'], detail=True, url_path="test", permission_classes=[IsAuthenticated])
+    def saved_test(self, request, **kwargs):
+        """
+        Test notifier endpoint.
+        To be used on notifiers which are already created & saved.
+        """
 
         n_status = n_status_code = n_error = None
 
@@ -102,30 +135,43 @@ class NotifiersViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Up
                     "status": n_status,
                     "status_code": n_status_code,
                     "error": n_error
-                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                }, status=n_status_code)
         except Notifiers.DoesNotExist:
             raise NotFound
 
-    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
-    def jobs(self, request, **kwargs):
-        """Return all jobs using this notifier"""
+    @action(methods=['post'], detail=False, url_path="test", permission_classes=[IsAuthenticated])
+    def unsaved_test(self, request, **kwargs):
+        """
+        Test notifier endpoint
+        To be used on notifiers which are not yet created.
+        """
 
-        try:
-            uuid = self.kwargs['uuid']
+        n_status = n_status_code = n_error = None
 
-            _ = Notifiers.objects.get(
-                uuid=uuid)
+        serializer = NotifierTestSerializer(data=request.data)
 
-            query_set = Jobs.objects.filter(notifiers=uuid)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            if query_set.exists():
-                serializer = JobsSerializer(query_set, many=True)
-                return Response(serializer.data)
-            else:
-                return Response({"detail": "No jobs found"}, status=status.HTTP_404_NOT_FOUND)
+        notifier = Notifiers(
+            url=request.data['url'],
+            type=request.data['type']
+        )
 
-        except Notifiers.DoesNotExist:
-            return Response({"detail": "Invalid notifier"}, status=status.HTTP_404_NOT_FOUND)
+        n_status, n_status_code, n_error = Notify.test(notifier)
+
+        if n_status:
+            return Response({
+                "status": n_status,
+                "status_code": n_status_code,
+                "error": n_error
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "status": n_status,
+                "status_code": n_status_code,
+                "error": n_error
+            }, status=n_status_code)
 
 
 class NotifiersHistoryViewSet(generics.ListAPIView, viewsets.GenericViewSet):

@@ -23,6 +23,7 @@ class Notifiers(models.Model):
         max_length=40, default=get_str_uuid, primary_key=True)
     url = models.URLField(unique=True)
     type = models.CharField(max_length=10, choices=NOTIFIER_TYPES)
+    title = models.CharField(max_length=15)
     description = models.TextField()
 
     class Meta:
@@ -31,6 +32,9 @@ class Notifiers(models.Model):
         ]
         verbose_name = "Notifiers"
         verbose_name_plural = "Notifiers"
+
+    def __str__(self) -> str:
+        return self.uuid
 
 
 class NotifiersHistoryManager(models.Manager):
@@ -50,8 +54,8 @@ class NotifiersHistory(models.Model):
     uuid = models.ForeignKey(
         Notifiers, related_name="notifier_uuid", on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
-    status_code = models.IntegerField(null=True)
-    error = models.TextField(null=True)
+    status_code = models.IntegerField(null=True, blank=True)
+    error = models.TextField(null=True, blank=True)
 
     objects = NotifiersHistoryManager()
 
@@ -62,3 +66,6 @@ class NotifiersHistory(models.Model):
         ]
         verbose_name = "Notifiers History"
         verbose_name_plural = "Notifiers History"
+
+    def __str__(self) -> str:
+        return self.uuid

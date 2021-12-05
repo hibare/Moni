@@ -14,6 +14,7 @@ from moni import TITLE, VERSION
 from pathlib import Path
 from dj_database_url import parse as db_url
 from decouple import config, Csv
+from datetime import timedelta
 from moni.utils.funcs import get_version, get_title
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'django_apscheduler',
     'accounts',
     'jobs',
@@ -65,7 +68,7 @@ ROOT_URLCONF = 'moni.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'moni/templates'],
+        'DIRS': [BASE_DIR / 'moni/assets/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +130,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = ()
+STATICFILES_DIRS = [
+    BASE_DIR / 'moni/assets/static'
+]
 
 STATIC_ROOT = BASE_DIR / 'static'
 
@@ -184,12 +189,26 @@ LOGGING = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'moni.utils.api_authentication.APIAuthentication'
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'moni.utils.api_authentication.APIAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
 }
+
+# Simple JWT
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=8),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    'JTI_CLAIM': 'jti',
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'AUTH_HEADER_NAME': 'HTTP_X_ACCESS_TOKEN',
+}
+
 
 # This scheduler config will:
 # - Store jobs in the project database

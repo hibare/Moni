@@ -12,3 +12,5 @@ gunicorn
 drf-writable-nested
 urllib3
 PyYAML
+djangorestframework-simplejwt
+BeautifulSoup4

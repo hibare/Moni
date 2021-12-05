@@ -24,16 +24,19 @@ class Jobs(models.Model):
     uuid = models.CharField(
         max_length=40, default=get_str_uuid, primary_key=True)
     url = models.URLField(unique=True)
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=15)
+    # Job state aka, enabled or disabled
     state = models.BooleanField(default=True)
     headers = models.JSONField(default=dict)
     notifiers = models.ManyToManyField(
-        Notifiers, related_name="jobs_notifiers", db_column='uuid')
+        Notifiers, related_name="jobs_notifiers", db_column='uuid', blank=True)
     verify_ssl = models.BooleanField(default=True)
     interval = models.PositiveIntegerField(default=15)
     success_status = ArrayField(
         models.PositiveIntegerField(), default=default_success_status)
     check_redirect = models.BooleanField(default=True)
+    healthy = models.BooleanField(default=False)
+    favicon_url = models.URLField(null=True, blank=True)
 
     tracker = FieldTracker()
 
@@ -43,6 +46,9 @@ class Jobs(models.Model):
         ]
         verbose_name = "Jobs"
         verbose_name_plural = "Jobs"
+
+    def __str__(self) -> str:
+        return self.uuid
 
 
 class JobsHistoryManager(models.Manager):
@@ -61,10 +67,10 @@ class JobsHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     uuid = models.ForeignKey(
         Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE)
-    status_code = models.IntegerField(null=True)
+    status_code = models.IntegerField(null=True, blank=True)
     success = models.BooleanField()
-    response_time = models.FloatField(null=True)
-    error = models.TextField(null=True)
+    response_time = models.FloatField(null=True, blank=True)
+    error = models.TextField(null=True, blank=True)
 
     objects = JobsHistoryManager()
 
@@ -75,3 +81,6 @@ class JobsHistory(models.Model):
         ]
         verbose_name = "Jobs History"
         verbose_name_plural = "Jobs History"
+
+    def __str__(self) -> str:
+        return self.uuid
