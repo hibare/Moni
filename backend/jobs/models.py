@@ -36,7 +36,7 @@ class Jobs(models.Model):
         models.PositiveIntegerField(), default=default_success_status)
     check_redirect = models.BooleanField(default=True)
     healthy = models.BooleanField(default=False)
-    favicon_url = models.URLField(null=True)
+    favicon_url = models.URLField(null=True, blank=True)
 
     tracker = FieldTracker()
 
@@ -67,10 +67,10 @@ class JobsHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     uuid = models.ForeignKey(
         Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE)
-    status_code = models.IntegerField(null=True)
+    status_code = models.IntegerField(null=True, blank=True)
     success = models.BooleanField()
-    response_time = models.FloatField(null=True)
-    error = models.TextField(null=True)
+    response_time = models.FloatField(null=True, blank=True)
+    error = models.TextField(null=True, blank=True)
 
     objects = JobsHistoryManager()
 

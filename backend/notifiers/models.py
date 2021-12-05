@@ -54,8 +54,8 @@ class NotifiersHistory(models.Model):
     uuid = models.ForeignKey(
         Notifiers, related_name="notifier_uuid", on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
-    status_code = models.IntegerField(null=True)
-    error = models.TextField(null=True)
+    status_code = models.IntegerField(null=True, blank=True)
+    error = models.TextField(null=True, blank=True)
 
     objects = NotifiersHistoryManager()
 
