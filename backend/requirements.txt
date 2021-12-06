@@ -38,7 +38,7 @@ drf-writable-nested==0.6.3
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
-markdown==3.3.4
+markdown==3.3.6
     # via -r requirements.in
 psycopg2-binary==2.9.2
     # via -r requirements.in
