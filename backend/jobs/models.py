@@ -35,7 +35,7 @@ class Jobs(models.Model):
     success_status = ArrayField(
         models.PositiveIntegerField(), default=default_success_status)
     check_redirect = models.BooleanField(default=True)
-    healthy = models.BooleanField(default=False)
+    healthy = models.BooleanField(default=True)
     favicon_url = models.URLField(null=True, blank=True)
 
     tracker = FieldTracker()
