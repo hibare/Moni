@@ -55,7 +55,7 @@
                 >mdi-circle-medium</v-icon
               >
             </v-card-title>
-            <v-card-text>{{ maskURL(item.url) }}</v-card-text>
+            <v-card-text class="text-truncate">{{ item.url }}</v-card-text>
           </v-card>
         </v-hover>
       </v-col>
@@ -76,7 +76,6 @@ export default {
     items: [1, 2, 3, 4, 5, 6, 7],
     jobs: [],
     jobLoader: false,
-    MAX_URL_CHARS: 45,
   }),
 
   created() {
@@ -99,12 +98,6 @@ export default {
 
     jobAddedEventHandler(data) {
       this.jobs.push(data);
-    },
-
-    maskURL(url) {
-      if (url.length >= this.MAX_URL_CHARS)
-        return url.slice(0, this.MAX_URL_CHARS) + "...";
-      return url;
     },
   },
 };
