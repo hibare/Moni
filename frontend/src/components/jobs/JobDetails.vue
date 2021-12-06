@@ -63,7 +63,7 @@
                   :disabled="reloadFaviconLoader"
                   @click="reloadFavicon"
                 >
-                  <v-icon>mdi-bullseye</v-icon>
+                  <v-icon>mdi-image-filter-hdr</v-icon>
                 </v-btn>
               </template>
               <span>Reload Favicon</span>
