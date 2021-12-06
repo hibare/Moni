@@ -5,17 +5,8 @@
         <job-add @jobAddedEvent="jobAddedEventHandler" />
       </v-col>
 
-      <v-col
-        v-if="jobs.length < 1"
-        align="center"
-        justify="center"
-        cols="12"
-        sm="4"
-        md="3"
-        lg="3"
-        class="mt-16"
-      >
-        <span><v-icon>mdi-memory</v-icon> No jobs found</span>
+      <v-col v-if="jobs.length < 1" cols="12" sm="2" md="2" lg="2" class="mt-1">
+        <v-alert type="info" text dense> No jobs found. </v-alert>
       </v-col>
 
       <v-col
