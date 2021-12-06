@@ -162,6 +162,10 @@
           </v-card-title>
         </v-card>
 
+        <v-row>
+          <job-response-chart :uuid="job.uuid" />
+        </v-row>
+
         <v-row align="center" class="mt-3">
           <job-created :created="job.created" />
           <job-modified :modified="job.updated" />
@@ -227,6 +231,7 @@ import JobResponse from "./JobResponse.vue";
 import JobNotifiers from "./JobNotifiers.vue";
 import JobHistory from "./JobHistory.vue";
 import JobEdit from "./JobEdit.vue";
+import JobResponseChart from "./JobResponseChart.vue";
 
 export default {
   name: "JobDetails",
@@ -239,6 +244,7 @@ export default {
     JobNotifiers,
     JobHistory,
     JobEdit,
+    JobResponseChart,
   },
 
   data: () => ({
