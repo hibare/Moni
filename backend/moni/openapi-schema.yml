@@ -546,6 +546,20 @@ paths:
           description: "Job history not found"
       tags:
         - Jobs History
+  /api/v1/jobs/status/:
+    get:
+      operationId: Jobs Status
+      description: "Return a flag indicating overall status of all jobs"
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobsStatus"
+          description: ""
+      tags:
+        - Jobs
   /api/v1/notifiers/:
     get:
       operationId: List Notifiers
@@ -1062,6 +1076,15 @@ components:
           readOnly: true
         error:
           type: string
+          readOnly: true
+    JobsStatus:
+      type: object
+      properties:
+        status:
+          type: boolean
+          readOnly: true
+        jobs:
+          type: boolean
           readOnly: true
     Notifiers:
       type: object

@@ -10,6 +10,13 @@
           <router-link :to="{ name: 'jobs' }" class="brand">{{
             getAppName()
           }}</router-link>
+
+          <v-icon v-if="jobsStatus.status" small class="mr-1" color="green"
+            >mdi-circle-medium</v-icon
+          >
+          <v-icon v-else small class="mr-1" color="red"
+            >mdi-circle-medium</v-icon
+          >
         </h2>
       </v-app-bar-title>
 
@@ -122,6 +129,10 @@ export default {
   data: () => ({
     drawer: false,
     group: null,
+    jobsStatus: {
+      status: null,
+      jobs: null,
+    },
   }),
 
   watch: {
@@ -140,7 +151,18 @@ export default {
     }),
   },
 
+  created() {
+    this.getJobsStatus();
+    setTimeout(this.getJobsStatus(), 300000);
+  },
+
   methods: {
+    getJobsStatus() {
+      this.$http.get("/api/v1/jobs/status/").then((result) => {
+        this.jobsStatus = result.data;
+      });
+    },
+
     logout() {
       this.$store.dispatch("auth/logout");
       this.$router.replace({ name: "login" });

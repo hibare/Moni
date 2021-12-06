@@ -7,7 +7,7 @@ from rest_framework import viewsets, mixins, generics, status
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from jobs.models import Jobs, JobsHistory
 from jobs.serializers import JobsSerializer, JobsHistorySerializer
 from moni.utils.favicon import Favicon
@@ -22,6 +22,25 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
     permission_classes = (IsAuthenticated,)
     serializer_class = JobsSerializer
     queryset = Jobs.objects.all()
+
+    @action(methods=['get'], detail=False, permission_classes=[AllowAny])
+    def status(self, request, **kwargs):
+        """
+        Return a flag indicating overall status of all jobs
+        Status=True indicates all jobs healthy
+        Status=False indicates one of the job is un-healthy
+        Jobs=int indicates no. of jobs having corresponding status.
+        """
+
+        if self.queryset.exists():
+            health = [job.healthy for job in self.queryset.all()]
+
+            if health.count(False):
+                return Response({"status": False, "jobs": health.count(False)}, status=status.HTTP_200_OK)
+            else:
+                return Response({"status": True, "jobs": health.count(True)}, status=status.HTTP_200_OK)
+        else:
+            return Response({"status": None, "jobs": None}, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
     def history(self, request, **kwargs):
