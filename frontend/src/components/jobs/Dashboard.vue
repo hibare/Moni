@@ -5,17 +5,8 @@
         <job-add @jobAddedEvent="jobAddedEventHandler" />
       </v-col>
 
-      <v-col
-        v-if="jobs.length < 1"
-        align="center"
-        justify="center"
-        cols="12"
-        sm="4"
-        md="3"
-        lg="3"
-        class="mt-16"
-      >
-        <span><v-icon>mdi-memory</v-icon> No jobs found</span>
+      <v-col v-if="jobs.length < 1" cols="12" sm="2" md="2" lg="2" class="mt-1">
+        <v-alert type="info" text dense> No jobs found. </v-alert>
       </v-col>
 
       <v-col
@@ -64,7 +55,7 @@
                 >mdi-circle-medium</v-icon
               >
             </v-card-title>
-            <v-card-text>{{ maskURL(item.url) }}</v-card-text>
+            <v-card-text class="text-truncate">{{ item.url }}</v-card-text>
           </v-card>
         </v-hover>
       </v-col>
@@ -85,11 +76,11 @@ export default {
     items: [1, 2, 3, 4, 5, 6, 7],
     jobs: [],
     jobLoader: false,
-    MAX_URL_CHARS: 45,
   }),
 
   created() {
     this.getJobs();
+    setTimeout(this.getJobs(), 300000);
   },
 
   methods: {
@@ -107,12 +98,6 @@ export default {
 
     jobAddedEventHandler(data) {
       this.jobs.push(data);
-    },
-
-    maskURL(url) {
-      if (url.length >= this.MAX_URL_CHARS)
-        return url.slice(0, this.MAX_URL_CHARS) + "...";
-      return url;
     },
   },
 };

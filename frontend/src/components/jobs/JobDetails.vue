@@ -5,144 +5,166 @@
       <v-col cols="12" sm="12" lg="12" md="12">
         <v-card elevation="1" color="background">
           <v-card-title>
-            <v-icon class="mr-2" v-if="job.favicon_url === null"
-              >mdi-web</v-icon
+            <v-col cols="12" sm="6" lg="6" md="6" class="py-0 px-0 px-sm-2">
+              <h3>
+                <v-icon class="mr-2" v-if="job.favicon_url === null"
+                  >mdi-web</v-icon
+                >
+                <img
+                  :src="job.favicon_url"
+                  alt=""
+                  height="24"
+                  width="24"
+                  class="mr-2 ma-0"
+                  v-else
+                />
+                {{ job.title }}
+                <v-chip
+                  close-icon="mdi-delete"
+                  x-small
+                  outlined
+                  v-if="!job.state"
+                  >Disabled</v-chip
+                >
+                <v-icon small class="mr-1" color="green" v-else-if="job.healthy"
+                  >mdi-circle-medium</v-icon
+                >
+                <v-icon small class="mr-1" color="red" v-else
+                  >mdi-circle-medium</v-icon
+                >
+              </h3>
+
+              <v-card-subtitle class="mt-2 mb-4">
+                <v-row class="text-truncate">{{ job.url }}</v-row>
+                <v-row class="subtitle mt-6">
+                  <span class="pr-3"
+                    ><v-icon small color="blue lighten-1" class="mr-1 pb-1"
+                      >mdi-update</v-icon
+                    >{{ job.interval }} Min.</span
+                  >
+                  <span class="pr-3"
+                    ><v-icon small color="yellow lighten-1" class="mr-1 pb-1"
+                      >mdi-format-list-checks</v-icon
+                    >{{ job.success_status.join(", ") }}</span
+                  >
+                  <span class="pr-2"
+                    ><v-icon
+                      v-if="job.verify_ssl"
+                      small
+                      color="green lighten-1"
+                      class="mr-1 pb-1"
+                      >mdi-shield</v-icon
+                    >
+                    <v-icon v-else small color="red lighten-1" class="mr-1 pb-1"
+                      >mdi-shield-alert</v-icon
+                    ></span
+                  >
+                  <span class="pr-3"
+                    ><v-icon
+                      v-if="job.check_redirect"
+                      small
+                      color="green lighten-1"
+                      class="mr-1 pb-1"
+                      >mdi-repeat</v-icon
+                    >
+                    <v-icon v-else small color="red lighten-1" class="mr-1 pb-1"
+                      >mdi-repeat-off</v-icon
+                    ></span
+                  >
+                </v-row>
+              </v-card-subtitle>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              lg="6"
+              md="6"
+              class="
+                py-0
+                px-0 px-sm-2
+                d-flex
+                justify-lg-end justify-sm-end justify-top
+              "
             >
-            <img
-              :src="job.favicon_url"
-              alt=""
-              height="24"
-              width="24"
-              class="mr-2"
-              v-else
-            />
-            <h3>
-              {{ job.title }}
-              <v-chip close-icon="mdi-delete" x-small outlined v-if="!job.state"
-                >Disabled</v-chip
-              >
-              <v-icon small class="mr-1" color="green" v-else-if="job.healthy"
-                >mdi-circle-medium</v-icon
-              >
-              <v-icon small class="mr-1" color="red" v-else
-                >mdi-circle-medium</v-icon
-              >
-            </h3>
-            <v-spacer></v-spacer>
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  color="amber accent-2"
-                  class="mx-5"
-                  v-bind="attrs"
-                  v-on="on"
-                  :loading="stateToggleLoader"
-                  :disabled="stateToggleLoader"
-                  @click="toggleJobState"
-                >
-                  <v-icon v-if="job.state">mdi-pause</v-icon>
-                  <v-icon v-else>mdi-play</v-icon>
-                </v-btn>
-              </template>
-              <span v-if="job.state">Pause Job</span>
-              <span v-else>Resume Job</span>
-            </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    x-small
+                    color="amber accent-2"
+                    class="mr-5"
+                    v-bind="attrs"
+                    v-on="on"
+                    :loading="stateToggleLoader"
+                    :disabled="stateToggleLoader"
+                    @click="toggleJobState"
+                  >
+                    <v-icon v-if="job.state">mdi-pause</v-icon>
+                    <v-icon v-else>mdi-play</v-icon>
+                  </v-btn>
+                </template>
+                <span v-if="job.state">Pause Job</span>
+                <span v-else>Resume Job</span>
+              </v-tooltip>
 
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  color="blue darken-1"
-                  class="mr-5"
-                  :loading="reloadFaviconLoader"
-                  :disabled="reloadFaviconLoader"
-                  @click="reloadFavicon"
-                >
-                  <v-icon>mdi-bullseye</v-icon>
-                </v-btn>
-              </template>
-              <span>Reload Favicon</span>
-            </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    x-small
+                    v-bind="attrs"
+                    v-on="on"
+                    color="blue darken-1"
+                    class="mr-5"
+                    :loading="reloadFaviconLoader"
+                    :disabled="reloadFaviconLoader"
+                    @click="reloadFavicon"
+                  >
+                    <v-icon>mdi-image-filter-hdr</v-icon>
+                  </v-btn>
+                </template>
+                <span>Reload Favicon</span>
+              </v-tooltip>
 
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  color="green darken-1"
-                  @click="openEditJobDialog"
-                >
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-              <span>Edit Job</span>
-            </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    x-small
+                    v-bind="attrs"
+                    v-on="on"
+                    color="green darken-1"
+                    @click="openEditJobDialog"
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+                <span>Edit Job</span>
+              </v-tooltip>
 
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  color="pink darken-1"
-                  class="mx-5"
-                  @click="openDeleteJobDialog"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-              <span>Delete Job</span>
-            </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    x-small
+                    v-bind="attrs"
+                    v-on="on"
+                    color="pink darken-1"
+                    class="mx-5"
+                    @click="openDeleteJobDialog"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+                <span>Delete Job</span>
+              </v-tooltip>
+            </v-col>
           </v-card-title>
-          <v-card-subtitle class="mt-2 mb-1 ml-4">
-            <v-row>{{ job.url }}</v-row>
-            <v-row class="subtitle mt-6">
-              <span class="pr-3"
-                ><v-icon small color="blue lighten-1" class="mr-1 pb-1"
-                  >mdi-update</v-icon
-                >{{ job.interval }} Min.</span
-              >
-              <span class="pr-3"
-                ><v-icon small color="yellow lighten-1" class="mr-1 pb-1"
-                  >mdi-format-list-checks</v-icon
-                >{{ job.success_status.join(", ") }}</span
-              >
-              <span class="pr-2"
-                ><v-icon
-                  v-if="job.verify_ssl"
-                  small
-                  color="green lighten-1"
-                  class="mr-1 pb-1"
-                  >mdi-shield</v-icon
-                >
-                <v-icon v-else small color="red lighten-1" class="mr-1 pb-1"
-                  >mdi-shield-alert</v-icon
-                ></span
-              >
-              <span class="pr-3"
-                ><v-icon
-                  v-if="job.check_redirect"
-                  small
-                  color="green lighten-1"
-                  class="mr-1 pb-1"
-                  >mdi-repeat</v-icon
-                >
-                <v-icon v-else small color="red lighten-1" class="mr-1 pb-1"
-                  >mdi-repeat-off</v-icon
-                ></span
-              >
-            </v-row>
-          </v-card-subtitle>
-          <v-card-text> </v-card-text>
         </v-card>
+
+        <v-row>
+          <job-response-chart :uuid="job.uuid" />
+        </v-row>
 
         <v-row align="center" class="mt-3">
           <job-created :created="job.created" />
@@ -209,6 +231,7 @@ import JobResponse from "./JobResponse.vue";
 import JobNotifiers from "./JobNotifiers.vue";
 import JobHistory from "./JobHistory.vue";
 import JobEdit from "./JobEdit.vue";
+import JobResponseChart from "./JobResponseChart.vue";
 
 export default {
   name: "JobDetails",
@@ -221,6 +244,7 @@ export default {
     JobNotifiers,
     JobHistory,
     JobEdit,
+    JobResponseChart,
   },
 
   data: () => ({
