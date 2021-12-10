@@ -6,15 +6,20 @@
 #
 --trusted-host pypi.org
 
-apscheduler==3.8.0
+apscheduler==3.8.1
     # via django-apscheduler
 asgiref==3.4.1
     # via django
+backports.zoneinfo==0.2.1
+    # via
+    #   django
+    #   pytz-deprecation-shim
+    #   tzlocal
 beautifulsoup4==4.10.0
     # via -r requirements.in
 dj-database-url==0.5.0
     # via -r requirements.in
-django==3.2.9
+django==4.0
     # via
     #   -r requirements.in
     #   django-apscheduler
@@ -38,32 +43,38 @@ drf-writable-nested==0.6.3
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
+importlib-metadata==4.8.2
+    # via markdown
 markdown==3.3.6
     # via -r requirements.in
 psycopg2-binary==2.9.2
     # via -r requirements.in
-pyjwt==2.1.0
+pyjwt==2.3.0
     # via djangorestframework-simplejwt
 python-decouple==3.5
     # via -r requirements.in
 pytz==2021.3
-    # via
-    #   apscheduler
-    #   django
+    # via apscheduler
+pytz-deprecation-shim==0.1.0.post0
+    # via tzlocal
 pyyaml==6.0
     # via -r requirements.in
 six==1.16.0
     # via apscheduler
-soupsieve==2.3
+soupsieve==2.3.1
     # via beautifulsoup4
 sqlparse==0.4.2
     # via django
-tzlocal==2.1
+tzdata==2021.5
+    # via pytz-deprecation-shim
+tzlocal==4.1
     # via apscheduler
 urllib3==1.26.7
     # via -r requirements.in
 whitenoise==5.3.0
     # via -r requirements.in
+zipp==3.6.0
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
