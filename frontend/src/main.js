@@ -10,8 +10,9 @@ import { EventBus } from '@/helpers/eventBus';
 
 axios.interceptors.request.use(
   request => {
+    const ignorePaths = ['/api/v1/jobs/status/']
 
-    if (request.url.startsWith('/api/v1/')) {
+    if (!ignorePaths.includes(request.url) && request.url.startsWith('/api/v1/')) {
       const token = store.getters['auth/getAccessToken'];
       request.headers.common["X-Access-Token"] = `JWT ${token}`;
     }
