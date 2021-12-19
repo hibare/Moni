@@ -57,6 +57,9 @@ axios.interceptors.response.use(
         case 403:
           data.status = 'failure'
           data.message = 'Forbidden'
+          if (error.config.method === "get") {
+            router.push({ name: 'login' })
+          }
           EventBus.$emit("showSnackbar", data);
           break;
 
