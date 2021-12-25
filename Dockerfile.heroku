@@ -1,1 +1,1 @@
-FROM hibare/moni:0.5.0
+FROM hibare/moni:latest
