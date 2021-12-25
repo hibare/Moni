@@ -1,7 +1,9 @@
 <template>
   <v-container fill-height fluid>
     <v-row align="center" justify="center">
-      <v-col cols="12" sm="12" lg="7" md="12" class=""> left </v-col>
+      <v-col cols="12" sm="12" lg="7" md="12" class="" align="center">
+        left
+      </v-col>
       <v-col cols="12" sm="12" lg="5" md="12" align="center" justify="center">
         <v-col sm="9" lg="9" md="9">
           <v-form
