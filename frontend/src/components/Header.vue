@@ -153,7 +153,7 @@ export default {
 
   created() {
     this.getJobsStatus();
-    setTimeout(this.getJobsStatus(), 300000);
+    setInterval(this.getJobsStatus(), 300000);
   },
 
   methods: {

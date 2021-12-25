@@ -80,7 +80,7 @@ export default {
 
   created() {
     this.getJobs();
-    setTimeout(this.getJobs(), 300000);
+    setInterval(this.getJobs(), 300000);
   },
 
   methods: {
