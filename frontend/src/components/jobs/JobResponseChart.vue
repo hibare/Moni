@@ -58,7 +58,8 @@ export default {
         .then((result) => {
           if (result.status === 200) {
             for (var item of result.data) {
-              this.values.push(item.response_time);
+              if (item.response_time !== null)
+                this.values.push(item.response_time);
             }
           }
         })
