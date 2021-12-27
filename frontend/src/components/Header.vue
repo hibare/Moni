@@ -139,6 +139,18 @@ export default {
     group() {
       this.drawer = false;
     },
+
+    jobsStatus(val) {
+      if (val.status === false) {
+        this.$notification.show(
+          "Service Down",
+          {
+            body: "One / More service(s) down",
+          },
+          {}
+        );
+      }
+    },
   },
 
   computed: {
@@ -153,11 +165,12 @@ export default {
 
   created() {
     this.getJobsStatus();
-    setInterval(this.getJobsStatus(), 300000);
+    setInterval(() => this.getJobsStatus(), 300000);
   },
 
   methods: {
     getJobsStatus() {
+      console.log("Calling");
       this.$http.get("/api/v1/jobs/status/").then((result) => {
         this.jobsStatus = result.data;
       });

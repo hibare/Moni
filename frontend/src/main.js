@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios';
+import VueNativeNotification from 'vue-native-notification'
 
 import App from '@/App.vue'
 import vuetify from '@/plugins/vuetify'
@@ -115,9 +116,18 @@ Vue.config.productionTip = true
 
 Vue.mixin(globalMixin);
 
+Vue.use(VueNativeNotification, {
+  // Automatic permission request before
+  // showing notification (default: true)
+  requestOnNotify: true
+})
+
 new Vue({
   router,
   store,
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+
+// Request notification permissions.
+Vue.notification.requestPermission()
