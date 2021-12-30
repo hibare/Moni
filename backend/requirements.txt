@@ -47,7 +47,7 @@ importlib-metadata==4.9.0
     # via markdown
 markdown==3.3.6
     # via -r requirements.in
-psycopg2-binary==2.9.2
+psycopg2-binary==2.9.3
     # via -r requirements.in
 pyjwt==2.3.0
     # via djangorestframework-simplejwt
