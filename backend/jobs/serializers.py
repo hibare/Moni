@@ -9,6 +9,16 @@ class JobsSerializer(serializers.ModelSerializer):
     notifiers = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Notifiers.objects.all())
 
+    def validate_failure_threshold(self, value):
+        """
+        failure_threshold should be always greater than 0.
+        """
+
+        if value <= 0:
+            raise serializers.ValidationError(
+                detail="Value must be greater than 0", code="failure_threshold")
+        return value
+
     class Meta:
         model = Jobs
         fields = '__all__'

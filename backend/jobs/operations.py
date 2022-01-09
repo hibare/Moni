@@ -71,6 +71,7 @@ def executor(id: str) -> None:
         success_status = job.success_status
         check_redirect = job.check_redirect
         notifiers = job.notifiers.all()
+        failure_threshold = job.failure_threshold
 
         status_code, response, elapsed_seconds, error = request(
             url, headers, verify_ssl, check_redirect)
@@ -80,11 +81,9 @@ def executor(id: str) -> None:
         logger.info("Response id=%s, url=%s, status_code=%s, elapsed_seconds=%s, success=%s, error=%s",
                     id, url, status_code, elapsed_seconds, success, error)
 
-        # Notify failure
-        if notifiers and not success:
-            for notifier in notifiers:
-                Notify.notify(notifier, title, url,
-                              success, success_status, status_code, error)
+        # Update job health status
+        job.healthy = success
+        job.save()
 
         # Record job execution history
         _ = JobsHistory.objects.create(
@@ -95,9 +94,15 @@ def executor(id: str) -> None:
             error=error
         )
 
-        # Update job health status
-        job.healthy = success
-        job.save()
+        # Notify failure
+        if notifiers and not success:
+            history_status = JobsHistory.objects.filter(uuid=id).order_by(
+                '-timestamp').values_list('success', flat=True)[:failure_threshold]
+
+            if len(history_status) >= failure_threshold and all(el == False for el in history_status):
+                for notifier in notifiers:
+                    Notify.notify(notifier, title, url,
+                                  success, success_status, status_code, error)
 
     except Exception:
         logger.exception("Failed to execute healthcheck, id=%s", id)

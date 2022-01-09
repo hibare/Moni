@@ -12,7 +12,7 @@ class JobsAdmin(admin.ModelAdmin):
 
     empty_value_display = '-empty-'
     list_display = ['uuid', 'url', 'title', 'healthy',
-                    'state', 'verify_ssl', 'interval', 'favicon_url', 'check_redirect', 'success_status', 'headers']
+                    'state', 'verify_ssl', 'interval', 'favicon_url', 'check_redirect', 'success_status', 'headers', 'failure_threshold']
     list_filter = ['state', 'verify_ssl',
                    'interval', 'healthy', 'check_redirect']
 

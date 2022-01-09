@@ -111,6 +111,18 @@
                     :rules="[(v) => !!v || 'Item is required']"
                   ></v-select>
                 </v-col>
+
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="jobItem.failure_threshold"
+                    label="Failure Threshold"
+                    required
+                    single-line
+                    min="1"
+                    :rules="numberRule"
+                  ></v-text-field>
+                </v-col>
+
                 <v-col cols="12" sm="12" md="4" lg="4">
                   <v-switch
                     v-model="jobItem.state"
@@ -254,6 +266,7 @@ export default {
       headers: {},
       notifiers: [],
       success_status: [200],
+      failure_threshold: 1,
     },
   }),
 
