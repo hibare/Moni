@@ -14,6 +14,14 @@ export default {
             (v) => /.+@.+\..+/.test(v) || "Invalid Email",
         ],
 
+        // Validate a number
+
+        numberRule: [
+            (v) => !!v || "Required",
+            (v) => Number.isInteger(Number(v)) || "Value must be a positive integer",
+            (v) => v > 0 || "Value must be greater than zero"
+        ],
+
         // Validate password
         emptyRule: [(v) => !!v || "Required"],
 

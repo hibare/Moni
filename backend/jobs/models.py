@@ -37,6 +37,7 @@ class Jobs(models.Model):
     check_redirect = models.BooleanField(default=True)
     healthy = models.BooleanField(default=True)
     favicon_url = models.URLField(null=True, blank=True)
+    failure_threshold = models.PositiveIntegerField(default=1)
 
     tracker = FieldTracker()
 
@@ -81,6 +82,3 @@ class JobsHistory(models.Model):
         ]
         verbose_name = "Jobs History"
         verbose_name_plural = "Jobs History"
-
-    def __str__(self) -> str:
-        return self.uuid
