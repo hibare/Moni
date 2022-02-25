@@ -20,3 +20,10 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "dev"
+
+  # Maintain version for npm or yarn
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "dev"
