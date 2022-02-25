@@ -2,14 +2,14 @@ version: 2
 updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directory: "/.github"
     schedule:
       interval: "daily"
     target-branch: "dev"
 
   # Maintain dependencies for Go mods
   - package-ecosystem: "pip"
-    directory: "/"
+    directory: "/backend"
     schedule:
       interval: "daily"
     target-branch: "dev"
@@ -23,7 +23,7 @@ updates:
 
   # Maintain version for npm or yarn
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/frontend"
     schedule:
       interval: "weekly"
     target-branch: "dev"
