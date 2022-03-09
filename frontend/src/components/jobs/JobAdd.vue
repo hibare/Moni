@@ -129,7 +129,6 @@
                     v-model="jobItem.failure_threshold"
                     label="Failure Threshold"
                     required
-                    single-line
                     min="1"
                     :rules="numberRule"
                   ></v-text-field>
