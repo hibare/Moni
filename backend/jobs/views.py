@@ -33,7 +33,7 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
         """
 
         if self.queryset.exists():
-            health = [job.healthy for job in self.queryset.all()]
+            health = [job.healthy for job in self.queryset.filter(state=True)]
 
             if health.count(False):
                 return Response({"status": False, "jobs": health.count(False)}, status=status.HTTP_200_OK)
