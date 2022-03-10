@@ -89,9 +89,15 @@ export default {
           })
           .catch((error) => {
             console.log(error);
+            EventBus.$emit("showSnackbar", {
+              status: "failure",
+              message: "Request Failed",
+            });
+          })
+          .finally(() => {
+            this.loginLoader = false;
           });
       }
-      this.loginLoader = false;
     },
     reset() {
       this.$refs.loginForm.reset();
