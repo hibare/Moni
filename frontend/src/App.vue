@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { EventBus } from "@/helpers/eventBus";
+import { EventBus } from "@/events/eventBus";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 

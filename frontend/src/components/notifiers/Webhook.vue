@@ -336,7 +336,7 @@
 <script>
 import dateMixin from "@/mixins/dateMixin";
 import rulesMixin from "@/mixins/rulesMixin";
-import { EventBus } from "@/helpers/eventBus";
+import { EventBus } from "@/events/eventBus";
 import NotifierJobsCount from "./utils/NotifierJobsCount.vue";
 import NotifierDelivery from "./utils/NotifierDelivery.vue";
 import NotifierCreated from "./utils/NotifierCreated.vue";

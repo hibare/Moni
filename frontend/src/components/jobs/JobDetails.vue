@@ -223,7 +223,7 @@
 
 <script>
 import Loader from "../Loader.vue";
-import { EventBus } from "@/helpers/eventBus";
+import { EventBus } from "@/events/eventBus";
 import JobCreated from "./JobCreated.vue";
 import JobModified from "./JobModified.vue";
 import JobUptime from "./JobUptime.vue";

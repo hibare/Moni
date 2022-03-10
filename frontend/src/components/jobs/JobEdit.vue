@@ -230,7 +230,7 @@
 
 <script>
 import rulesMixin from "@/mixins/rulesMixin";
-import { EventBus } from "@/helpers/eventBus";
+import { EventBus } from "@/events/eventBus";
 
 export default {
   name: "JobAdd",

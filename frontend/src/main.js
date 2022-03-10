@@ -7,7 +7,7 @@ import vuetify from '@/plugins/vuetify'
 import globalMixin from "@/mixins/globalMixin";
 import store from '@/store'
 import router from '@/router'
-import { EventBus } from '@/helpers/eventBus';
+import { EventBus } from '@/events/eventBus';
 
 axios.interceptors.request.use(
   request => {
