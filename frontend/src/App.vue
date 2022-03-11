@@ -24,7 +24,10 @@
           </v-btn>
         </template>
       </v-snackbar>
-      <router-view @showSnackbar="showSnackbar" />
+      <router-view
+        @showSnackbar="showSnackbarEvent"
+        @changeFavicon="changeFaviconEvent"
+      />
     </v-main>
     <Footer />
   </v-app>
@@ -50,10 +53,12 @@ export default {
       color: null,
       timeout: 5000,
     },
+    publicPath: process.env.BASE_URL,
   }),
 
   created() {
-    EventBus.$on("showSnackbar", this.showSnackbar);
+    EventBus.$on("showSnackbar", this.showSnackbarEvent);
+    EventBus.$on("changeFavicon", this.changeFaviconEvent);
     this.setGitData();
   },
 
@@ -71,7 +76,7 @@ export default {
   },
 
   methods: {
-    showSnackbar(data) {
+    showSnackbarEvent(data) {
       var colors = {
         success: "green",
         failure: "pink darken-1",
@@ -80,6 +85,15 @@ export default {
       this.snackbar.status = true;
       this.snackbar.message = data.message;
       this.snackbar.color = colors[data.status];
+    },
+
+    changeFaviconEvent(type) {
+      var types = {
+        normal: "favicon.ico",
+        issue: "favicon-fail.ico",
+      };
+      const favicon = document.getElementById("favicon");
+      favicon.href = this.publicPath + types[type];
     },
   },
 };

@@ -122,6 +122,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { EventBus } from "@/events/eventBus";
 
 export default {
   name: "Header",
@@ -149,6 +150,9 @@ export default {
           },
           {}
         );
+        EventBus.$emit("changeFavicon", "issue");
+      } else {
+        EventBus.$emit("changeFavicon", "normal");
       }
     },
   },
