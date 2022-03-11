@@ -174,7 +174,6 @@ export default {
 
   methods: {
     getJobsStatus() {
-      console.log("Calling");
       this.$http.get("/api/v1/jobs/status/").then((result) => {
         this.jobsStatus = result.data;
       });
