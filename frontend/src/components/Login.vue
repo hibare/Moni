@@ -1,18 +1,21 @@
 <template>
   <v-container fill-height fluid>
     <v-row align="center" justify="center">
-      <v-col cols="12" sm="12" lg="7" md="12" class="" align="center">
-        left
-      </v-col>
       <v-col cols="12" sm="12" lg="5" md="12" align="center" justify="center">
         <v-col sm="9" lg="9" md="9">
+          <h1 align="center" justify="center" class="mr-8">
+            <img src="/favicon.ico" height="40px" width="80px" />
+            <span style="padding: 0 0 0 10px" class="brand">{{
+              getAppName()
+            }}</span>
+          </h1>
           <v-form
             ref="loginForm"
             @submit.prevent="login"
             v-model="loginFormValid"
             lazy-validation
+            class="mt-8"
           >
-            <h2>Jump-in</h2>
             <v-text-field
               v-model="username"
               :rules="nameRules"
@@ -42,7 +45,7 @@
               :loading="loginLoader"
               :disabled="!loginFormValid"
             >
-              Jump
+              Login
             </v-btn>
           </v-form>
         </v-col>
@@ -78,10 +81,6 @@ export default {
           .then((response) => {
             if (response.status === 200) {
               this.$store.dispatch("auth/login", response.data);
-              EventBus.$emit("showSnackbar", {
-                status: "success",
-                message: "Logged in",
-              });
               this.reset();
               this.resetValidation();
               this.$router.push("jobs");

@@ -5,11 +5,16 @@
         @click.stop="drawer = !drawer"
         v-if="isLoggedin"
       ></v-app-bar-nav-icon>
-      <v-app-bar-title color="primary" class="font-weight-medium">
+      <v-app-bar-title
+        color="primary"
+        class="font-weight-medium"
+        v-if="isLoggedin"
+      >
         <h2>
-          <router-link :to="{ name: 'jobs' }" class="brand">{{
-            getAppName()
-          }}</router-link>
+          <router-link :to="{ name: 'jobs' }" class="brand"
+            ><img src="/favicon.ico" height="25px" width="50px" />
+            {{ getAppName() }}</router-link
+          >
 
           <v-icon v-if="jobsStatus.status" small class="mr-1" color="green"
             >mdi-circle-medium</v-icon
@@ -122,7 +127,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { EventBus } from "@/events/eventBus";
 
 export default {
   name: "Header",
@@ -150,9 +154,6 @@ export default {
           },
           {}
         );
-        EventBus.$emit("changeFavicon", "issue");
-      } else {
-        EventBus.$emit("changeFavicon", "normal");
       }
     },
   },

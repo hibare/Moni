@@ -24,10 +24,7 @@
           </v-btn>
         </template>
       </v-snackbar>
-      <router-view
-        @showSnackbar="showSnackbarEvent"
-        @changeFavicon="changeFaviconEvent"
-      />
+      <router-view @showSnackbar="showSnackbarEvent" />
     </v-main>
     <Footer />
   </v-app>
@@ -58,7 +55,6 @@ export default {
 
   created() {
     EventBus.$on("showSnackbar", this.showSnackbarEvent);
-    EventBus.$on("changeFavicon", this.changeFaviconEvent);
     this.setGitData();
   },
 
@@ -86,15 +82,6 @@ export default {
       this.snackbar.message = data.message;
       this.snackbar.color = colors[data.status];
     },
-
-    changeFaviconEvent(type) {
-      var types = {
-        normal: "favicon.ico",
-        issue: "favicon-fail.ico",
-      };
-      const favicon = document.getElementById("favicon");
-      favicon.href = this.publicPath + types[type];
-    },
   },
 };
 </script>
@@ -106,5 +93,22 @@ export default {
 
 .icon-cursor {
   cursor: pointer;
+}
+
+@font-face {
+  font-family: "Merienda-Regular";
+  src: local("Merienda"),
+    url(./assets/fonts/Merienda/Merienda-Regular.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Merienda-Bold";
+  src: local("Merienda"),
+    url(./assets/fonts/Merienda/Merienda-Bold.ttf) format("truetype");
+}
+
+.brand {
+  text-decoration: none;
+  color: inherit;
+  font-family: Merienda-Bold;
 }
 </style>

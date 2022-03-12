@@ -25,10 +25,6 @@ urlpatterns = [
         url='/static/img/favicon.ico',
         permanent=True
     ), name='favicon'),
-    path('favicon-fail.ico/', RedirectView.as_view(
-        url='/static/img/favicon-fail.ico',
-        permanent=True
-    ), name='favicon'),
     path('admin/', admin.site.urls),
     path('__version/', version_v, name='version'),
     path('__health/', health_v, name='health'),
