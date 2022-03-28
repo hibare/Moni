@@ -1,4 +1,4 @@
-FROM python:3.10.2-slim as base
+FROM python:3.10.4-slim as base
 
 LABEL Github="hibare"
 
