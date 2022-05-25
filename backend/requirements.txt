@@ -40,7 +40,7 @@ markdown==3.3.6
     # via -r requirements.in
 psycopg2-binary==2.9.3
     # via -r requirements.in
-pyjwt==2.3.0
+pyjwt==2.4.0
     # via djangorestframework-simplejwt
 python-decouple==3.6
     # via -r requirements.in
