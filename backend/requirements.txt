@@ -62,7 +62,7 @@ tzdata==2021.5
     # via pytz-deprecation-shim
 tzlocal==4.1
     # via apscheduler
-urllib3==1.26.8
+urllib3==1.26.12
     # via -r requirements.in
 whitenoise==6.0.0
     # via -r requirements.in
