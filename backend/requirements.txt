@@ -32,7 +32,7 @@ djangorestframework==3.13.1
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==5.1.0
     # via -r requirements.in
-drf-writable-nested==0.6.3
+drf-writable-nested==0.7.0
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
