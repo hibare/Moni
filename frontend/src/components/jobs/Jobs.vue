@@ -1,10 +1,6 @@
 <template>
   <v-container fluid>
     <v-row v-if="!jobLoader" align="center" justify="center" dense class="">
-      <v-col cols="12" sm="12" md="12" lg="12">
-        <job-add @jobAddedEvent="jobAddedEventHandler" />
-      </v-col>
-
       <v-col v-if="jobs.length < 1" cols="12" sm="2" md="2" lg="2" class="mt-1">
         <v-alert type="info" text dense> No jobs found. </v-alert>
       </v-col>
@@ -67,9 +63,10 @@
 
 <script>
 import Loader from "../Loader.vue";
-import JobAdd from "./JobAdd.vue";
+import { EventBus } from "@/events/eventBus";
+
 export default {
-  components: { JobAdd, Loader },
+  components: { Loader },
   name: "JobsDashboard",
 
   data: () => ({
@@ -79,8 +76,9 @@ export default {
   }),
 
   created() {
+    EventBus.$on("jobAddedEvent", this.jobAddedEventHandler);
+    EventBus.$on("loadStatusEvent", this.getJobs);
     this.getJobs();
-    setInterval(this.getJobs(), 300000);
   },
 
   methods: {

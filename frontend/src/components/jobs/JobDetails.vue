@@ -134,7 +134,7 @@
                     v-bind="attrs"
                     v-on="on"
                     color="green darken-1"
-                    @click="openEditJobDialog"
+                    @click="editJobDialog = true"
                   >
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
@@ -176,12 +176,7 @@
         <v-row>
           <job-notifiers :uuids="job.notifiers" />
           <job-history :uuid="job.uuid" />
-          <job-edit
-            @jobEditEvent="jobEditEventHandler"
-            @jobEditClose="closeEditJobDialog"
-            :editJobDialog="editJobDialog"
-            :job="job"
-          />
+          <job-add-update :jobDialog.sync="editJobDialog" :job="job" />
         </v-row>
       </v-col>
     </v-row>
@@ -230,7 +225,7 @@ import JobUptime from "./JobUptime.vue";
 import JobResponse from "./JobResponse.vue";
 import JobNotifiers from "./JobNotifiers.vue";
 import JobHistory from "./JobHistory.vue";
-import JobEdit from "./JobEdit.vue";
+import JobAddUpdate from "./JobAddUpdate.vue";
 import JobResponseChart from "./JobResponseChart.vue";
 
 export default {
@@ -243,7 +238,7 @@ export default {
     JobResponse,
     JobNotifiers,
     JobHistory,
-    JobEdit,
+    JobAddUpdate,
     JobResponseChart,
   },
 
@@ -262,6 +257,7 @@ export default {
   created() {
     const uuid = this.$route.params.uuid;
     this.getJob(uuid);
+    EventBus.$on("jobEditEvent", this.jobEditEventHandler);
   },
 
   methods: {
@@ -335,17 +331,8 @@ export default {
       this.deleteJobDialog = false;
     },
 
-    openEditJobDialog() {
-      this.editJobDialog = true;
-    },
-
-    closeEditJobDialog() {
-      this.editJobDialog = false;
-    },
-
-    jobEditEventHandler() {
-      this.getJob(this.job.uuid);
-      this.closeEditJobDialog();
+    jobEditEventHandler(data) {
+      this.job = data;
     },
   },
 };

@@ -44,7 +44,6 @@ export default {
   watch: {
     uuids() {
       this.getJobNotifiers();
-      console.log(this.uuids);
     },
   },
   created() {
