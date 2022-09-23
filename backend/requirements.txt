@@ -10,11 +10,12 @@ asgiref==3.4.1
     # via django
 beautifulsoup4==4.10.0
     # via -r requirements.in
-dj-database-url==0.5.0
+dj-database-url==1.0.0
     # via -r requirements.in
 django==4.0.7
     # via
     #   -r requirements.in
+    #   dj-database-url
     #   django-apscheduler
     #   django-filter
     #   django-model-utils
@@ -26,17 +27,17 @@ django-filter==21.1
     # via -r requirements.in
 django-model-utils==4.2.0
     # via -r requirements.in
-djangorestframework==3.13.1
+djangorestframework==3.14.0
     # via
     #   -r requirements.in
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==5.1.0
     # via -r requirements.in
-drf-writable-nested==0.6.3
+drf-writable-nested==0.7.0
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
-markdown==3.3.6
+markdown==3.4.1
     # via -r requirements.in
 psycopg2-binary==2.9.3
     # via -r requirements.in
@@ -62,7 +63,7 @@ tzdata==2021.5
     # via pytz-deprecation-shim
 tzlocal==4.1
     # via apscheduler
-urllib3==1.26.8
+urllib3==1.26.12
     # via -r requirements.in
 whitenoise==6.0.0
     # via -r requirements.in
