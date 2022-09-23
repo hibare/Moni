@@ -26,7 +26,7 @@ django-filter==21.1
     # via -r requirements.in
 django-model-utils==4.2.0
     # via -r requirements.in
-djangorestframework==3.13.1
+djangorestframework==3.14.0
     # via
     #   -r requirements.in
     #   djangorestframework-simplejwt
