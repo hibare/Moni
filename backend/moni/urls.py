@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from .views import index_v, health_v, version_v, OpenAPISchemaView, ReDocView, SwaggerUIView
 

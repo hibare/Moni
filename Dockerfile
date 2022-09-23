@@ -61,7 +61,7 @@ COPY --from=frontend --chown=${USER}:${USER} /frontend/dist/static ${APP_DIR}/mo
 COPY --from=frontend --chown=${USER}:${USER} /frontend/dist/*.html ${APP_DIR}/moni/assets/templates
 
 # Copy favicon
-COPY --from=frontend --chown=${USER}:${USER} /frontend/dist/favicon.ico ${APP_DIR}/moni/assets/static/img/
+COPY --from=frontend --chown=${USER}:${USER} /frontend/dist/favicon*.ico ${APP_DIR}/moni/assets/static/img/
 
 RUN python manage.py collectstatic --no-input
 

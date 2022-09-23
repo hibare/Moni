@@ -24,14 +24,14 @@
           </v-btn>
         </template>
       </v-snackbar>
-      <router-view @showSnackbar="showSnackbar" />
+      <router-view @showSnackbar="showSnackbarEvent" />
     </v-main>
     <Footer />
   </v-app>
 </template>
 
 <script>
-import { EventBus } from "@/helpers/eventBus";
+import { EventBus } from "@/events/eventBus";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 
@@ -50,10 +50,11 @@ export default {
       color: null,
       timeout: 5000,
     },
+    publicPath: process.env.BASE_URL,
   }),
 
   created() {
-    EventBus.$on("showSnackbar", this.showSnackbar);
+    EventBus.$on("showSnackbar", this.showSnackbarEvent);
     this.setGitData();
   },
 
@@ -71,7 +72,7 @@ export default {
   },
 
   methods: {
-    showSnackbar(data) {
+    showSnackbarEvent(data) {
       var colors = {
         success: "green",
         failure: "pink darken-1",
@@ -92,5 +93,22 @@ export default {
 
 .icon-cursor {
   cursor: pointer;
+}
+
+@font-face {
+  font-family: "Merienda-Regular";
+  src: local("Merienda"),
+    url(./assets/fonts/Merienda/Merienda-Regular.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Merienda-Bold";
+  src: local("Merienda"),
+    url(./assets/fonts/Merienda/Merienda-Bold.ttf) format("truetype");
+}
+
+.brand {
+  text-decoration: none;
+  color: inherit;
+  font-family: Merienda-Bold;
 }
 </style>
