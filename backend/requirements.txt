@@ -31,7 +31,7 @@ djangorestframework==3.14.0
     # via
     #   -r requirements.in
     #   djangorestframework-simplejwt
-djangorestframework-simplejwt==5.1.0
+djangorestframework-simplejwt==5.2.1
     # via -r requirements.in
 drf-writable-nested==0.7.0
     # via -r requirements.in
