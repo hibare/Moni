@@ -23,10 +23,8 @@ pyparsing==3.0.9
 toml==0.10.2
     # via autopep8
 tomli==2.0.0
-    # via
-    #   build
-    #   pep517
-wheel==0.37.0
+    # via pep517
+wheel==0.38.1
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
