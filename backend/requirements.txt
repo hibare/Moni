@@ -43,7 +43,7 @@ psycopg2-binary==2.9.5
     # via -r requirements.in
 pyjwt==2.3.0
     # via djangorestframework-simplejwt
-python-decouple==3.6
+python-decouple==3.7
     # via -r requirements.in
 pytz==2021.3
     # via
