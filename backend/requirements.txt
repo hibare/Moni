@@ -12,7 +12,7 @@ beautifulsoup4==4.10.0
     # via -r requirements.in
 dj-database-url==1.2.0
     # via -r requirements.in
-django==4.0.8
+django==4.0.9
     # via
     #   -r requirements.in
     #   dj-database-url
