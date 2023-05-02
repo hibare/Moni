@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Create scheduler to run in a thread inside the application process
 scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
+scheduler._job_defaults['misfire_grace_time'] = 60
 
 
 def test_job():
