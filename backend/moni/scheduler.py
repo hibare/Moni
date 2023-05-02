@@ -11,9 +11,15 @@ from notifiers.models import NotifiersHistory
 
 logger = logging.getLogger(__name__)
 
+jobDefaults = {
+    'coalesce': True,
+    'max_instances': 5,
+    'misfire_grace_time': 15*60
+}
+
 # Create scheduler to run in a thread inside the application process
-scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-scheduler._job_defaults['misfire_grace_time'] = 180
+scheduler = BackgroundScheduler(
+    settings.SCHEDULER_CONFIG, job_defaults=jobDefaults)
 
 
 def test_job():
