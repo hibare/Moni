@@ -41,14 +41,14 @@ def job_post_save(sender, instance, created, **kwargs):
         JobOps.run(instance.uuid)
 
 
-@ receiver(post_delete, sender=Jobs)
+@receiver(post_delete, sender=Jobs)
 def job_post_delete(sender, instance, **kwargs):
     """Delete scheduled job when the job record is deleted"""
 
     JobOps.remove(instance.uuid)
 
 
-@ receiver(post_save, sender=DjangoJobExecution)
+@receiver(post_save, sender=DjangoJobExecution)
 def delete_execution_record(sender, instance, created, **kwargs):
     """
     Django APScheduler stores execution reccords in DB. As app is storing custom execution records, this is no longer needed.
