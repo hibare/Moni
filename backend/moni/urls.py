@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/v1/accounts/', include('accounts.urls')),
     path('api/v1/jobs/', include('jobs.urls')),
     path('api/v1/notifiers/', include('notifiers.urls')),
+    path('api/v1/admin/', include('controller.urls')),
     path('openapi/', OpenAPISchemaView.as_view(), name='openapi-schema'),
     path('redoc/', ReDocView.as_view(), name='redoc'),
     path('swagger/', SwaggerUIView.as_view(), name='swagger-ui'),

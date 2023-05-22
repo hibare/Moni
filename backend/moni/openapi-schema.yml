@@ -9,6 +9,8 @@ info:
     name: MIT
     url: https://github.com/hibare/Moni/blob/master/LICENSE
 tags:
+  - name: Admin
+    description: Admin APIs.
   - name: Accounts
     description: API's to manage user details.
   - name: Token
@@ -26,6 +28,47 @@ tags:
   - name: Notifiers History
     description: API to manage notifiers history.
 paths:
+  /api/v1/admin/jobs/misfire/gracetime/:
+    post:
+      operationId: Update jobs misfire gracetime
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+      - Admin
+  /api/v1/admin/jobs/misfire/gracetime/{uuid}/:
+    post:
+      operationId: Update a job misfire gracetime
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: 'Job UUID'
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/JobsMisfireGraceTime"
+          description: ''
+      tags:
+      - Admin
   /api/v1/accounts/:
     get:
       operationId: Get User
@@ -898,6 +941,12 @@ components:
       scheme: bearer
       description: API uses bearer authentication mechanism
   schemas:
+    JobsMisfireGraceTime:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
     Accounts:
       type: object
       properties:
