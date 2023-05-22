@@ -56,6 +56,22 @@ services:
     ports:
       - 127.0.0.1:8082:80
 
+  api:
+    image: python:3.11.2
+    command: >
+        bash -c "pip install -r requirements.txt -r dev-requirements.txt
+        && python manage.py runserver 0.0.0.0:5000"
+    working_dir: /app
+    container_name: api
+    hostname: api
+    user: ${HOST_UID}:${HOST_GID}
+    env_file:
+      - .env
+    ports:
+      - 127.0.0.1:5000:5000
+    volumes:
+      - ./backend:/app
+    
   moni:
     build: .
     container_name: moni
