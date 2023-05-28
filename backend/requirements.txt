@@ -51,6 +51,8 @@ pytz==2023.3
     # via
     #   apscheduler
     #   djangorestframework
+pytz-deprecation-shim==0.1.0.post0
+    # via -r requirements.in
 pyyaml==6.0
     # via -r requirements.in
 six==1.16.0
@@ -63,6 +65,8 @@ typing-extensions==4.6.2
     # via
     #   asgiref
     #   dj-database-url
+tzdata==2023.3
+    # via pytz-deprecation-shim
 tzlocal==5.0.1
     # via apscheduler
 urllib3==2.0.2
