@@ -68,4 +68,4 @@ class NotifiersHistory(models.Model):
         verbose_name_plural = "Notifiers History"
 
     def __str__(self) -> str:
-        return self.uuid
+        return self.uuid.uuid

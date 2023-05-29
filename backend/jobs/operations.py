@@ -14,7 +14,7 @@ from notifiers.services.notify import Notify
 logger = logging.getLogger(__name__)
 
 
-def request(url: str, headers: Dict = None, verify_ssl: bool = True, check_redirect: bool = False) -> Tuple[Union[int, None], Union[str, None], Union[float, None]]:
+def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirect: bool = False) -> Tuple[Union[int, None], Union[bytes, None], Union[float, None], Union[str, None]]:
     """
     HTTP Request executor
 
@@ -25,7 +25,7 @@ def request(url: str, headers: Dict = None, verify_ssl: bool = True, check_redir
         "Cache-Control": "no-cache"
     }
 
-    if headers is None:
+    if not headers:
         headers = {}
 
     headers.update(DEFAULT_HEADERS)
@@ -194,7 +194,10 @@ class JobOps:
         """Run a job now"""
 
         try:
-            scheduler.get_job(job_id=id).modify(
-                next_run_time=datetime.datetime.now())
+            job = scheduler.get_job(job_id=id)
+
+            if job is not None:
+                job.modify(
+                    next_run_time=datetime.datetime.now())
         except Exception:
             logger.exception("Failed to run job, id=%s", id)

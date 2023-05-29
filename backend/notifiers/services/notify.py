@@ -24,7 +24,7 @@ class Notify:
     }
 
     @staticmethod
-    def notify(notification_obj: Notifiers, title: str, url: str, success: bool, success_status: List, status_code: int, error: str = None):
+    def notify(notification_obj: Notifiers, title: str, url: str, success: bool, success_status: List, status_code: int | None, error: str | None = None):
         """Prepare & send notifier"""
 
         notifier = Notify.NOTIFIERS.get(notification_obj.type, None)
@@ -39,6 +39,7 @@ class Notify:
 
         notify.prep_payload(title, url, success,
                             success_status, status_code, error)
+
         n_status, n_status_code, n_error = notify.send(
             notification_obj.url)
 
