@@ -222,6 +222,12 @@ SCHEDULER_CONFIG = {
     },
 }
 SCHEDULER_AUTOSTART = True
+SCHEDULER_JOB_MISFIRE_GRACETIME = config(
+    'SCHEDULER_JOB_MISFIRE_GRACETIME', default=60, cast=int)
+SCHEDULER_JOB_MAX_INSTANCES = config(
+    'SCHEDULER_JOB_MAX_INSTANCES', default=1, cast=int)
+SCHEDULER_JOB_REPLACE_EXISTING = config(
+    'SCHEDULER_JOB_REPLACE_EXISTING', default=True, cast=bool)
 
 # App info
 VERSION = get_version()

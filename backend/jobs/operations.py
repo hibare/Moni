@@ -6,6 +6,7 @@ import ssl
 import logging
 from typing import Dict, Tuple, Union
 import urllib3
+from moni import settings
 from moni.scheduler import scheduler
 from jobs.models import Jobs, JobsHistory
 from notifiers.services.notify import Notify
@@ -128,7 +129,9 @@ class JobOps:
                 "interval",
                 id=id,
                 minutes=interval,
-                args=[id]
+                args=[id],
+                max_instances=settings.SCHEDULER_JOB_MAX_INSTANCES,
+                misfire_grace_time=settings.SCHEDULER_JOB_MISFIRE_GRACETIME
             )
             logger.info("Job added, id=%s", id)
             return True
