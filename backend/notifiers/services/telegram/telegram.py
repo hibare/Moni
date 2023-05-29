@@ -2,7 +2,7 @@
 
 import logging
 import json
-from typing import List
+from typing import List, Tuple
 from django.conf import settings
 from moni.utils.requests_proxy import requests_post
 from moni.utils.urls import parse_url
@@ -27,7 +27,7 @@ class Telegram(NotifierService):
         self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / \
             "notifiers/services/telegram/template_service_up.html"
 
-    def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str = None) -> None:
+    def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str | None = None) -> None:
         TEMPLATE = self.SERVICE_UP_TEMPLATE if success else self.SERVICE_DOWN_TEMPLATE
 
         with open(TEMPLATE) as ft:
@@ -38,7 +38,7 @@ class Telegram(NotifierService):
 
         self.payload['text'] = template_data
 
-    def send(self, webhook: str) -> bool:
+    def send(self, webhook: str) -> Tuple[bool, int | None, str | None]:
         try:
             url_obj = parse_url(webhook)
             chat_id = url_obj.QUERY.get('chat_id')

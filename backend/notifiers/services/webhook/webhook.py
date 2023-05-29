@@ -1,7 +1,7 @@
 """Webhook notification service"""
 
 import logging
-from typing import List
+from typing import List, Tuple
 import json
 from moni.utils.requests_proxy import requests_post
 from notifiers.services import NotifierService
@@ -21,7 +21,7 @@ class Webhook(NotifierService):
             "Content-type": "application/json"
         }
 
-    def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str = None) -> None:
+    def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str | None = None) -> None:
         payload = {
             "title": title,
             "health_check_url": health_check_url,
@@ -33,7 +33,7 @@ class Webhook(NotifierService):
 
         self.payload = json.dumps(payload).encode("utf-8")
 
-    def send(self, webhook: str) -> bool:
+    def send(self, webhook: str) -> Tuple[bool, int | None, str | None]:
         try:
             response = requests_post(webhook, self.payload, self.HEADERS)
             logger.info("Response from webhook, status_code=%s, response=%s",

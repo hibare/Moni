@@ -4,6 +4,7 @@ Find favicon/icon link of a web service
 
 import logging
 from time import time
+from typing import Union
 import urllib3
 import bs4
 from urllib.parse import urljoin, urlparse, urlunparse
@@ -19,7 +20,7 @@ class Favicon:
     DEFAULT_FAVICON_PATH = '/favicon.ico'
 
     @staticmethod
-    def get_favicon_url(url: str) -> str:
+    def get_favicon_url(url: str) -> Union[str, None]:
         """Find & return favicon URL"""
 
         try:
@@ -55,6 +56,7 @@ class Favicon:
             logger.exception("URL=%s", url)
             return None
 
+    @staticmethod
     def validate_url(url: str) -> bool:
         """
         Check if URL is live & rechable

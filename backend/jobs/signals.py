@@ -5,7 +5,7 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django_apscheduler.models import DjangoJobExecution
 from jobs.models import Jobs
-from jobs.operations import JobOps, executor
+from jobs.operations import JobOps
 from moni.utils.favicon import Favicon
 
 logger = logging.getLogger(__name__)
