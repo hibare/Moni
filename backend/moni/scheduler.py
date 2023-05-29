@@ -11,15 +11,8 @@ from notifiers.models import NotifiersHistory
 
 logger = logging.getLogger(__name__)
 
-jobDefaults = {
-    'coalesce': True,
-    'max_instances': 5,
-    'misfire_grace_time': 15*60
-}
-
 # Create scheduler to run in a thread inside the application process
-scheduler = BackgroundScheduler(
-    settings.SCHEDULER_CONFIG, job_defaults=jobDefaults)
+scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
 
 
 def delete_old_job_executions(max_age=604_800):
