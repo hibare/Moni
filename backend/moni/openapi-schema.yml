@@ -603,6 +603,28 @@ paths:
           description: ""
       tags:
         - Jobs
+  /api/v1/jobs/{uuid}/notifiers/:
+    get:
+      operationId: Job Notifiers
+      description: Job Notifiers
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A unique value identifying this Jobs.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notifiers"
+          description: ''
+      tags:
+      - Jobs
   /api/v1/notifiers/:
     get:
       operationId: List Notifiers
@@ -1046,6 +1068,12 @@ components:
         uuid:
           type: string
           readOnly: true
+        created:
+          type: string
+          maxLength: 50
+        updated:
+          type: string
+          maxLength: 50
         url:
           type: string
           format: uri
@@ -1141,6 +1169,12 @@ components:
         uuid:
           type: string
           readOnly: true
+        created:
+          type: string
+          maxLength: 50
+        updated:
+          type: string
+          maxLength: 50
         url:
           type: string
           format: uri
@@ -1159,6 +1193,9 @@ components:
             - webhook
             - gotify
           type: string
+        title:
+          type: string
+          maxLength: 50
         description:
           type: string
       required:
