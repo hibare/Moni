@@ -65,9 +65,8 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
 
         if queryset.exists():
             queryset.delete()
-            return Response({"detail": "Job history deleted"}, status=status.HTTP_204_NO_CONTENT)
-        else:
-            raise NotFound()
+
+        return Response({"detail": "Job history deleted"}, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def pause(self, request, **kwargs):
