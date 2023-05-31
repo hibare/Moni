@@ -1,5 +1,6 @@
 """Job Operations"""
 
+import copy
 import time
 import datetime
 import ssl
@@ -28,7 +29,8 @@ def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirec
     if not headers:
         headers = {}
 
-    headers.update(DEFAULT_HEADERS)
+    request_headers = copy.deepcopy(headers)
+    request_headers.update(DEFAULT_HEADERS)
 
     try:
         if verify_ssl:
@@ -42,7 +44,7 @@ def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirec
         response = http.request(
             'GET',
             url,
-            headers=headers,
+            headers=request_headers,
             timeout=10,
             redirect=not check_redirect
         )
