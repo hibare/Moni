@@ -1,28 +1,30 @@
 <template>
-  <v-col cols="12" sm="3" lg="3" md="3" class="center">
-    <v-card elevation="1" color="transparent">
-      <v-card-subtitle>Created On</v-card-subtitle>
-      <v-card-text class="justify-center">
-        <h3>
-          {{ getPrettyDate(created) }}
-        </h3>
-      </v-card-text>
-    </v-card>
-  </v-col>
+    <q-card class="notifier-metric-card">
+        <q-inner-loading showing v-if="notifierLoading">
+            <q-spinner-puff size="50px" color="primary" />
+        </q-inner-loading>
+        <q-card-section>
+            <div class="text-weight-medium"><q-icon name="calendar_month" size="xs" class="q-mr-xs" />Created
+                on</div>
+            <div class="q-mt-md card-title">{{ prettyDate(notifier?.created) }}</div>
+        </q-card-section>
+    </q-card>
 </template>
 
-<script>
-import dateMixin from "@/mixins/dateMixin";
+<script setup lang="ts">
+import { computed } from 'vue';
+import { NotifierType } from '../../types';
+import { useNotifierStore } from '../../store';
+import { prettyDate } from '../../utils/utils';
 
-export default {
-  name: "NotifierCreated",
-  mixins: [dateMixin],
-  props: {
-    created: String,
-  },
-  data: () => ({}),
-};
+const notifierStore = useNotifierStore()
+
+const notifier = computed((): NotifierType => {
+    return notifierStore.getNotifier as NotifierType
+})
+
+const notifierLoading = computed((): boolean => {
+    return notifierStore.getNotifierLoading
+})
+
 </script>
-
-<style>
-</style>

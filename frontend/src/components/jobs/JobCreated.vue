@@ -1,30 +1,29 @@
 <template>
-  <v-col cols="12" sm="3" lg="3" md="3" class="center">
-    <v-card elevation="1" color="transparent">
-      <v-card-subtitle>
-        <v-icon small>mdi-calendar</v-icon> Created On</v-card-subtitle
-      >
-      <v-card-text class="justify-center">
-        <h3>
-          {{ getPrettyDate(created) }}
-        </h3>
-      </v-card-text>
-    </v-card>
-  </v-col>
+    <q-card class="job-metric-card">
+        <q-inner-loading showing v-if="jobLoading">
+            <q-spinner-puff size="50px" color="primary" />
+        </q-inner-loading>
+        <q-card-section>
+            <div class="text-weight-medium"><q-icon name="calendar_month" size="xs" class="q-mr-xs" />Created
+                on</div>
+            <div class="q-mt-md card-title">{{ prettyDate(job?.created) }}</div>
+        </q-card-section>
+    </q-card>
 </template>
+<script setup lang="ts">
+import { computed } from 'vue';
+import { JobType } from '../../types';
+import { useJobStore } from '../../store';
+import { prettyDate } from '../../utils/utils';
 
-<script>
-import dateMixin from "@/mixins/dateMixin";
+const job = computed((): JobType => {
+    const jobStore = useJobStore()
+    return jobStore.getJob as JobType
+})
 
-export default {
-  name: "JobCreated",
-  mixins: [dateMixin],
-  props: {
-    created: String,
-  },
-  data: () => ({}),
-};
+const jobLoading = computed((): boolean => {
+    const jobStore = useJobStore()
+    return jobStore.getJobLoading
+})
+
 </script>
-
-<style>
-</style>

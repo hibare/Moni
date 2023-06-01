@@ -76,7 +76,8 @@ services:
     build: .
     container_name: moni
     hostname: moni
-    env_file: docker.env
+    env_file: 
+      - .env
     ports:
       - 127.0.0.1:5000:8000
     depends_on: 

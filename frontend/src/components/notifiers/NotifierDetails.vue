@@ -1,214 +1,142 @@
 <template>
-  <v-container fluid>
-    <v-row class="px-4 mb-4">
-      <loader v-if="notifierLoader" />
-      <v-col cols="12" sm="12" lg="12" md="12">
-        <v-card elevation="1" color="background">
-          <v-card-title>
-            <h3>
-              <v-icon class="mr-1">{{ notifier.icon }}</v-icon>
-              {{ notifier.title }}
-            </h3>
-            <v-spacer></v-spacer>
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  color="lime darken-1"
-                  class="mx-5"
-                  v-bind="attrs"
-                  v-on="on"
-                  :loading="testNotifierBtnLoader"
-                  @click="testSavedNotifier"
-                >
-                  <v-icon>mdi-test-tube</v-icon>
-                </v-btn>
-              </template>
-              <span>Test Notifier</span>
-            </v-tooltip>
+    <div>
+        <q-card style="min-height: 145px;">
+            <q-inner-loading showing v-if="notifierLoading">
+                <q-spinner-puff size="50px" color="primary" />
+            </q-inner-loading>
+            <template v-else-if="notifier">
+                <q-item class="q-pb-none q-pt-md">
+                    <q-item-section avatar class="q-pr-xs">
+                        <q-avatar>
+                            <q-icon :name="NotifierTypeMap[notifier.type].icon" size="23px"
+                                :color="NotifierTypeMap[notifier.type].color" />
+                        </q-avatar>
+                    </q-item-section>
+                    <q-item-section>
+                        <div class="text-h6 q-pt-xs">{{ notifier?.title }}
+                        </div>
+                    </q-item-section>
+                    <q-card-section class="flex flex-center q-pa-0 q-ma-0">
+                        <div class="q-gutter-xs">
+                            <q-btn flat round size="sm" icon="fa-solid fa-microscope" color="blue" @click="testNotifier"
+                                :disable="notifierLoading || getNotifierTestLoading" :loading="getNotifierTestLoading">
+                                <q-tooltip>Test Notifier</q-tooltip>
+                            </q-btn>
+                            <NotifierAddEdit :isEdit="true" />
+                            <q-btn flat round size="sm" icon="delete" color="red"
+                                @click="toggleNotifierDeleteDialog"><q-tooltip>Delete Notifier</q-tooltip>
+                            </q-btn>
+                        </div>
+                    </q-card-section>
+                </q-item>
+                <q-card-section class="q-pt-sm">
+                    <div class="fit text-caption q-pl-sm">{{ notifier?.description }}
+                    </div>
+                </q-card-section>
+                <q-card-section class="q-pt-none">
+                    <q-input filled dense readonly v-model="notifier.url" label="URL"
+                        :type="urlVisibility ? 'text' : 'password'">
+                        <template v-slot:append>
+                            <q-icon :name="urlVisibility ? 'visibility_off' : 'visibility'" size="xs"
+                                @click="toggleUrlVisibility" class="cursor-pointer q-pr-sm" />
+                            <q-icon name="content_copy" size="xs" @click="copy2Clipboard(notifier.url)"
+                                class="cursor-pointer" />
+                        </template>
+                    </q-input>
+                </q-card-section>
+            </template>
+        </q-card>
+    </div>
 
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  color="green darken-1"
-                  @click="openEditNotifierDialog"
-                >
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-              <span>Edit Notifier</span>
-            </v-tooltip>
+    <q-dialog v-model="notifierDeleteDialog">
+        <q-card class="q-px-md">
+            <q-card-section>
+                <div class="text-h6 text-primary">Delete Job?</div>
+            </q-card-section>
 
-            <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  color="pink darken-1"
-                  class="mx-5"
-                  @click="openDeleteNotifierDialog"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-              <span>Delete Notifier</span>
-            </v-tooltip>
-          </v-card-title>
-          <v-card-subtitle class="my-1">{{
-            notifier.description
-          }}</v-card-subtitle>
-          <v-card-text>
-            <v-text-field
-              dense
-              readonly
-              label=""
-              filled
-              :value="notifier.url"
-              :append-icon="showURL ? 'mdi-eye' : 'mdi-eye-off'"
-              :type="showURL ? 'text' : 'password'"
-              @click:append="showURL = !showURL"
-              class="webhook"
-            ></v-text-field>
-          </v-card-text>
-        </v-card>
+            <q-card-section class="q-py-md">
+                Are you sure you want to delete this notifier?. This is a non-reversible operation.
+            </q-card-section>
 
-        <v-row align="center" class="mt-3">
-          <notifier-created :created="notifier.created" />
-          <notifier-modified :modified="notifier.updated" />
-          <notifier-jobs-count :uuid="notifier.uuid" />
-          <notifier-delivery :uuid="notifier.uuid" />
-        </v-row>
-
-        <v-row>
-          <notifier-jobs :uuid="notifier.uuid" />
-          <notifier-history :uuid="notifier.uuid" />
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+            <q-card-actions align="right" class="q-pt-md">
+                <q-btn flat label="Cancel" class="text-capitalize" v-close-popup />
+                <q-btn flat label="Delete" class="text-capitalize" color="red" :loading="notifierStateLoading"
+                    :disable="notifierStateLoading" @click="deleteNotifier" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 </template>
 
-<script>
-import Loader from "../Loader.vue";
-import { EventBus } from "@/events/eventBus";
-import NotifierJobsCount from "./NotifierJobsCount.vue";
-import NotifierDelivery from "./NotifierDelivery.vue";
-import NotifierCreated from "./NotifierCreated.vue";
-import NotifierModified from "./NotifierModified.vue";
-import NotifierJobs from "./NotifierJobs.vue";
-import NotifierHistory from "./NotifierHistory.vue";
-import notifiersMap from "./notifiers.js";
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
+import { useNotifierStore, useNotifiersStore } from '../../store';
+import { NotificationType, NotifierType } from '../../types';
+import { NotifierTypeMap, NotifyStatus } from '../../constants';
+import { copy2Clipboard, showNotify } from "../../utils/utils"
+import router from '../../router';
+import NotifierAddEdit from './NotifierAddEdit.vue';
 
-export default {
-  name: "NotifierDetails",
+const props = defineProps({
+    uuid: {
+        type: String,
+        required: true
+    }
+})
 
-  components: {
-    Loader,
-    NotifierJobsCount,
-    NotifierDelivery,
-    NotifierCreated,
-    NotifierModified,
-    NotifierJobs,
-    NotifierHistory,
-  },
+const notifierDeleteDialog = ref<boolean>(false)
 
-  data: () => ({
-    uuid: null,
-    notifier: {},
+const urlVisibility = ref<boolean>(false)
 
-    // Status flags
-    showURL: false,
+const notifierStore = useNotifierStore()
 
-    // Dialogs status flags
-    addNotifierDialog: false,
-    editNotifierDialog: false,
-    deleteNotifierDialog: false,
+const notifier = computed((): NotifierType => {
+    return notifierStore.getNotifier as NotifierType
+})
 
-    // Button loader status flags
-    addNotifierBtnLoader: false,
-    editNotifierBtnLoader: false,
-    deleteNotifierBtnLoader: false,
-    testNotifierBtnLoader: false,
-    notifierLoader: false,
-  }),
+const notifierLoading = computed((): boolean => {
+    return notifierStore.getNotifierLoading
+})
 
-  created() {
-    this.uuid = this.$route.params.uuid;
-    this.getNotifier();
-  },
+const toggleUrlVisibility = () => {
+    urlVisibility.value = !urlVisibility.value
+}
 
-  watch: {
-    notifier() {
-      this.notifier.icon = notifiersMap[this.notifier.type].icon;
-    },
-  },
+const getNotifierTestLoading = computed(() => {
+    return notifierStore.getNotifierTestLoading
+})
 
-  methods: {
-    getNotifier() {
-      this.notifierLoader = true;
-      this.$http
-        .get(`/api/v1/notifiers/${this.uuid}/`)
-        .then((result) => {
-          this.notifier = result.data;
-        })
-        .finally(() => {
-          this.notifierLoader = false;
-        });
-    },
+const testNotifier = async () => {
+    const notification = {} as NotificationType
 
-    openEditNotifierDialog() {},
+    const status = await notifierStore.testNotifier(props.uuid)
+    if (status) {
+        notification.status = NotifyStatus.Success
+        notification.message = "Successfully Tested."
+    } else {
+        notification.status = NotifyStatus.Error
+        notification.message = "Something went wrong."
+    }
+    showNotify(notification)
+}
 
-    testSavedNotifier() {
-      const uuid = this.uuid;
-      this.testNotifierBtnLoader = true;
-      this.$http
-        .post(`/api/v1/notifiers/${uuid}/test/`, this.notifier)
-        .then((result) => {
-          if (result.status === 200) {
-            EventBus.$emit("showSnackbar", {
-              status: "success",
-              message: "Test success",
-            });
-          }
-        })
-        .finally(() => {
-          this.testNotifierBtnLoader = false;
-        });
-    },
+const notifierStateLoading = computed(() => {
+    return notifierStore.getNotifierStateLoading
+})
 
-    testNotifier() {
-      this.testNotifierBtnLoader = true;
-      this.$http
-        .post("/api/v1/notifiers/test/", this.notifier)
-        .then((result) => {
-          if (result.status === 200) {
-            EventBus.$emit("showSnackbar", {
-              status: "success",
-              message: "Test success",
-            });
-            this.notifier.valid = true;
-          }
-        })
-        .finally(() => {
-          this.testNotifierBtnLoader = false;
-        });
-    },
+const toggleNotifierDeleteDialog = () => {
+    notifierDeleteDialog.value = !notifierDeleteDialog.value
+}
 
-    openDeleteNotifierDialog() {
-      this.deleteNotifierDialog = true;
-    },
+const deleteNotifier = async () => {
+    const status = await notifierStore.deleteNotifier(props.uuid)
+    if (status) {
+        const notifiersStore = useNotifiersStore()
+        notifiersStore.forceFetchNotifiers()
+        router.push({ name: 'notifiers' })
+    }
+}
 
-    closeDeleteNotifierDialog() {
-      this.deleteNotifierDialog = false;
-      this.notifier = Object.assign({}, this.defaultNotifier);
-    },
-  },
-};
+onMounted(() => {
+    notifierStore.fetchNotifier(props.uuid)
+})
 </script>

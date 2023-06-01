@@ -1,161 +1,133 @@
 <template>
-  <v-col cols="12" sm="6" md="6" lg="6">
-    <v-card elevation="1" color="transparent">
-      <v-card-title>
-        <h5><v-icon>mdi-history</v-icon> History</h5>
-        <v-spacer></v-spacer>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              icon
-              x-small
-              v-bind="attrs"
-              v-on="on"
-              color="pink darken-1"
-              class="mx-5"
-              :disabled="items.length === 0"
-              @click="openDeleteHistoryDialog"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </template>
-          <span>Delete History</span>
-        </v-tooltip>
-      </v-card-title>
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        :search="search"
-        :items-per-page="5"
-        :loading="tableLoading"
-        :loader-height="1"
-        loading-text="Fetching data..."
-        class="transparent mt-2"
-      >
-        <template v-slot:[`item.timestamp`]="{ item }">
-          {{ getPrettyDate(item.timestamp) }}
+    <q-table title="History" :rows="rows" :columns="columns" :loading="historyLoading" row-key="timestamp"
+        :fullscreen="fullscreen" class="q-px-sm q-py-sm">
+        <template v-slot:top>
+            <div class="col-12 card-title text-weight-medium"><q-icon name="history" size="xs" />
+                History <q-btn icon="delete" size="sm" flat round color="red" class="float-right"
+                    :disable="rows.length === 0" @click="toggleDeleteHistoryDialog" />
+                <q-btn :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'" size="sm" flat round color="primary"
+                    class="float-right" :disable="rows.length === 0" @click="toggleFullscreen" />
+            </div>
         </template>
-        <template v-slot:[`item.status`]="{ item }">
-          <v-icon small :color="getStatusColor(item.status)">{{
-            getPrettyStatusIcon(item.status)
-          }}</v-icon>
+        <template v-slot:loading>
+            <q-inner-loading showing>
+                <q-spinner-puff size="50px" color="primary" />
+            </q-inner-loading>
         </template>
-        <template v-slot:[`item.error`]="{ item }">
-          {{ fillEmptyValue(item.error) }}
+        <template v-slot:no-data="{ icon, message }">
+            <div class="full-width row flex-center text-accent q-gutter-sm">
+                <span v-if="historyError">Something went wrong</span>
+                <span v-else-if="!historyLoading">No history found</span>
+            </div>
         </template>
-      </v-data-table>
-    </v-card>
+        <template v-slot:body-cell-success="props">
+            <q-td :props="props">
+                <q-icon :name="props.row.status ? 'check' : 'close'" :color="props.row.status ? 'green' : 'red'"
+                    size="1.2rem" />
+            </q-td>
+        </template>
+    </q-table>
 
-    <!-- Delete notifier -->
-    <v-dialog persistent v-model="deleteHistoryDialog" width="500">
-      <v-card color="secondary">
-        <v-card-title>
-          <span class="text-h5">
-            <v-icon>mdi-delete</v-icon> Delete History</span
-          >
-          <v-spacer></v-spacer>
-          <v-btn icon small @click="closeDeleteHistoryDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-text class="justify-center py-10">
-          Do you want to delete notifier history?
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            color="pink darken-1"
-            block
-            depressed
-            outlined
-            class="text-capitalize"
-            :disabled="deleteHistoryBtnLoader"
-            :loading="deleteHistoryBtnLoader"
-            @click="deleteNotifierHistory"
-          >
-            Delete
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!-- ./Delete notifier -->
-  </v-col>
+    <q-dialog v-model="deleteHistoryDialog">
+        <q-card class="q-px-md">
+            <q-card-section>
+                <div class="text-h6 text-red">Delete History?</div>
+            </q-card-section>
+
+            <q-card-section class="q-py-md">
+                Are you sure you want to delete notifier history? This is a non-reversible operation.
+            </q-card-section>
+
+            <q-card-actions align="right" class="q-pt-md">
+                <q-btn flat label="Cancel" class="text-capitalize" color="primary" v-close-popup />
+                <q-btn flat label="Delete" class="text-capitalize" color="red" :loading="historyDelLoading"
+                    @click="deleteJobHistory" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 </template>
 
-<script>
-import dateMixin from "@/mixins/dateMixin";
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import { QTableColumn } from 'quasar';
+import { HistoryType } from '../../types';
+import { useNotifierHistoryStore } from '../../store';
 
-export default {
-  name: "NotifierHistory",
-  mixins: [dateMixin],
-  props: {
-    uuid: String,
-  },
-  data: () => ({
-    search: "",
-    tableLoading: true,
-    headers: [
-      {
-        text: "Timestamp",
-        align: "start",
-        value: "timestamp",
-      },
-      { text: "Status", value: "status" },
-      { text: "Status Code", value: "status_code" },
-      { text: "Error", value: "error" },
-    ],
-    items: [],
-    deleteHistoryDialog: false,
-    deleteHistoryBtnLoader: false,
-  }),
-  watch: {
-    uuid() {
-      this.getNotifierhistory();
-    },
-  },
-  created() {
-    this.getNotifierhistory();
-  },
-  methods: {
-    getNotifierhistory() {
-      this.tableLoading = true;
-      this.$http
-        .get(`/api/v1/notifiers/${this.uuid}/history/`)
-        .then((result) => {
-          if (result.status === 200) {
-            this.items = result.data;
-          }
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.tableLoading = false;
-        });
-    },
+const fullscreen = ref<boolean>(false)
+const deleteHistoryDialog = ref<boolean>(false)
 
-    openDeleteHistoryDialog() {
-      this.deleteHistoryDialog = true;
-    },
-    closeDeleteHistoryDialog() {
-      this.deleteHistoryDialog = false;
-    },
 
-    deleteNotifierHistory() {
-      this.deleteHistoryBtnLoader = true;
-      this.$http
-        .delete(`/api/v1/notifiers/${this.uuid}/history`)
-        .then((result) => {
-          if (result.status === 204) {
-            this.closeDeleteHistoryDialog();
-            this.items = [];
-            this.getNotifierhistory();
-          }
-        })
-        .finally(() => {
-          this.deleteHistoryBtnLoader = false;
-        });
+const props = defineProps({
+    uuid: {
+        type: String,
+        required: true
+    }
+})
+
+const columns: QTableColumn[] = [
+    {
+        name: 'timestamp',
+        required: true,
+        label: 'Timestamp',
+        align: 'left',
+        field: 'timestamp',
+        sortable: true
     },
-  },
-};
+    {
+        name: 'status_code',
+        align: 'left',
+        label: 'Status Code',
+        field: 'status_code',
+        sortable: true
+    },
+    {
+        name: 'success',
+        align: 'left',
+        label: 'Success',
+        field: 'success',
+        sortable: true
+    },
+    {
+        name: 'error',
+        align: 'left',
+        label: 'Error',
+        field: 'error',
+        sortable: true
+    },
+]
+
+const notifierHistoryStore = useNotifierHistoryStore()
+
+const rows = computed((): Array<HistoryType> => {
+    return notifierHistoryStore.getHistory as HistoryType[]
+})
+
+const historyLoading = computed((): boolean => {
+    return notifierHistoryStore.getHistoryLoading
+})
+
+const historyError = computed((): string => {
+    return notifierHistoryStore.getHistoryError || ''
+})
+
+const historyDelLoading = computed((): boolean => {
+    return notifierHistoryStore.getHistoryDelLoading
+})
+
+const toggleFullscreen = function () {
+    fullscreen.value = !fullscreen.value
+}
+
+const toggleDeleteHistoryDialog = function () {
+    deleteHistoryDialog.value = !deleteHistoryDialog.value
+}
+
+const deleteJobHistory = async function () {
+    await notifierHistoryStore.deleteHistory(props.uuid)
+    deleteHistoryDialog.value = false
+}
+
+onMounted(() => {
+    notifierHistoryStore.fetchHistory(props.uuid)
+})
 </script>
-
-<style>
-</style>

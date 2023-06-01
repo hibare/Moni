@@ -20,8 +20,8 @@ from .views import index_v, health_v, version_v, OpenAPISchemaView, ReDocView, S
 
 urlpatterns = [
     path('', index_v, name='index'),
-    path('favicon.ico/', RedirectView.as_view(
-        url='/static/img/favicon.ico',
+    path('favicon.png/', RedirectView.as_view(
+        url='/static/img/favicon.png',
         permanent=True
     ), name='favicon'),
     path('admin/', admin.site.urls),

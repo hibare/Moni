@@ -11,6 +11,12 @@ db-up:
 db-down:
 	${DOCKER_COMPOSE_PREFIX} rm -fsv postgres adminer gotify httpbin
 
+moni-up: db-up
+	${DOCKER_COMPOSE_PREFIX} up --build moni
+
+moni-down: db-down
+	${DOCKER_COMPOSE_PREFIX} rm -fsv moni
+
 api-up: db-up
 	${DOCKER_COMPOSE_PREFIX} up api
 
