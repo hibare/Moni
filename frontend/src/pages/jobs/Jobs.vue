@@ -1,8 +1,9 @@
 <template>
     <q-page container class="q-pb-xl q-px-md">
         <div class="q-pa-md q-gutter-md" v-if="!jobsError && jobs.length">
-            <q-banner inline-actions rounded class="bg-green text-white">
-                <q-icon name="check" size="xs" /> {{ systemOperationalBanner }}
+            <q-banner inline-actions rounded :class="[systemsOperational ? 'bg-green' : 'bg-orange', 'text-white']">
+                <q-icon :name="systemsOperational ? 'check' : 'warning'" size="xs" /> {{ systemsOperational ?
+                    allSystemsOperational : someSystemsOperational }}
             </q-banner>
 
             <div class="row">
@@ -77,6 +78,10 @@ import { useJobsStore } from '../../store';
 import Error from '../../components/Error.vue';
 import router from '../../router';
 import JobAddEdit from '../../components/jobs/JobAddEdit.vue'
+import { JobType } from '../../types';
+
+const allSystemsOperational = 'All Systems Operational.'
+const someSystemsOperational = 'Some systems are not operational.'
 
 const search = ref<string>('')
 
@@ -110,19 +115,16 @@ const refreshJobs = () => {
     jobsStore.forceFetchJobs()
 }
 
-const systemOperationalBanner = computed(() => {
-    const healthyStatus = 'All Systems Operational.'
-    const unhealthyStatus = 'Some systems are not operational.'
+const systemsOperational = computed((): boolean => {
+    const activeJobs: Array<JobType> = jobs.value.filter(obj => obj.state)
+    const systemStatus: boolean = activeJobs.every(obj => obj.healthy === true);
 
-    const systemStatus: boolean = jobs.value.every(obj => obj.healthy === true);
-
-    return systemStatus ? healthyStatus : unhealthyStatus
+    return systemStatus
 })
 
 const route2Details = (uuid: string) => {
     router.push({ name: 'jobDetails', params: { uuid } })
 }
-
 
 onMounted(() => {
     jobsStore.fetchJobs()
