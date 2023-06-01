@@ -1,5 +1,5 @@
 import axios from "../utils/axios";
-import { JWTLoginResponseType } from "../types";
+import { AccountType, JWTLoginResponseType, PasswordType } from "../types";
 
 async function login(
   username: string,
@@ -24,9 +24,20 @@ async function jwtVerify(token: string): Promise<boolean> {
   return status === 200 ? true : false;
 }
 
+async function patchAccount(account: AccountType): Promise<AccountType> {
+  const { data } = await axios.patch<AccountType>("/api/v1/accounts/", account);
+  return data;
+}
+
+async function changePassword(password: PasswordType): Promise<void> {
+  await axios.put("/api/v1/accounts/password/", password);
+}
+
 const authApi = {
   login,
   jwtVerify,
+  patchAccount,
+  changePassword,
 };
 
 export default authApi;

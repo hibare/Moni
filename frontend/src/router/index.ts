@@ -12,6 +12,7 @@ import Jobs from "../pages/jobs/Jobs.vue";
 import JobDetails from "../pages/jobs/JobDetails.vue";
 import Notifiers from "../pages/notifiers/Notifiers.vue";
 import NotifierDetails from "../pages/notifiers/NotifierDetails.vue";
+import Profile from "../pages/Profile.vue";
 import { AppName } from "../constants";
 
 const routes: Readonly<RouteRecordRaw[]> = [
@@ -62,6 +63,12 @@ const routes: Readonly<RouteRecordRaw[]> = [
     name: "notifierDetails",
     component: NotifierDetails,
     meta: { title: "Notifier" },
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
+    meta: { title: "Profile" },
   },
 ];
 

@@ -89,3 +89,19 @@ export type NotifierAddEditType = {
   type: string;
   valid?: boolean;
 };
+
+export type AccountType = {
+  first_name: string;
+  last_name: string;
+  email: string;
+};
+
+export type PasswordType = {
+  old_password: string;
+  new_password: string;
+  new_password_confirm: string;
+};
+
+export type APITokenType = {
+  token: string;
+};

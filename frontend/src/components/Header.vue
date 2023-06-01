@@ -15,7 +15,7 @@
                 <span class="text-caption">{{ getBadge }}</span>
                 <q-menu transition-show="scale" transition-hide="scale" anchor="bottom left">
                     <q-list style="min-width: 100px">
-                        <q-item clickable>
+                        <q-item clickable :to="{ name: 'profile' }">
                             <q-item-section>Profile</q-item-section>
                         </q-item>
                     </q-list>
@@ -61,6 +61,15 @@
 
                 <span class="fixed-bottom">
                     <q-separator />
+                    <q-item clickable v-ripple :to="{ name: 'profile' }">
+                        <q-item-section avatar>
+                            <q-icon name="person" />
+                        </q-item-section>
+
+                        <q-item-section>
+                            Profile
+                        </q-item-section>
+                    </q-item>
                     <q-item clickable v-ripple>
                         <q-item-section avatar>
                             <q-icon name="fa-brands fa-github" />

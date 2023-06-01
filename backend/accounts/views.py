@@ -2,7 +2,6 @@
 
 import logging
 from django.contrib.auth.models import User
-from rest_framework import generics, serializers
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -40,7 +39,7 @@ class APIToken(ObtainAuthToken):
             token = Token.objects.get(user=user)
             return Response({'token': token.key})
         except Token.DoesNotExist:
-            raise NotFound
+            return Response({'token': ''})
 
     def put(self, request, *args, **kwargs):
         """Regenerate API token"""
@@ -56,7 +55,7 @@ class APIToken(ObtainAuthToken):
             logger.exception("Token update failed")
             return Response({'Details': 'Operation failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        token, created = Token.objects.get_or_create(user=user)
+        token, _ = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
     def delete(self, request, *args, **kwargs):

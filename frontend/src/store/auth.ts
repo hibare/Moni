@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import authApi from "../api/auth";
 import { getErrorMessage } from "../utils/utils";
+import { AccountType } from "../types";
 
 export const useAuthStore = defineStore(
   "auth",
@@ -14,6 +15,7 @@ export const useAuthStore = defineStore(
     const isLoggedIn = ref<boolean>(false);
     const isVerifyingToken = ref<boolean>(true);
     const isLoggingIn = ref<boolean>(false);
+    const accountLoading = ref<boolean>(false);
 
     const getAccessToken = computed(() => accessToken);
     const getRefreshToken = computed(() => refreshToken);
@@ -23,6 +25,7 @@ export const useAuthStore = defineStore(
     const getIsLoggedIn = computed(() => isLoggedIn);
     const getIsVerifyingToken = computed(() => isVerifyingToken);
     const getIsLoggingIn = computed(() => isLoggingIn);
+    const getAccountLoading = computed(() => accountLoading);
 
     async function login(username: string, password: string) {
       try {
@@ -69,6 +72,23 @@ export const useAuthStore = defineStore(
       isVerifyingToken.value = false;
     }
 
+    async function pathAccount(account: AccountType): Promise<string> {
+      let message: string = "";
+
+      try {
+        accountLoading.value = true;
+        const data = await authApi.patchAccount(account);
+        firstName.value = data.first_name;
+        lastName.value = data.last_name;
+        email.value = data.email;
+      } catch (err: unknown) {
+        message = getErrorMessage(err);
+      } finally {
+        accountLoading.value = false;
+      }
+      return message;
+    }
+
     return {
       accessToken,
       refreshToken,
@@ -78,6 +98,7 @@ export const useAuthStore = defineStore(
       isLoggedIn,
       isVerifyingToken,
       isLoggingIn,
+      accountLoading,
 
       getAccessToken,
       getRefreshToken,
@@ -87,10 +108,12 @@ export const useAuthStore = defineStore(
       getIsLoggedIn,
       getIsVerifyingToken,
       getIsLoggingIn,
+      getAccountLoading,
 
       login,
       logout,
       validateSession,
+      pathAccount,
     };
   },
   {
