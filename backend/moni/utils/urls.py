@@ -44,7 +44,7 @@ def get_base_url(url: str) -> str:
 
     url = format_url(url)
     parsed = parse_url(url)
-    return '{uri.SCHEME}://{uri.NETLOC}/'.format(uri=parsed)
+    return f'{parsed.SCHEME}://{parsed.NETLOC}/'
 
 
 def parse_url(url: str) -> URL:
