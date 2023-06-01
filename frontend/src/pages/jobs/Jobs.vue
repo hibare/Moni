@@ -6,6 +6,10 @@
                     allSystemsOperational : someSystemsOperational }}
             </q-banner>
 
+            <q-banner inline-actions rounded class="bg-primary text-white" v-if="hasPausedJobs">
+                <q-icon name="info" size="xs" /> {{ pausedJobs }}
+            </q-banner>
+
             <div class="row">
                 <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)">
                     <template v-slot:append>
@@ -82,6 +86,7 @@ import { JobType } from '../../types';
 
 const allSystemsOperational = 'All Systems Operational.'
 const someSystemsOperational = 'Some systems are not operational.'
+const pausedJobs = 'Some jobs are paused.'
 
 const search = ref<string>('')
 
@@ -120,6 +125,10 @@ const systemsOperational = computed((): boolean => {
     const systemStatus: boolean = activeJobs.every(obj => obj.healthy === true);
 
     return systemStatus
+})
+
+const hasPausedJobs = computed((): boolean => {
+    return jobs.value.some(obj => !obj.state);
 })
 
 const route2Details = (uuid: string) => {
