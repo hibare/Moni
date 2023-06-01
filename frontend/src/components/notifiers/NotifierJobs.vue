@@ -65,21 +65,21 @@ const columns: QTableColumn[] = [
 
     {
         name: 'title',
-        align: 'center',
+        align: 'left',
         label: 'Title',
         field: 'title',
         sortable: true
     },
     {
         name: 'state',
-        align: 'center',
+        align: 'left',
         label: 'State',
         field: 'state',
         sortable: true
     },
     {
         name: 'healthy',
-        align: 'center',
+        align: 'left',
         label: 'Healthy',
         field: 'healthy',
         sortable: true

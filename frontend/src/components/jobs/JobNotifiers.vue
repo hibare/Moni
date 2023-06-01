@@ -49,20 +49,20 @@ const columns: QTableColumn[] = [
         name: 'type',
         required: true,
         label: 'Type',
-        align: 'center',
+        align: 'left',
         field: 'type',
         sortable: true
     },
     {
         name: 'title',
-        align: 'center',
+        align: 'left',
         label: 'Title',
         field: 'title',
         sortable: true
     },
     {
         name: 'description',
-        align: 'center',
+        align: 'left',
         label: 'Description',
         field: 'description',
         sortable: true
