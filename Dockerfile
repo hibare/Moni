@@ -24,7 +24,15 @@ RUN npm run build
 
 FROM base as builder
 
+ENV PYTHONDONTWRITEBYTECODE 1
+
+ENV PYTHONUNBUFFERED 1
+
 RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libssl-dev libffi-dev rustc
+
+RUN python -m venv /opt/venv
+
+ENV PATH="/opt/venv/bin:$PATH"
 
 COPY backend/requirements.txt .
 
@@ -40,9 +48,9 @@ ENV APP_DIR=/home/${USER}/app
 
 RUN apt-get update && apt-get install -y libpq5 
 
-COPY --from=builder /usr/local/bin/ /usr/local/bin/
+COPY --from=builder /opt/venv /opt/venv
 
-COPY --from=builder /usr/local/lib/ /usr/local/lib/
+ENV PATH="/opt/venv/bin:$PATH"
 
 RUN useradd -ms /bin/bash ${USER}
 
