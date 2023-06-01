@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.15.9",
+    "@types/lodash.clonedeep": "^4.5.7",
     "axios": "^1.2.1",
+    "lodash.clonedeep": "^4.5.0",
     "pinia": "^2.0.28",
     "pinia-plugin-persistedstate": "^3.0.2",
     "quasar": "^2.11.3",

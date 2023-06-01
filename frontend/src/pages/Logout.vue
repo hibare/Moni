@@ -18,15 +18,18 @@
         </div>
     </q-page>
 </template>
+
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import router from '../router';
 import { useAuthStore } from '../store';
+import { useResetStore } from '../store/pinia';
 
 const authStore = useAuthStore()
 const { logout } = authStore
 
 onMounted(() => {
+    useResetStore().all()
     logout()
 })
 
