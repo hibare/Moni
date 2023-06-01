@@ -145,6 +145,8 @@ const toggleJobDeleteDialog = () => {
 }
 
 const toggleJobState = async () => {
+    const jobsStore = useJobsStore()
+
     if (job?.value.state) {
         const jobStore = useJobStore()
         await jobStore.pauseJob(props.uuid)
@@ -152,6 +154,7 @@ const toggleJobState = async () => {
         const jobStore = useJobStore()
         await jobStore.resumeJob(props.uuid)
     }
+    jobsStore.forceFetchJobs()
     toggleJobStateDialog()
 }
 

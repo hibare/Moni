@@ -48,8 +48,12 @@
                                     <div class="text-h6 q-pt-sm">{{ job.title }}</div>
                                 </q-item-label>
                             </q-item-section>
-                            <q-card-section class="flex flex-center q-pa-0 q-ma-0">
-                                <q-icon name="fiber_manual_record" size="0.7rem" :color="job.healthy ? 'green' : 'red'" />
+                            <q-card-section class="flex flex-center q-pa-none q-ma-none">
+                                <q-icon name="fiber_manual_record" size="0.7rem" :color="job.healthy ? 'green' : 'red'"
+                                    v-if="job.state" />
+                                <q-chip v-else dense class="text-caption q-pa-sm">Paused
+                                    <q-tooltip>Job is paused. Open job details to resume it.</q-tooltip>
+                                </q-chip>
                             </q-card-section>
                         </q-item>
                         <q-item>
