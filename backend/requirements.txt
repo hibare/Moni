@@ -9,12 +9,12 @@ apscheduler==3.8.1
 asgiref==3.4.1
     # via django
 beautifulsoup4==4.10.0
-    # via -r requirements.in
+    # via -r backend/requirements.in
 dj-database-url==1.2.0
-    # via -r requirements.in
+    # via -r backend/requirements.in
 django==4.0.8
     # via
-    #   -r requirements.in
+    #   -r backend/requirements.in
     #   dj-database-url
     #   django-apscheduler
     #   django-filter
@@ -22,29 +22,29 @@ django==4.0.8
     #   djangorestframework
     #   djangorestframework-simplejwt
 django-apscheduler==0.6.2
-    # via -r requirements.in
+    # via -r backend/requirements.in
 django-filter==21.1
-    # via -r requirements.in
+    # via -r backend/requirements.in
 django-model-utils==4.3.1
-    # via -r requirements.in
+    # via -r backend/requirements.in
 djangorestframework==3.14.0
     # via
-    #   -r requirements.in
+    #   -r backend/requirements.in
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==5.2.2
-    # via -r requirements.in
+    # via -r backend/requirements.in
 drf-writable-nested==0.7.0
-    # via -r requirements.in
+    # via -r backend/requirements.in
 gunicorn==20.1.0
-    # via -r requirements.in
+    # via -r backend/requirements.in
 markdown==3.4.1
-    # via -r requirements.in
+    # via -r backend/requirements.in
 psycopg2-binary==2.9.5
-    # via -r requirements.in
+    # via -r backend/requirements.in
 pyjwt==2.3.0
     # via djangorestframework-simplejwt
 python-decouple==3.6
-    # via -r requirements.in
+    # via -r backend/requirements.in
 pytz==2021.3
     # via
     #   apscheduler
@@ -52,21 +52,21 @@ pytz==2021.3
 pytz-deprecation-shim==0.1.0.post0
     # via tzlocal
 pyyaml==6.0
-    # via -r requirements.in
+    # via -r backend/requirements.in
 six==1.16.0
     # via apscheduler
 soupsieve==2.3.1
     # via beautifulsoup4
-sqlparse==0.4.2
+sqlparse==0.4.4
     # via django
 tzdata==2021.5
     # via pytz-deprecation-shim
 tzlocal==4.1
     # via apscheduler
 urllib3==1.26.13
-    # via -r requirements.in
+    # via -r backend/requirements.in
 whitenoise==6.0.0
-    # via -r requirements.in
+    # via -r backend/requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
