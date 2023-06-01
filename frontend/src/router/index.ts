@@ -82,6 +82,12 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next({ name: "jobs" });
     }
+  } else if (
+    store.isLoggedIn &&
+    from.name === "login" &&
+    to.name === "logout"
+  ) {
+    next({ name: "jobs" });
   } else next();
 });
 
