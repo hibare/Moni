@@ -11,7 +11,8 @@
                 one
             </q-banner>
             <q-banner inline-actions rounded class="bg-primary text-white q-mb-md" v-else>
-                <q-icon name="info" size="sm" /> Please keep your API token in a secure place.
+                <q-icon name="info" size="sm" /> Please keep your API token in a secure place. <a href="/swagger"
+                    target="_blank" class="text-white">API Swagger Doc</a>
             </q-banner>
 
             <q-input dense filled v-model="apiToken" label="API Token" readonly
