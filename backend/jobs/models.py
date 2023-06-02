@@ -59,7 +59,7 @@ class JobsHistoryManager(models.Manager):
         """Delete job history from database"""
 
         self.filter(timestamp__lte=timezone.now() -
-                    timedelta(seconds=max_age)).delete()
+                    timedelta(days=max_age)).delete()
 
 
 class JobsHistory(models.Model):

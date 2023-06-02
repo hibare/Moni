@@ -44,7 +44,7 @@ class NotifiersHistoryManager(models.Manager):
         """Delete notifiers history from database"""
 
         self.filter(timestamp__lte=timezone.now() -
-                    timedelta(seconds=max_age)).delete()
+                    timedelta(days=max_age)).delete()
 
 
 class NotifiersHistory(models.Model):
