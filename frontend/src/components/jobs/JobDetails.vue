@@ -1,65 +1,68 @@
 <template>
     <div>
-        <q-banner inline-actions rounded class="bg-red text-white q-mb-md" v-if="job && !job?.state">
+        <q-banner inline-actions rounded class="bg-red text-white q-mb-md" v-if="!jobLoading && job && !job?.state">
             <q-icon name="warning" size="xs" /> This job is paused.
         </q-banner>
         <q-card style="min-height: 145px;">
             <q-inner-loading showing v-if="jobLoading">
                 <q-spinner-puff size="50px" color="primary" />
             </q-inner-loading>
-            <q-item class="q-pb-none" v-else-if="job">
-                <q-item-section avatar class="q-pr-xs">
-                    <q-avatar>
-                        <q-icon name="cloud" size="23px" color="orange" v-if="job?.favicon_url === null" />
-                        <q-img height="25px" width="25px" spinner-color="black" spinner-size="1rem" fit="fill" v-else
-                            :src="job?.favicon_url">
-                            <template v-slot:error>
-                                <q-icon name="cloud" size="23px" color="orange" />
-                            </template>
-                        </q-img>
-                    </q-avatar>
-                </q-item-section>
-                <q-item-section>
-                    <div class="text-h6 q-pt-xs">{{ job?.title }}
-                        <q-icon name="fiber_manual_record" size="0.7rem" :color="job?.healthy ? 'green' : 'red'"
-                            v-if="job?.state" />
-                    </div>
-                </q-item-section>
-                <q-card-section class="flex flex-center q-pa-0 q-ma-0">
-                    <div class="q-gutter-xs">
-                        <q-btn flat round size="sm" :icon="job?.state ? 'pause' : 'play_arrow'"
-                            :color="job?.state ? 'orange' : 'green'" @click="toggleJobStateDialog" :disable="jobLoading" />
-                        <JobAddEdit :isEdit="true" />
-                        <q-btn flat round size="sm" icon="delete" color="red" @click="toggleJobDeleteDialog"
-                            :disable="jobLoading" />
+            <template v-else-if="job && !jobLoading">
+                <q-item class="q-pb-none">
+                    <q-item-section avatar class="q-pr-xs">
+                        <q-avatar>
+                            <q-icon name="cloud" size="23px" color="orange" v-if="job?.favicon_url === null" />
+                            <q-img height="25px" width="25px" spinner-color="black" spinner-size="1rem" fit="fill" v-else
+                                :src="job?.favicon_url">
+                                <template v-slot:error>
+                                    <q-icon name="cloud" size="23px" color="orange" />
+                                </template>
+                            </q-img>
+                        </q-avatar>
+                    </q-item-section>
+                    <q-item-section>
+                        <div class="text-h6 q-pt-xs">{{ job?.title }}
+                            <q-icon name="fiber_manual_record" size="0.7rem" :color="job?.healthy ? 'green' : 'red'"
+                                v-if="job?.state" />
+                        </div>
+                    </q-item-section>
+                    <q-card-section class="flex flex-center q-pa-0 q-ma-0">
+                        <div class="q-gutter-xs">
+                            <q-btn flat round size="sm" :icon="job?.state ? 'pause' : 'play_arrow'"
+                                :color="job?.state ? 'orange' : 'green'" @click="toggleJobStateDialog"
+                                :disable="jobLoading" />
+                            <JobAddEdit :isEdit="true" />
+                            <q-btn flat round size="sm" icon="delete" color="red" @click="toggleJobDeleteDialog"
+                                :disable="jobLoading" />
+                        </div>
+                    </q-card-section>
+                </q-item>
+                <q-card-section class="q-pt-none">
+                    <div class="fit text-subtitle2 q-pl-sm">
+                        {{ job?.url }} <q-icon class="cursor-pointer" name="content_copy" color="grey"
+                            @click="copy2Clipboard(job?.url)" />
                     </div>
                 </q-card-section>
-            </q-item>
-            <q-card-section class="q-pt-none">
-                <div class="fit text-subtitle2 q-pl-sm">
-                    {{ job?.url }} <q-icon class="cursor-pointer" name="content_copy" color="grey"
-                        @click="copy2Clipboard(job?.url)" />
-                </div>
-            </q-card-section>
-            <q-card-section class="q-pt-md">
-                <div class="q-pl-sm q-gutter-md">
-                    <span><q-icon name="update" color="blue" class="q-pr-xs" />
-                        <q-tooltip>Job Interval</q-tooltip>
-                        {{ job?.interval }} Min.</span>
-                    <span><q-icon name="checklist" color="green" class="q-pr-xs" />
-                        <q-tooltip>Job Success Status Codes</q-tooltip>
-                        {{ job?.success_status.join(", ")
-                        }}</span>
-                    <span><q-icon name="shield" :color="job?.verify_ssl ? 'green' : 'red'" class="">
-                            <q-tooltip>{{ job?.verify_ssl ? 'Verifies SSL' : 'Does not verify SSL' }}</q-tooltip>
-                        </q-icon> </span>
-                    <span><q-icon name="redo" :color="job?.check_redirect ? 'green' : 'red'" class="q-pr-xs">
-                            <q-tooltip>
-                                {{ job?.check_redirect ? 'Checks for redirect' : 'Does not check for redirect' }}
-                            </q-tooltip>
-                        </q-icon></span>
-                </div>
-            </q-card-section>
+                <q-card-section class="q-pt-md">
+                    <div class="q-pl-sm q-gutter-md">
+                        <span><q-icon name="update" color="blue" class="q-pr-xs" />
+                            <q-tooltip>Job Interval</q-tooltip>
+                            {{ job?.interval }} Min.</span>
+                        <span><q-icon name="checklist" color="green" class="q-pr-xs" />
+                            <q-tooltip>Job Success Status Codes</q-tooltip>
+                            {{ job?.success_status.join(", ")
+                            }}</span>
+                        <span><q-icon name="shield" :color="job?.verify_ssl ? 'green' : 'red'" class="">
+                                <q-tooltip>{{ job?.verify_ssl ? 'Verifies SSL' : 'Does not verify SSL' }}</q-tooltip>
+                            </q-icon> </span>
+                        <span><q-icon name="redo" :color="job?.check_redirect ? 'green' : 'red'" class="q-pr-xs">
+                                <q-tooltip>
+                                    {{ job?.check_redirect ? 'Checks for redirect' : 'Does not check for redirect' }}
+                                </q-tooltip>
+                            </q-icon></span>
+                    </div>
+                </q-card-section>
+            </template>
         </q-card>
     </div>
 
