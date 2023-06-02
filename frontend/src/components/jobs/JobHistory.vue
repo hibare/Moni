@@ -1,6 +1,6 @@
 <template>
     <q-table title="History" :rows="rows" :columns="columns" :loading="historyLoading" row-key="timestamp"
-        :fullscreen="fullscreen" class="q-px-sm q-py-sm">
+        :fullscreen="fullscreen" @fullscreen="onFullscreen" v-model:pagination="pagination" class="q-px-sm q-py-sm">
         <template v-slot:top>
             <div class="col-12 card-title text-weight-medium"><q-icon name="history" size="xs" />
                 History <q-btn icon="delete" size="sm" flat round color="red" class="float-right"
@@ -54,6 +54,9 @@ import { useJobHistoryStore } from '../../store/jobHistory';
 import { HistoryType } from '../../types';
 
 const fullscreen = ref<boolean>(false)
+const pagination = ref<Record<string, any>>({
+    rowsPerPage: 5
+})
 const deleteHistoryDialog = ref<boolean>(false)
 
 const props = defineProps({
@@ -94,6 +97,11 @@ const columns: QTableColumn[] = [
         sortable: true
     },
 ]
+
+const onFullscreen = (val: boolean) => {
+    pagination.value.rowsPerPage = val ? 10 : 5
+    console.log(pagination.value)
+}
 
 const rows = computed((): Array<HistoryType> => {
     const jobHistoryStore = useJobHistoryStore()
