@@ -1,17 +1,21 @@
 <template>
     <q-page container class="q-pb-xl q-px-md">
-        <div class="q-pa-md q-gutter-md" v-if="!jobsError && jobs.length">
-            <q-banner inline-actions rounded :class="[systemsOperational ? 'bg-green' : 'bg-orange', 'text-white']">
-                <q-icon :name="systemsOperational ? 'check' : 'warning'" size="xs" /> {{ systemsOperational ?
-                    allSystemsOperational : someSystemsOperational }}
-            </q-banner>
+        <div class="q-pa-md q-gutter-md" v-if="!jobsError">
+            <template v-if="jobs.length">
+                <q-banner inline-actions rounded :class="[systemsOperational ? 'bg-green' : 'bg-orange', 'text-white']"
+                    v-if="hasActiveJobs">
+                    <q-icon :name="systemsOperational ? 'check' : 'warning'" size="xs" /> {{ systemsOperational ?
+                        allSystemsOperational : someSystemsOperational }}
+                </q-banner>
 
-            <q-banner inline-actions rounded class="bg-primary text-white" v-if="hasPausedJobs">
-                <q-icon name="info" size="xs" /> {{ pausedJobs }}
-            </q-banner>
+                <q-banner inline-actions rounded class="bg-primary text-white" v-if="hasPausedJobs">
+                    <q-icon name="info" size="xs" /> {{ pausedJobs }}
+                </q-banner>
+            </template>
 
             <div class="row">
-                <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)">
+                <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)"
+                    :disable="!jobs.length">
                     <template v-slot:append>
                         <q-icon name="search" />
                     </template>
@@ -23,8 +27,14 @@
                 </q-btn>
                 <JobAddEdit iconSize="md" />
             </div>
-
+            <div class="row absolute-center" v-if="!jobs.length && !jobsLoading && !jobsError">
+                <div class="text-subtitle2"><q-icon name="psychology_alt" size="sm" /> No Jobs found<br />
+                    Click
+                    <JobAddEdit iconSize="sm" /> to add a job
+                </div>
+            </div>
         </div>
+
         <div class="q-mx-md q-mt-sm">
             <q-inner-loading :showing="jobsLoading">
                 <q-spinner-puff size="50px" color="primary" />
@@ -122,9 +132,14 @@ const refreshJobs = () => {
 
 const systemsOperational = computed((): boolean => {
     const activeJobs: Array<JobType> = jobs.value.filter(obj => obj.state)
+
     const systemStatus: boolean = activeJobs.every(obj => obj.healthy === true);
 
     return systemStatus
+})
+
+const hasActiveJobs = computed((): boolean => {
+    return jobs.value.some(obj => obj.state)
 })
 
 const hasPausedJobs = computed((): boolean => {

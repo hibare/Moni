@@ -1,8 +1,9 @@
 <template>
     <q-page container class="q-pb-xl q-px-md">
-        <div class="q-pa-md q-gutter-md" v-if="!notifierError && notifiers.length">
+        <div class="q-pa-md q-gutter-md" v-if="!notifierError">
             <div class="row">
-                <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)">
+                <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)"
+                    :disable="!notifiers.length">
                     <template v-slot:append>
                         <q-icon name="search" />
                     </template>
@@ -16,6 +17,14 @@
                 <NotifierAddEdit iconSize="md" />
             </div>
         </div>
+
+        <div class="row absolute-center" v-if="!notifiers.length && !notifierLoading && !notifierError">
+            <div class="text-subtitle2"><q-icon name="psychology_alt" size="sm" /> No Notifiers found<br />
+                Click
+                <NotifierAddEdit iconSize="sm" /> to add a Notifier.
+            </div>
+        </div>
+
         <div class="q-mx-md q-mt-sm ">
             <q-inner-loading :showing="notifierLoading">
                 <q-spinner-puff size="50px" color="primary" />
