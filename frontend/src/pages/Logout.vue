@@ -9,6 +9,7 @@
 
                     <div class="text-h6"><span class="brand text-h4">Moni</span><br />You have been logged out
                         successfully.<br />
+                        <span class="text-caption">Redirecting to login in {{ counter }} seconds</span><br />
                         <q-btn outline dense size="md" class="q-px-md q-mt-md text-capitalize"
                             @click="navigateToLogin">Login
                             again</q-btn>
@@ -20,17 +21,30 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import router from '../router';
 import { useAuthStore } from '../store';
 import { useResetStore } from '../store/pinia';
 
+const counter = ref<number>(10)
 const authStore = useAuthStore()
 const { logout } = authStore
+
+const redirectCounter = () => {
+    if (counter.value > 0) {
+        setTimeout(() => {
+            counter.value = counter.value - 1
+            redirectCounter()
+        }, 1000)
+    } else {
+        navigateToLogin()
+    }
+}
 
 onMounted(() => {
     useResetStore().all()
     logout()
+    redirectCounter()
 })
 
 const navigateToLogin = () => {

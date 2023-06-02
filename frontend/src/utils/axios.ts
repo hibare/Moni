@@ -4,6 +4,7 @@ import { NotificationType } from "../types";
 import { useAuthStore } from "../store";
 import { NotifyStatus } from "../constants";
 import { showNotify } from "./utils";
+import { useResetStore } from "../store/pinia";
 
 const requestsIgnorePaths = ["/api/v1/jobs/status/"];
 const responseIgnorePaths = ["/api/v1/notifiers/test/"];
@@ -67,14 +68,14 @@ axios.interceptors.response.use(
               ? "Session Expired"
               : "Unauthorised";
           }
+          if (error.config.method === "get") {
+            router.push({ name: "logout" });
+          }
           break;
 
         case 403:
           notification.status = NotifyStatus.Error;
           notification.message = "Forbidden";
-          if (error.config.method === "get") {
-            router.push({ name: "login" });
-          }
           break;
 
         case 404:

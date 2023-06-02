@@ -100,9 +100,8 @@ const router: Router = createRouter({
   routes, // short for `routes: routes`
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   const store = useAuthStore();
-  await store.validateSession();
 
   if (!store.isLoggedIn && to.name !== "login") {
     next({ name: "login", query: { redirect: to.fullPath } });
