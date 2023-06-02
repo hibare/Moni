@@ -1,7 +1,7 @@
 <template>
     <div style="max-width: 40vw">
         <div class="text-h6 q-mb-lg">API</div>
-        <div>
+        <div class="q-pb-xs">
             <q-inner-loading showing v-if="apiTokenLoading">
                 <q-spinner-puff size="50px" color="primary" />
             </q-inner-loading>
@@ -22,7 +22,7 @@
                     <q-icon name="content_copy" class="cursor-pointer" size="xs" @click="copy2Clipboard(apiToken)" />
                 </template>
             </q-input>
-            <div class="row q-gutter-sm q-mt-sm">
+            <div class="row q-gutter-sm q-my-md">
                 <q-icon name="refresh" color="primary" size="sm" class="cursor-pointer" @click="regenerateToken">
                     <q-tooltip>Re-generate API Token</q-tooltip>
                 </q-icon>
