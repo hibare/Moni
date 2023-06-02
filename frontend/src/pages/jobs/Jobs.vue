@@ -14,7 +14,7 @@
             </template>
 
             <div class="row">
-                <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)"
+                <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 150px)"
                     :disable="!jobs.length">
                     <template v-slot:append>
                         <q-icon name="search" />
@@ -24,6 +24,56 @@
                     <q-tooltip>
                         Click to refresh
                     </q-tooltip>
+                </q-btn>
+                <q-btn round flat icon="tune">
+                    <q-tooltip>
+                        Apply filteredJobs
+                    </q-tooltip>
+                    <q-menu>
+                        <q-list style="min-width: 100px">
+                            <q-item-label header>Jobs Filter</q-item-label>
+                            <q-item tag="label" v-ripple>
+                                <q-item-section side top>
+                                    <q-checkbox v-model="jobsFilter.healthyJobs" />
+                                </q-item-section>
+
+                                <q-item-section>
+                                    <q-item-label>Healthy Jobs</q-item-label>
+                                    <q-item-label caption>
+                                        Show only healthy jobs.
+                                    </q-item-label>
+                                </q-item-section>
+                            </q-item>
+                            <q-item tag="label" v-ripple>
+                                <q-item-section side top>
+                                    <q-checkbox v-model="jobsFilter.unhealthyJobs" />
+                                </q-item-section>
+
+                                <q-item-section>
+                                    <q-item-label>Unhealthy Jobs</q-item-label>
+                                    <q-item-label caption>
+                                        Show only unhealthy jobs.
+                                    </q-item-label>
+                                </q-item-section>
+                            </q-item>
+                            <q-item tag="label" v-ripple>
+                                <q-item-section side top>
+                                    <q-checkbox v-model="jobsFilter.pausedJobs" />
+                                </q-item-section>
+
+                                <q-item-section>
+                                    <q-item-label>Paused Jobs</q-item-label>
+                                    <q-item-label caption>
+                                        Show only paused jobs.
+                                    </q-item-label>
+                                </q-item-section>
+                            </q-item>
+                            <q-separator />
+                            <q-item clickable v-close-popup @click="clearFilters">
+                                <q-item-section>Clear all</q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-menu>
                 </q-btn>
                 <JobAddEdit iconSize="md" />
             </div>
@@ -92,7 +142,7 @@ import { useJobsStore } from '../../store';
 import Error from '../../components/Error.vue';
 import router from '../../router';
 import JobAddEdit from '../../components/jobs/JobAddEdit.vue'
-import { JobType } from '../../types';
+import { JobType, JobsFilterType } from '../../types';
 
 const allSystemsOperational = 'All Systems Operational.'
 const someSystemsOperational = 'Some systems are not operational.'
@@ -102,15 +152,45 @@ const search = ref<string>('')
 
 const jobsStore = useJobsStore()
 
+const jobsFilter = ref<JobsFilterType>({
+    healthyJobs: false,
+    unhealthyJobs: false,
+    pausedJobs: false
+})
+
+const clearFilters = () => {
+    jobsFilter.value.healthyJobs = false
+    jobsFilter.value.unhealthyJobs = false
+    jobsFilter.value.pausedJobs = false
+}
+
 const filteredJobs = computed(() => {
+    let filteredJobs: Array<JobType> = []
     const searchStr = search.value.toLowerCase().trim()
 
+    // Filter based on search string
     if (!searchStr)
-        return jobsStore.getJobs
+        filteredJobs = jobsStore.getJobs
+    else
+        filteredJobs = jobsStore.getJobs.filter(job => {
+            return (job.title.toLowerCase().includes(searchStr) || job.url.toLowerCase().includes(searchStr))
+        })
 
-    return jobsStore.getJobs.filter(job => {
-        return (job.title.toLowerCase().includes(searchStr) || job.url.toLowerCase().includes(searchStr))
+    // Filter based on filter object
+    filteredJobs = filteredJobs.filter(job => {
+        if (jobsFilter.value.healthyJobs || jobsFilter.value.unhealthyJobs || jobsFilter.value.pausedJobs) {
+            if (jobsFilter.value.healthyJobs && job.healthy)
+                return job
+            else if (jobsFilter.value.unhealthyJobs && !job.healthy)
+                return job
+            else if (jobsFilter.value.pausedJobs && !job.state)
+                return job
+        } else {
+            return job
+        }
     })
+
+    return filteredJobs
 })
 
 const jobs = computed(() => {
