@@ -100,7 +100,6 @@ const columns: QTableColumn[] = [
 
 const onFullscreen = (val: boolean) => {
     pagination.value.rowsPerPage = val ? 10 : 5
-    console.log(pagination.value)
 }
 
 const notifierHistoryStore = useNotifierHistoryStore()
