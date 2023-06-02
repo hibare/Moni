@@ -179,9 +179,9 @@ const filteredJobs = computed(() => {
     // Filter based on filter object
     filteredJobs = filteredJobs.filter(job => {
         if (jobsFilter.value.healthyJobs || jobsFilter.value.unhealthyJobs || jobsFilter.value.pausedJobs) {
-            if (jobsFilter.value.healthyJobs && job.healthy)
+            if (jobsFilter.value.healthyJobs && job.state && job.healthy)
                 return job
-            else if (jobsFilter.value.unhealthyJobs && !job.healthy)
+            else if (jobsFilter.value.unhealthyJobs && job.state && !job.healthy)
                 return job
             else if (jobsFilter.value.pausedJobs && !job.state)
                 return job
