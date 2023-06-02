@@ -74,6 +74,10 @@ const routes: Readonly<RouteRecordRaw[]> = [
     meta: { title: "Profile" },
     children: [
       {
+        path: "",
+        redirect: { name: "profile.account" },
+      },
+      {
         path: "/profile/account",
         name: "profile.account",
         component: AccountVue,

@@ -61,7 +61,7 @@
 
                 <span class="fixed-bottom">
                     <q-separator />
-                    <q-item clickable v-ripple :to="{ name: 'profile' }">
+                    <q-item clickable v-ripple :to="{ name: 'profile.account' }">
                         <q-item-section avatar>
                             <q-icon name="person" />
                         </q-item-section>
