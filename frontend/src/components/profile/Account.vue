@@ -1,115 +1,69 @@
 <template>
-  <v-row>
-    <v-col cols="12">
-      <v-card elevation="1" color="transparent">
-        <v-card-title>
-          <h5><v-icon>mdi-account-circle</v-icon> Account</h5>
-        </v-card-title>
-        <v-card-text>
-          <loader v-if="accountsLoader" />
-          <div v-else>
-            <v-form ref="account" lazy-validation class="px-5 mt-4">
-              <v-text-field
-                v-model="account.first_name"
-                :counter="10"
-                :rules="nameRules"
-                label="Firstname"
-              ></v-text-field>
+    <div style="max-width: 40vw">
+        <div class="text-h6 q-mb-lg">Account</div>
+        <div>
+            <q-form class="q-gutter-sm" ref="accountForm">
+                <q-input dense filled v-model="account.first_name" label="Firstname" lazy-rules :rules="rules.nameRules" />
 
-              <v-text-field
-                v-model="account.last_name"
-                :counter="10"
-                :rules="nameRules"
-                label="Lastname"
-              ></v-text-field>
+                <q-input dense filled v-model="account.last_name" label="Lastname" lazy-rules :rules="rules.nameRules" />
 
-              <v-text-field
-                v-model="account.email"
-                :rules="emailRules"
-                label="E-mail"
-                required
-              ></v-text-field>
+                <q-input dense filled v-model="account.email" label="Email" lazy-rules :rules="rules.emailRules" />
 
-              <v-btn
-                :disabled="updateLoader"
-                :loading="updateLoader"
-                color="success"
-                class="mr-4 text-capitalize"
-                @click="updateAccount"
-              >
-                Update
-              </v-btn>
-            </v-form>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+                <div>
+                    <q-btn flat label="Update" color="primary" :loading="accountLoading" :disable="accountLoading"
+                        class="text-capitalize" @click="submit" />
+                </div>
+            </q-form>
+        </div>
+    </div>
 </template>
 
-<script>
-import Loader from "../Loader.vue";
-import rulesMixin from "@/mixins/rulesMixin";
-import { EventBus } from "@/events/eventBus";
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
+import rules from '../../utils/rules';
+import { useAuthStore } from '../../store';
+import { AccountType, NotificationType } from '../../types';
+import { NotifyStatus } from '../../constants';
+import { showNotify } from '../../utils/utils';
 
-export default {
-  components: { Loader },
-  name: "Account",
-  mixins: [rulesMixin],
+const accountForm = ref(null)
 
-  data: () => ({
-    accountsLoader: false,
-    updateLoader: false,
-    account: {
-      first_name: "",
-      last_name: "",
-      email: "",
-    },
-  }),
+const account = ref<AccountType>({
+    first_name: "",
+    last_name: "",
+    email: ""
+})
 
-  created() {
-    this.getAccount();
-  },
+const authStore = useAuthStore()
 
-  methods: {
-    getAccount() {
-      this.accountsLoader = true;
-      this.$http
-        .get(`/api/v1/accounts/`)
-        .then((result) => {
-          if (result.status === 200) {
-            this.account = result.data;
-          }
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.accountsLoader = false;
-        });
-    },
+const accountLoading = computed(() => {
+    return authStore.accountLoading
+})
 
-    updateAccount() {
-      if (this.$refs.account.validate()) {
-        this.accountsLoader = true;
-        this.$http
-          .patch(`/api/v1/accounts/`, this.account)
-          .then((result) => {
-            if (result.status === 200) {
-              EventBus.$emit("showSnackbar", {
-                status: "success",
-                message: "Updated",
-              });
-              this.account = result.data;
+const submit = async () => {
+    const notifications = {} as NotificationType
+
+    // @ts-ignore
+    accountForm.value?.validate().then(async (success: Boolean) => {
+        if (success) {
+            const message = await authStore.pathAccount(account.value)
+
+            if (message === "") {
+                notifications.status = NotifyStatus.Success
+                notifications.message = "Account updated"
+            } else {
+                notifications.status = NotifyStatus.Error
+                notifications.message = message
             }
-          })
-          .finally(() => {
-            this.accountsLoader = false;
-            this.$refs.account.resetValidation();
-          });
-      }
-    },
-  },
-};
-</script>
+            showNotify(notifications)
+        }
+    })
+}
 
-<style>
-</style>
+onMounted(() => {
+    account.value.first_name = authStore.getFirstName.value || ""
+    account.value.last_name = authStore.getLastName.value || ""
+    account.value.email = authStore.getEmail.value || ""
+})
+
+</script>

@@ -9,12 +9,13 @@ class JWTTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
 
-        data['firstname'] = self.user.first_name
-        data['lastname'] = self.user.last_name
-        data['fullname'] = self.user.get_full_name()
-        data['email'] = self.user.email
-        data['is_staff'] = self.user.is_staff
-        data['is_superuser'] = self.user.is_superuser
+        if self.user is not None:
+            data['firstname'] = self.user.first_name  # type: ignore
+            data['lastname'] = self.user.last_name  # type: ignore
+            data['fullname'] = self.user.get_full_name()  # type: ignore
+            data['email'] = self.user.email  # type: ignore
+            data['is_staff'] = self.user.is_staff  # type: ignore
+            data['is_superuser'] = self.user.is_superuser  # type: ignore
 
         return data
 
@@ -53,8 +54,9 @@ class ChangePasswordSerializer(serializers.Serializer):
         return data
 
     def save(self, **kwargs):
-        self.user.set_password(self.validated_data['new_password'])
-        self.user.save()
+        if isinstance(self.validated_data, dict):
+            self.user.set_password(self.validated_data['new_password'])
+            self.user.save()
         return self.user
 
     @property

@@ -1,191 +1,122 @@
 <template>
-  <v-container fluid class="pt-8">
-    <v-row>
-      <v-col cols="12">
-        <v-card elevation="1" color="transparent">
-          <v-card-title>
-            <h5><v-icon>mdi-api</v-icon> API Token</h5>
-            <v-spacer></v-spacer>
-            <v-tooltip top v-if="apiKey">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  color="green darken-1"
-                  :loading="tokenLoader"
-                  :disabled="tokenLoader"
-                  @click="generateToken"
-                >
-                  <v-icon>mdi-reload</v-icon>
-                </v-btn>
-              </template>
-              <span>Regenerate</span>
-            </v-tooltip>
+    <div style="max-width: 40vw">
+        <div class="text-h6 q-mb-lg">API</div>
+        <div>
+            <q-inner-loading showing v-if="apiTokenLoading">
+                <q-spinner-puff size="50px" color="primary" />
+            </q-inner-loading>
+            <q-banner inline-actions rounded class="bg-orange q-mb-md text-black" v-if="!apiToken">
+                You do not have an API token. Click on <q-icon name="refresh" color="white" size="sm" /> button below to
+                generate
+                one
+            </q-banner>
+            <q-banner inline-actions rounded class="bg-primary text-white q-mb-md" v-else>
+                <q-icon name="info" size="sm" /> Please keep your API token in a secure place.
+            </q-banner>
 
-            <v-tooltip top v-if="apiKey">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  color="pink darken-1"
-                  class="mx-5"
-                  @click="openDeleteTokenDialog"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-              <span>Delete Token</span>
-            </v-tooltip>
-          </v-card-title>
-          <v-card-text>
-            <loader v-if="tokenLoader" />
-            <div v-else-if="apiKey === null">
-              <p>No token found</p>
-              <v-btn
-                small
-                class="text-capitalize"
-                color="blue darken-3"
-                @click="generateToken"
-                :loading="tokenGenerateLoader"
-                :disabled="tokenGenerateLoader"
-                >Generate</v-btn
-              >
+            <q-input dense filled v-model="apiToken" label="API Token" readonly
+                :type="apiTokenVisibility ? 'text' : 'password'">
+                <template v-slot:append>
+                    <q-icon :name="apiTokenVisibility ? 'visibility_off' : 'visibility'" class="cursor-pointer q-pr-sm"
+                        @click="apiTokenVisibility = !apiTokenVisibility" size="xs" />
+                    <q-icon name="content_copy" class="cursor-pointer" size="xs" @click="copy2Clipboard(apiToken)" />
+                </template>
+            </q-input>
+            <div class="row q-gutter-sm q-mt-sm">
+                <q-icon name="refresh" color="primary" size="sm" class="cursor-pointer" @click="regenerateToken">
+                    <q-tooltip>Re-generate API Token</q-tooltip>
+                </q-icon>
+                <q-icon name="delete" color="red" size="sm" class="cursor-pointer" :disable="apiTokenDeleteLoading"
+                    @click="apiTokenDeleteDialog = true">
+                    <q-tooltip>Delete API Token</q-tooltip>
+                </q-icon>
             </div>
-            <v-text-field
-              dense
-              readonly
-              label=""
-              filled
-              :value="apiKey"
-              :append-icon="showToken ? 'mdi-eye' : 'mdi-eye-off'"
-              :type="showToken ? 'text' : 'password'"
-              @click:append="showToken = !showToken"
-              class="token"
-              v-else
-            ></v-text-field>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+        </div>
+    </div>
 
-    <!-- Delete token -->
-    <v-dialog persistent v-model="tokenDeleteDialog" width="500">
-      <v-card color="secondary">
-        <v-card-title>
-          <span class="text-h5"> <v-icon>mdi-delete</v-icon> Delete Token</span>
-          <v-spacer></v-spacer>
-          <v-btn icon small @click="closeDeleteTokenDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-text class="justify-center py-10">
-          Do you want to delete token?
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            color="pink darken-1"
-            block
-            depressed
-            outlined
-            class="text-capitalize"
-            :disabled="tokenDeleteLoader"
-            :loading="tokenDeleteLoader"
-            @click="deleteToken"
-          >
-            Delete
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!-- ./Delete token -->
-  </v-container>
+    <q-dialog v-model="apiTokenDeleteDialog">
+        <q-card class="q-px-md">
+            <q-card-section>
+                <div class="text-h6 text-primary">Delete API Token?</div>
+            </q-card-section>
+
+            <q-card-section class="q-py-md">
+                Are you sure you want to delete this API token? Deleting API token may produce unintended side-effects.
+            </q-card-section>
+
+            <q-card-actions align="right" class="q-pt-md">
+                <q-btn flat label="Cancel" class="text-capitalize" v-close-popup />
+                <q-btn flat label="Delete" class="text-capitalize" color="red" :loading="apiTokenDeleteLoading"
+                    :disable="apiTokenDeleteLoading" @click="deleteToken" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 </template>
 
-<script>
-import Loader from "../Loader.vue";
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { copy2Clipboard, getErrorMessage, showNotify } from '../../utils/utils';
+import tokenApi from '../../api/token'
+import { NotifyStatus } from '../../constants';
+import { NotificationType } from '../../types';
 
-export default {
-  components: { Loader },
-  name: "API",
+const apiToken = ref<string>("")
+const apiTokenLoading = ref<boolean>(false)
+const apiTokenDeleteLoading = ref<boolean>(false)
+const apiTokenDeleteDialog = ref<boolean>(false)
+const apiTokenVisibility = ref<boolean>(false)
 
-  data: () => ({
-    apiKey: null,
-    showToken: false,
+const regenerateToken = async () => {
+    const notifications = {} as NotificationType
 
-    tokenLoader: true,
-    tokenDeleteLoader: false,
-    tokenGenerateLoader: false,
+    try {
+        apiTokenLoading.value = true
+        const data = await tokenApi.regenerateAPIToken()
+        apiToken.value = data.token
+        notifications.status = NotifyStatus.Success
+        notifications.message = "Token Regenerated"
+    } catch (err: unknown) {
+        notifications.status = NotifyStatus.Error
+        notifications.message = `Failed to regenerate token: ${getErrorMessage(err)}`
+    } finally {
+        apiTokenLoading.value = false
+    }
+    showNotify(notifications)
 
-    tokenDeleteDialog: false,
-  }),
-
-  created() {
-    this.getToken();
-  },
-
-  methods: {
-    getToken() {
-      this.tokenLoader = true;
-      this.$http
-        .get(`/api/v1/accounts/token/`)
-        .then((result) => {
-          if (result.status === 200) {
-            this.apiKey = result.data.token;
-          }
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.tokenLoader = false;
-        });
-    },
-
-    generateToken() {
-      this.tokenGenerateLoader = true;
-      this.$http
-        .put(`/api/v1/accounts/token/`)
-        .then((result) => {
-          if (result.status === 200) {
-            this.apiKey = result.data.token;
-          }
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.tokenGenerateLoader = false;
-        });
-    },
-
-    deleteToken() {
-      this.tokenDeleteLoader = true;
-      this.$http
-        .delete(`/api/v1/accounts/token/`)
-        .then((result) => {
-          if (result.status === 200) {
-            this.apiKey = null;
-            this.closeDeleteTokenDialog();
-          }
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.tokenDeleteLoader = false;
-        });
-    },
-
-    openDeleteTokenDialog() {
-      this.tokenDeleteDialog = true;
-    },
-    closeDeleteTokenDialog() {
-      this.tokenDeleteDialog = false;
-    },
-  },
-};
-</script>
-
-<style scoped>
-.token {
-  font-size: 14px;
 }
-</style>
+
+const deleteToken = async () => {
+    const notifications = {} as NotificationType
+
+    try {
+        apiTokenDeleteLoading.value = true
+        await tokenApi.deleteAPIToken()
+        apiToken.value = ""
+        notifications.status = NotifyStatus.Error
+        notifications.message = `API Token Deleted`
+        apiTokenDeleteDialog.value = false
+    } catch (err: unknown) {
+        notifications.status = NotifyStatus.Error
+        notifications.message = `Failed to delete token: ${getErrorMessage(err)}`
+    } finally {
+        apiTokenDeleteLoading.value = false
+    }
+    showNotify(notifications)
+}
+
+onMounted(async () => {
+    const notifications = {} as NotificationType
+
+    try {
+        apiTokenLoading.value = true
+        const data = await tokenApi.getAPIToken()
+        apiToken.value = data.token
+    } catch (err: unknown) {
+        notifications.status = NotifyStatus.Error
+        notifications.message = `Failed to fetch token: ${getErrorMessage(err)}`
+        showNotify(notifications)
+    } finally {
+        apiTokenLoading.value = false
+    }
+})
+</script>

@@ -4,13 +4,15 @@ import logging
 from collections import Counter
 from statistics import mean
 from rest_framework import viewsets, mixins, generics, status
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from jobs.models import Jobs, JobsHistory
 from jobs.serializers import JobsSerializer, JobsHistorySerializer
 from moni.utils.favicon import Favicon
+from notifiers.models import Notifiers
+from notifiers.serializers import NotifiersSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -63,9 +65,8 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
 
         if queryset.exists():
             queryset.delete()
-            return Response({"detail": "Job history deleted"}, status=status.HTTP_204_NO_CONTENT)
-        else:
-            raise NotFound()
+
+        return Response({"detail": "Job history deleted"}, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
     def pause(self, request, **kwargs):
@@ -166,6 +167,20 @@ class JobsViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
             job.save()
 
             return Response(self.serializer_class(job).data)
+        except Jobs.DoesNotExist:
+            raise NotFound
+
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def notifiers(self, request, **kwargs):
+        """Return job notifiers"""
+
+        try:
+            uuid = self.kwargs['uuid']
+            job = self.queryset.get(uuid=uuid)
+            notifiers_uuids = job.notifiers.all().values_list('uuid', flat=True)
+            queryset = Notifiers.objects.filter(uuid__in=notifiers_uuids)
+            serializer = NotifiersSerializer(queryset, many=True)
+            return Response(serializer.data)
         except Jobs.DoesNotExist:
             raise NotFound
 

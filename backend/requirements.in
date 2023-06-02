@@ -11,6 +11,7 @@ whitenoise
 gunicorn
 drf-writable-nested
 urllib3
+pytz-deprecation-shim
 PyYAML
 djangorestframework-simplejwt
 BeautifulSoup4

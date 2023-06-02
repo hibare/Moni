@@ -15,11 +15,6 @@ logger = logging.getLogger(__name__)
 scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
 
 
-def test_job():
-    """Test job to schedule"""
-    logger.info("Test job executed")
-
-
 def delete_old_job_executions(max_age=604_800):
     """This job deletes all apscheduler job executions older than `max_age` from the database."""
     DjangoJobExecution.objects.delete_old_job_executions(max_age)
@@ -52,8 +47,9 @@ def start(default_jobs=True):
                 hour="00", minute="00"
             ),  # Everyday midnight
             id="delete_old_job_executions",
-            max_instances=1,
-            replace_existing=True,
+            max_instances=settings.SCHEDULER_JOB_MAX_INSTANCES,
+            replace_existing=settings.SCHEDULER_JOB_REPLACE_EXISTING,
+            misfire_grace_time=settings.SCHEDULER_JOB_MISFIRE_GRACETIME
         )
         logger.info(
             "Added daily job: 'delete_old_job_executions'."
@@ -65,8 +61,9 @@ def start(default_jobs=True):
                 hour="00", minute="00"
             ),  # Everyday midnight
             id="delete_old_job_history",
-            max_instances=1,
-            replace_existing=True,
+            max_instances=settings.SCHEDULER_JOB_MAX_INSTANCES,
+            replace_existing=settings.SCHEDULER_JOB_REPLACE_EXISTING,
+            misfire_grace_time=settings.SCHEDULER_JOB_MISFIRE_GRACETIME
         )
         logger.info(
             "Added daily job: 'delete_old_job_history'."
@@ -78,15 +75,13 @@ def start(default_jobs=True):
                 hour="00", minute="00"
             ),  # Everyday midnight
             id="delete_old_notifier_history",
-            max_instances=1,
-            replace_existing=True,
+            max_instances=settings.SCHEDULER_JOB_MAX_INSTANCES,
+            replace_existing=settings.SCHEDULER_JOB_REPLACE_EXISTING,
+            misfire_grace_time=settings.SCHEDULER_JOB_MISFIRE_GRACETIME
         )
         logger.info(
             "Added daily job: 'delete_old_notifier_history'."
         )
-
-    # scheduler.add_job(test_job,
-    #                   "interval", id="test_job", minutes=5, replace_existing=True)
 
     # Add the scheduled jobs to the Django admin interface
     register_events(scheduler)

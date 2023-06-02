@@ -3,3 +3,4 @@
 **/*.env
 **/*data
 **/*dist
+**/*frontendv1

@@ -4,6 +4,7 @@ volumes/*
 data/
 backend/scripts/*.json
 *.env
+frontendv1
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

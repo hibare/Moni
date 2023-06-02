@@ -1,112 +1,83 @@
 <template>
-  <v-row>
-    <v-col cols="12">
-      <v-card elevation="1" color="transparent">
-        <v-card-title>
-          <h5><v-icon>mdi-lock</v-icon> Password</h5>
-        </v-card-title>
-        <v-card-text>
-          <v-form ref="password" lazy-validation class="px-5 mt-4">
-            <v-text-field
-              v-model="password.old_password"
-              label="Current Password"
-              :rules="emptyRule"
-              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-              :type="showPassword ? 'text' : 'password'"
-              @click:append="showPassword = !showPassword"
-            ></v-text-field>
+    <div style="max-width: 40vw">
+        <div class="text-h6 q-mb-lg">Password</div>
+        <div>
+            <q-form class="q-gutter-sm" ref="passwordForm">
+                <q-input dense filled v-model="password.old_password" label="Current Password" lazy-rules
+                    :rules="rules.emptyRule" :type="oldPasswordVisibility ? 'text' : 'password'">
+                    <template v-slot:append>
+                        <q-icon :name="oldPasswordVisibility ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                            @click="oldPasswordVisibility = !oldPasswordVisibility" size="xs" />
+                    </template>
+                </q-input>
 
-            <v-text-field
-              v-model="password.new_password"
-              label="New Password"
-              :rules="emptyRule"
-              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-              :type="showPassword ? 'text' : 'password'"
-              @click:append="showPassword = !showPassword"
-            ></v-text-field>
+                <q-input dense filled v-model="password.new_password" label="New Password" lazy-rules
+                    :rules="rules.emptyRule" :type="newPasswordVisibility ? 'text' : 'password'">
+                    <template v-slot:append>
+                        <q-icon :name="newPasswordVisibility ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                            @click="newPasswordVisibility = !newPasswordVisibility" size="xs" />
+                    </template></q-input>
 
-            <v-text-field
-              v-model="password.new_password_confirm"
-              label="Confirm New Password"
-              :rules="emptyRule"
-              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-              :type="showPassword ? 'text' : 'password'"
-              @click:append="showPassword = !showPassword"
-            ></v-text-field>
+                <q-input dense filled v-model="password.new_password_confirm" label="New Password (Confirm)" lazy-rules
+                    :rules="rules.emptyRule" :type="newPasswordConfimVisibility ? 'text' : 'password'">
+                    <template v-slot:append>
+                        <q-icon :name="newPasswordConfimVisibility ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                            @click="newPasswordConfimVisibility = !newPasswordConfimVisibility" size="xs" />
+                    </template></q-input>
 
-            <v-btn
-              :disabled="updateLoader"
-              :loading="updateLoader"
-              color="success"
-              class="mr-4 text-capitalize"
-              @click="updatePassword"
-            >
-              Update
-            </v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+                <div>
+                    <q-btn flat label="Update" color="primary" :loading="passwordLoading" :disable="passwordLoading"
+                        class="text-capitalize" @click="submit" />
+                </div>
+            </q-form>
+        </div>
+    </div>
 </template>
 
-<script>
-import rulesMixin from "@/mixins/rulesMixin";
-import { EventBus } from "@/events/eventBus";
+<script setup lang="ts">
+import { ref } from 'vue';
+import rules from '../../utils/rules';
+import authApi from "../../api/auth";
+import { NotificationType, PasswordType } from '../../types';
+import { NotifyStatus } from '../../constants';
+import { getErrorMessage, showNotify } from '../../utils/utils';
 
-export default {
-  name: "Password",
-  mixins: [rulesMixin],
+const password = ref<PasswordType>({
+    old_password: "",
+    new_password: "",
+    new_password_confirm: ""
+})
 
-  data: () => ({
-    updateLoader: false,
+const oldPasswordVisibility = ref<boolean>(false)
+const newPasswordVisibility = ref<boolean>(false)
+const newPasswordConfimVisibility = ref<boolean>(false)
+const passwordLoading = ref<boolean>(false)
+const passwordForm = ref(null)
 
-    showPassword: false,
-    password: {
-      old_password: "",
-      new_password: "",
-      new_password_confirm: "",
-    },
-  }),
+const submit = async () => {
+    const notifications = {} as NotificationType
 
-  methods: {
-    updatePassword() {
-      if (this.$refs.password.validate()) {
-        this.updateLoader = true;
-        this.$http
-          .put(`/api/v1/accounts/password/`, this.password)
-          .then((result) => {
-            if (result.status === 200) {
-              EventBus.$emit("showSnackbar", {
-                status: "success",
-                message: "Password Changed",
-              });
-              this.password = {
-                old_password: "",
-                new_password: "",
-                new_password_confirm: "",
-              };
+    // @ts-ignore
+    passwordForm.value?.validate().then(async (success: Boolean) => {
+        if (success && password.value.new_password === password.value.new_password_confirm) {
+            try {
+                passwordLoading.value = true
+                await authApi.changePassword(password.value)
+                notifications.status = NotifyStatus.Success
+                notifications.message = "Updated updated"
+            } catch (err: unknown) {
+                notifications.status = NotifyStatus.Error
+                notifications.message = getErrorMessage(err)
+            } finally {
+                passwordLoading.value = false
             }
-          })
-          .catch((err) => {
-            if (err.response.status === 400) {
-              for (let v of Object.values(err.response.data)) {
-                EventBus.$emit("showSnackbar", {
-                  status: "failure",
-                  message: v.join(", "),
-                });
-              }
-            }
-          })
-          .finally(() => {
-            this.updateLoader = false;
-            this.$refs.password.resetValidation();
-          });
-      }
-    },
-  },
-};
+
+            showNotify(notifications)
+        } else if (password.value.new_password !== password.value.new_password_confirm) {
+            notifications.status = NotifyStatus.Warning
+            notifications.message = "Passwords do not match"
+            showNotify(notifications)
+        }
+    })
+}
 </script>
-
-<style>
-</style>

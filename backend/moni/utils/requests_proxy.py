@@ -5,11 +5,12 @@ import time
 import logging
 from typing import Dict
 import urllib3
+from urllib3.response import BaseHTTPResponse
 
 logger = logging.getLogger(__name__)
 
 
-def requests_get(url: str, headers: Dict = None, timeout: int = 20, verify_ssl: bool = True, redirect: bool = True) -> urllib3.response:
+def requests_get(url: str, headers: Dict = {}, timeout: int = 20, verify_ssl: bool = True, redirect: bool = True) -> BaseHTTPResponse:
     """urllib3 GET request proxy"""
 
     if verify_ssl:
@@ -19,7 +20,7 @@ def requests_get(url: str, headers: Dict = None, timeout: int = 20, verify_ssl: 
 
     http = urllib3.PoolManager(cert_reqs=cert_reqs)
 
-    if headers is None:
+    if not headers:
         headers = {}
 
     start = time.time()
@@ -39,7 +40,7 @@ def requests_get(url: str, headers: Dict = None, timeout: int = 20, verify_ssl: 
     return response
 
 
-def requests_post(url: str, body: str, headers: Dict, timeout: int = 20, verify_ssl: bool = True, redirect: bool = True) -> urllib3.response:
+def requests_post(url: str, body: str | bytes, headers: Dict, timeout: int = 20, verify_ssl: bool = True, redirect: bool = True) -> BaseHTTPResponse:
     """urllib3 GET request proxy"""
 
     if verify_ssl:

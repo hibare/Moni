@@ -1,67 +1,44 @@
 <template>
-  <v-col cols="12" sm="3" lg="3" md="3" class="center">
-    <v-card elevation="1" color="transparent">
-      <v-card-subtitle>Jobs</v-card-subtitle>
-      <v-card-text class="justify-center">
-        <v-progress-circular
-          indeterminate
-          v-if="jobsLoading"
-        ></v-progress-circular>
-        <h3 v-else>
-          {{
-            Object.prototype.toString.call(notifierJobs) === "[object String]"
-              ? notifierJobs
-              : notifierJobs.length
-          }}
-        </h3>
-      </v-card-text>
-    </v-card>
-  </v-col>
+    <q-card class="job-metric-card">
+        <q-inner-loading showing v-if="notifierJobsLoading">
+            <q-spinner-puff size="50px" color="primary" />
+        </q-inner-loading>
+        <q-card-section>
+            <div class="text-weight-medium"><q-icon name="memory" size="xs" class="q-mr-xs" />Jobs
+            </div>
+            <div class="q-mt-md card-title" v-if="notifierJobsError">Error</div>
+            <div class="q-mt-md card-title" v-else>{{ notifierJobs.length }}</div>
+        </q-card-section>
+    </q-card>
 </template>
 
-<script>
-export default {
-  name: "NotifierJobsCount",
-  props: {
-    uuid: String,
-  },
-  data: () => ({
-    notifierJobs: [],
-    jobsLoading: false,
-  }),
+<script setup lang="ts">
+import { computed, onMounted } from 'vue';
+import { useNotifierJobsStore } from '../../store';
+import { JobType } from '../../types';
 
-  created() {
-    this.getNotifierJobs();
-  },
+const props = defineProps({
+    uuid: {
+        type: String,
+        required: true
+    }
+})
 
-  watch: {
-    uuid() {
-      this.getNotifierJobs();
-    },
-  },
+const notifierJobStore = useNotifierJobsStore()
 
-  methods: {
-    getNotifierJobs() {
-      this.jobsLoading = true;
-      this.$http
-        .get(`/api/v1/notifiers/${this.uuid}/jobs/`)
-        .then((result) => {
-          if (result.status === 200) {
-            this.notifierJobs = result.data;
-          } else {
-            this.notifierJobs = "Failed";
-          }
-        })
-        .catch(() => {
-          this.notifierJobs = "Failed";
-        })
-        .finally(() => {
-          this.jobsLoading = false;
-        });
-    },
-  },
-};
+const notifierJobs = computed((): Array<JobType> => {
+    return notifierJobStore.getJobs
+})
+
+const notifierJobsLoading = computed((): boolean => {
+    return notifierJobStore.getJobsLoading
+})
+
+const notifierJobsError = computed((): string => {
+    return notifierJobStore.getJobsError || ''
+})
+
+onMounted(() => {
+    notifierJobStore.fetchNotifierJobs(props.uuid)
+})
 </script>
-
-<style>
-</style>

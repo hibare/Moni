@@ -1,63 +1,42 @@
 <template>
-  <v-col cols="12" sm="3" lg="3" md="3" class="center">
-    <v-card elevation="1" color="transparent">
-      <v-card-subtitle>Delivery</v-card-subtitle>
-      <v-card-text class="justify-center">
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          v-if="deliveryLoading"
-        ></v-progress-circular>
-        <h3>{{ notifierDelivery }}</h3>
-      </v-card-text>
-    </v-card>
-  </v-col>
+    <q-card class="job-metric-card">
+        <q-inner-loading showing v-if="notifierDeliveryLoading">
+            <q-spinner-puff size="50px" color="primary" />
+        </q-inner-loading>
+        <q-card-section>
+            <div class="text-weight-medium"><q-icon name="rocket_launch" size="xs" class="q-mr-xs" />Delivery
+            </div>
+            <div class="q-mt-md card-title" v-if="notifierDeliveryError">Error</div>
+            <div class="q-mt-md card-title" v-else>{{ notifierDelivery }}</div>
+        </q-card-section>
+    </q-card>
 </template>
+<script setup lang="ts">
+import { computed, onMounted } from 'vue';
+import { useNotifierStore } from '../../store';
 
-<script>
-export default {
-  name: "NotifierDelivery",
-  props: {
-    uuid: String,
-  },
+const props = defineProps({
+    uuid: {
+        type: String,
+        required: true
+    }
+})
 
-  data: () => ({
-    notifierDelivery: null,
-    deliveryLoading: false,
-  }),
+const notifierStore = useNotifierStore()
 
-  created() {
-    this.getNotifierDelivery();
-  },
+const notifierDelivery = computed((): string => {
+    return notifierStore.getNotifierDelivery || ''
+})
 
-  watch: {
-    uuid() {
-      this.getNotifierDelivery();
-    },
-  },
+const notifierDeliveryLoading = computed((): boolean => {
+    return notifierStore.getNotifierDeliveryLoading
+})
 
-  methods: {
-    getNotifierDelivery() {
-      this.deliveryLoading = true;
-      this.$http
-        .get(`/api/v1/notifiers/${this.uuid}/delivery/`)
-        .then((result) => {
-          if (result.status === 200) {
-            this.notifierDelivery = result.data.delivery;
-          } else {
-            this.notifierDelivery = "Failed";
-          }
-        })
-        .catch(() => {
-          this.notifierDelivery = "Failed";
-        })
-        .finally(() => {
-          this.deliveryLoading = false;
-        });
-    },
-  },
-};
+const notifierDeliveryError = computed((): string => {
+    return notifierStore.getNotifierDeliveryError || ''
+})
+
+onMounted(() => {
+    notifierStore.fetchNotifierDelivery(props.uuid)
+})
 </script>
-
-<style>
-</style>

@@ -1,342 +1,176 @@
 <template>
-  <v-container fluid>
-    <loader v-if="jobLoader" />
-    <v-row class="px-4" v-else>
-      <v-col cols="12" sm="12" lg="12" md="12">
-        <v-card elevation="1" color="background">
-          <v-card-title>
-            <v-col cols="12" sm="6" lg="6" md="6" class="py-0 px-0 px-sm-2">
-              <h3>
-                <v-icon class="mr-2" v-if="job.favicon_url === null"
-                  >mdi-web</v-icon
-                >
-                <img
-                  :src="job.favicon_url"
-                  alt=""
-                  height="24"
-                  width="24"
-                  class="mr-2 ma-0"
-                  v-else
-                />
-                {{ job.title }}
-                <v-chip
-                  close-icon="mdi-delete"
-                  x-small
-                  outlined
-                  v-if="!job.state"
-                  >Disabled</v-chip
-                >
-                <v-icon small class="mr-1" color="green" v-else-if="job.healthy"
-                  >mdi-circle-medium</v-icon
-                >
-                <v-icon small class="mr-1" color="red" v-else
-                  >mdi-circle-medium</v-icon
-                >
-              </h3>
+    <div>
+        <q-banner inline-actions rounded class="bg-red text-white q-mb-md" v-if="job && !job?.state">
+            <q-icon name="warning" size="xs" /> This job is paused.
+        </q-banner>
+        <q-card style="min-height: 145px;">
+            <q-inner-loading showing v-if="jobLoading">
+                <q-spinner-puff size="50px" color="primary" />
+            </q-inner-loading>
+            <q-item class="q-pb-none" v-else-if="job">
+                <q-item-section avatar class="q-pr-xs">
+                    <q-avatar>
+                        <q-icon name="cloud" size="23px" color="orange" v-if="job?.favicon_url === null" />
+                        <q-img height="25px" width="25px" spinner-color="black" spinner-size="1rem" fit="fill" v-else
+                            :src="job?.favicon_url">
+                            <template v-slot:error>
+                                <q-icon name="cloud" size="23px" color="orange" />
+                            </template>
+                        </q-img>
+                    </q-avatar>
+                </q-item-section>
+                <q-item-section>
+                    <div class="text-h6 q-pt-xs">{{ job?.title }}
+                        <q-icon name="fiber_manual_record" size="0.7rem" :color="job?.healthy ? 'green' : 'red'"
+                            v-if="job?.state" />
+                    </div>
+                </q-item-section>
+                <q-card-section class="flex flex-center q-pa-0 q-ma-0">
+                    <div class="q-gutter-xs">
+                        <q-btn flat round size="sm" :icon="job?.state ? 'pause' : 'play_arrow'"
+                            :color="job?.state ? 'orange' : 'green'" @click="toggleJobStateDialog" :disable="jobLoading" />
+                        <JobAddEdit :isEdit="true" />
+                        <q-btn flat round size="sm" icon="delete" color="red" @click="toggleJobDeleteDialog"
+                            :disable="jobLoading" />
+                    </div>
+                </q-card-section>
+            </q-item>
+            <q-card-section class="q-pt-none">
+                <div class="fit text-subtitle2 q-pl-sm">
+                    {{ job?.url }} <q-icon class="cursor-pointer" name="content_copy" color="grey"
+                        @click="copy2Clipboard(job?.url)" />
+                </div>
+            </q-card-section>
+            <q-card-section class="q-pt-md">
+                <div class="q-pl-sm q-gutter-md">
+                    <span><q-icon name="update" color="blue" class="q-pr-xs" />
+                        <q-tooltip>Job Interval</q-tooltip>
+                        {{ job?.interval }} Min.</span>
+                    <span><q-icon name="checklist" color="green" class="q-pr-xs" />
+                        <q-tooltip>Job Success Status Codes</q-tooltip>
+                        {{ job?.success_status.join(", ")
+                        }}</span>
+                    <span><q-icon name="shield" :color="job?.verify_ssl ? 'green' : 'red'" class="">
+                            <q-tooltip>{{ job?.verify_ssl ? 'Verifies SSL' : 'Does not verify SSL' }}</q-tooltip>
+                        </q-icon> </span>
+                    <span><q-icon name="redo" :color="job?.check_redirect ? 'green' : 'red'" class="q-pr-xs">
+                            <q-tooltip>
+                                {{ job?.check_redirect ? 'Checks for redirect' : 'Does not check for redirect' }}
+                            </q-tooltip>
+                        </q-icon></span>
+                </div>
+            </q-card-section>
+        </q-card>
+    </div>
 
-              <v-card-subtitle class="mt-2 mb-4">
-                <v-row class="text-truncate">{{ job.url }}</v-row>
-                <v-row class="subtitle mt-6">
-                  <span class="pr-3"
-                    ><v-icon small color="blue lighten-1" class="mr-1 pb-1"
-                      >mdi-update</v-icon
-                    >{{ job.interval }} Min.</span
-                  >
-                  <span class="pr-3"
-                    ><v-icon small color="yellow lighten-1" class="mr-1 pb-1"
-                      >mdi-format-list-checks</v-icon
-                    >{{ job.success_status.join(", ") }}</span
-                  >
-                  <span class="pr-2"
-                    ><v-icon
-                      v-if="job.verify_ssl"
-                      small
-                      color="green lighten-1"
-                      class="mr-1 pb-1"
-                      >mdi-shield</v-icon
-                    >
-                    <v-icon v-else small color="red lighten-1" class="mr-1 pb-1"
-                      >mdi-shield-alert</v-icon
-                    ></span
-                  >
-                  <span class="pr-3"
-                    ><v-icon
-                      v-if="job.check_redirect"
-                      small
-                      color="green lighten-1"
-                      class="mr-1 pb-1"
-                      >mdi-repeat</v-icon
-                    >
-                    <v-icon v-else small color="red lighten-1" class="mr-1 pb-1"
-                      >mdi-repeat-off</v-icon
-                    ></span
-                  >
-                </v-row>
-              </v-card-subtitle>
-            </v-col>
-            <v-col
-              cols="12"
-              sm="6"
-              lg="6"
-              md="6"
-              class="
-                py-0
-                px-0 px-sm-2
-                d-flex
-                justify-lg-end justify-sm-end justify-top
-              "
-            >
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    icon
-                    x-small
-                    color="amber accent-2"
-                    class="mr-5"
-                    v-bind="attrs"
-                    v-on="on"
-                    :loading="stateToggleLoader"
-                    :disabled="stateToggleLoader"
-                    @click="toggleJobState"
-                  >
-                    <v-icon v-if="job.state">mdi-pause</v-icon>
-                    <v-icon v-else>mdi-play</v-icon>
-                  </v-btn>
-                </template>
-                <span v-if="job.state">Pause Job</span>
-                <span v-else>Resume Job</span>
-              </v-tooltip>
 
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    icon
-                    x-small
-                    v-bind="attrs"
-                    v-on="on"
-                    color="blue darken-1"
-                    class="mr-5"
-                    :loading="reloadFaviconLoader"
-                    :disabled="reloadFaviconLoader"
-                    @click="reloadFavicon"
-                  >
-                    <v-icon>mdi-image-filter-hdr</v-icon>
-                  </v-btn>
-                </template>
-                <span>Reload Favicon</span>
-              </v-tooltip>
 
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    icon
-                    x-small
-                    v-bind="attrs"
-                    v-on="on"
-                    color="green darken-1"
-                    @click="editJobDialog = true"
-                  >
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                </template>
-                <span>Edit Job</span>
-              </v-tooltip>
+    <q-dialog v-model="jobStateDialog">
+        <q-card class="q-px-md">
+            <q-card-section>
+                <div class="text-h6 text-primary">{{ job?.state ? 'Pause' : 'Resume' }} Job?</div>
+            </q-card-section>
 
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    icon
-                    x-small
-                    v-bind="attrs"
-                    v-on="on"
-                    color="pink darken-1"
-                    class="mx-5"
-                    @click="openDeleteJobDialog"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-                <span>Delete Job</span>
-              </v-tooltip>
-            </v-col>
-          </v-card-title>
-        </v-card>
+            <q-card-section class="q-py-md">
+                Are you sure you want to {{ job?.state ? 'pause' : 'resume' }} job?.
+            </q-card-section>
 
-        <v-row>
-          <job-response-chart :uuid="job.uuid" />
-        </v-row>
+            <q-card-actions align="right" class="q-pt-md">
+                <q-btn flat label="Cancel" class="text-capitalize" v-close-popup />
+                <q-btn flat :label="job?.state ? 'Pause' : 'Resume'" class="text-capitalize" color="primary"
+                    :loading="jobStateLoading" :disable="jobStateLoading" @click="toggleJobState" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 
-        <v-row align="center" class="mt-3">
-          <job-created :created="job.created" />
-          <job-modified :modified="job.updated" />
-          <job-uptime :uuid="job.uuid" />
-          <job-response :uuid="job.uuid" />
-        </v-row>
+    <q-dialog v-model="jobDeleteDialog">
+        <q-card class="q-px-md">
+            <q-card-section>
+                <div class="text-h6 text-primary">Delete Job?</div>
+            </q-card-section>
 
-        <v-row>
-          <job-notifiers :uuids="job.notifiers" />
-          <job-history :uuid="job.uuid" />
-          <job-add-update :jobDialog.sync="editJobDialog" :job="job" />
-        </v-row>
-      </v-col>
-    </v-row>
+            <q-card-section class="q-py-md">
+                Are you sure you want to delete this job?. This is a non-reversible operation.
+            </q-card-section>
 
-    <!-- Delete Job -->
-    <v-dialog persistent v-model="deleteJobDialog" width="500">
-      <v-card color="secondary">
-        <v-card-title>
-          <span class="text-h5"> <v-icon>mdi-delete</v-icon> Delete Job</span>
-          <v-spacer></v-spacer>
-          <v-btn icon small @click="closeDeleteJobDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-text class="justify-center py-10">
-          Do you want to delete job
-          <strong>{{ this.job.title }}</strong
-          >?
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            color="pink darken-1"
-            block
-            depressed
-            outlined
-            class="text-capitalize"
-            :disabled="deleteJobBtnLoader"
-            :loading="deleteJobBtnLoader"
-            @click="deleteJob"
-          >
-            Delete
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!-- ./Delete Job -->
-  </v-container>
+            <q-card-actions align="right" class="q-pt-md">
+                <q-btn flat label="Cancel" class="text-capitalize" v-close-popup />
+                <q-btn flat label="Delete" class="text-capitalize" color="red" :loading="jobStateLoading"
+                    :disable="jobStateLoading" @click="deleteJob" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 </template>
 
-<script>
-import Loader from "../Loader.vue";
-import { EventBus } from "@/events/eventBus";
-import JobCreated from "./JobCreated.vue";
-import JobModified from "./JobModified.vue";
-import JobUptime from "./JobUptime.vue";
-import JobResponse from "./JobResponse.vue";
-import JobNotifiers from "./JobNotifiers.vue";
-import JobHistory from "./JobHistory.vue";
-import JobAddUpdate from "./JobAddUpdate.vue";
-import JobResponseChart from "./JobResponseChart.vue";
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import { JobType } from '../../types';
+import { useJobStore, useJobsStore } from '../../store';
+import { copy2Clipboard } from "../../utils/utils"
+import router from '../../router';
+import JobAddEdit from './JobAddEdit.vue'
 
-export default {
-  name: "JobDetails",
-  components: {
-    Loader,
-    JobCreated,
-    JobModified,
-    JobUptime,
-    JobResponse,
-    JobNotifiers,
-    JobHistory,
-    JobAddUpdate,
-    JobResponseChart,
-  },
+const jobStateDialog = ref<boolean>(false)
+const jobDeleteDialog = ref<boolean>(false)
 
-  data: () => ({
-    job: {},
+const props = defineProps({
+    uuid: {
+        type: String,
+        required: true
+    }
+})
 
-    jobLoader: false,
-    stateToggleLoader: false,
-    deleteJobBtnLoader: false,
-    reloadFaviconLoader: false,
+const job = computed((): JobType => {
+    const jobStore = useJobStore()
+    return jobStore.getJob as JobType
+})
 
-    deleteJobDialog: false,
-    editJobDialog: false,
-  }),
+const jobLoading = computed((): boolean => {
+    const jobStore = useJobStore()
+    return jobStore.getJobLoading
+})
 
-  created() {
-    const uuid = this.$route.params.uuid;
-    this.getJob(uuid);
-    EventBus.$on("jobEditEvent", this.jobEditEventHandler);
-  },
 
-  methods: {
-    getJob(uuid) {
-      this.jobLoader = true;
-      this.$http
-        .get(`/api/v1/jobs/${uuid}/`)
-        .then((result) => {
-          this.job = result.data;
-        })
-        .finally(() => {
-          this.jobLoader = false;
-        });
-    },
+const jobStateLoading = computed((): boolean => {
+    const jobStore = useJobStore()
+    return jobStore.getJobStateLoading
+})
 
-    deleteJob() {
-      this.deleteJobBtnLoader = true;
+const toggleJobStateDialog = () => {
+    jobStateDialog.value = !jobStateDialog.value
+}
 
-      const uuid = this.job.uuid;
-      this.$http
-        .delete(`/api/v1/jobs/${uuid}/`)
-        .then((result) => {
-          if (result.status === 204) {
-            EventBus.$emit("showSnackbar", {
-              status: "success",
-              message: "Job deleted",
-            });
-            this.closeDeleteJobDialog();
-            this.$router.replace({ name: "jobs" });
-          }
-        })
-        .finally(() => {
-          this.deleteJobBtnLoader = false;
-        });
-    },
+const toggleJobDeleteDialog = () => {
+    jobDeleteDialog.value = !jobDeleteDialog.value
+}
 
-    toggleJobState() {
-      var endpoint = "";
-      const uuid = this.job.uuid;
-      if (this.job.state) endpoint = `/api/v1/jobs/${uuid}/pause/`;
-      else endpoint = `/api/v1/jobs/${uuid}/resume/`;
+const toggleJobState = async () => {
+    const jobsStore = useJobsStore()
 
-      this.stateToggleLoader = true;
-      this.$http
-        .post(endpoint)
-        .then((result) => {
-          if (result.status === 200) this.job.state = !this.job.state;
-        })
-        .finally(() => {
-          this.stateToggleLoader = false;
-        });
-    },
+    if (job?.value.state) {
+        const jobStore = useJobStore()
+        await jobStore.pauseJob(props.uuid)
+    } else {
+        const jobStore = useJobStore()
+        await jobStore.resumeJob(props.uuid)
+    }
+    jobsStore.forceFetchJobs()
+    toggleJobStateDialog()
+}
 
-    reloadFavicon() {
-      const uuid = this.job.uuid;
-      this.reloadFaviconLoader = true;
-      this.$http
-        .get(`/api/v1/jobs/${uuid}/favicon/`)
-        .then((result) => {
-          if (result.status === 200) this.getJob(uuid);
-        })
-        .finally(() => {
-          this.reloadFaviconLoader = false;
-        });
-    },
+const deleteJob = async () => {
+    const jobStore = useJobStore()
+    const status = await jobStore.deleteJob(props.uuid)
+    if (status) {
+        const jobsStore = useJobsStore()
+        jobsStore.forceFetchJobs()
+        router.push({ name: 'jobs' })
+    }
+}
+onMounted(() => {
+    const jobStore = useJobStore()
+    jobStore.fetchJob(props.uuid)
+})
 
-    openDeleteJobDialog() {
-      this.deleteJobDialog = true;
-    },
-    closeDeleteJobDialog() {
-      this.deleteJobDialog = false;
-    },
 
-    jobEditEventHandler(data) {
-      this.job = data;
-    },
-  },
-};
 </script>
-
-<style>
-</style>

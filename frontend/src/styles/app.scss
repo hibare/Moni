@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "Merienda-Regular";
+    src: local("Merienda"),
+        url(/src/assets/fonts/Merienda/Merienda-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Merienda-Bold";
+    src: local("Merienda"),
+        url(/src/assets/fonts/Merienda/Merienda-Bold.ttf) format("truetype");
+}
+
+.header-url {
+    text-decoration: none;
+    color: #007d9c;
+}
+
+.header-url:hover {
+    color: #015F76;
+}
+
+.brand {
+    font-family: Merienda-Regular;
+}
+
+.q-item__section--avatar {
+    min-width: 0px;
+}
+
+.clickable-card {
+    cursor: pointer;
+}
+
+.card-title {
+    font-size: 16px;
+}
+
+.job-metric-card {
+    min-height: 93px;
+}
+
+.notifier-metric-card {
+    min-height: 93px;
+}

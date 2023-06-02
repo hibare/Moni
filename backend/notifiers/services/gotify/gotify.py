@@ -2,7 +2,7 @@
 
 import logging
 import json
-from typing import List
+from typing import List, Tuple
 from django.conf import settings
 from moni.utils.requests_proxy import requests_post
 from notifiers.services import NotifierService
@@ -27,7 +27,7 @@ class Gotify(NotifierService):
         self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / \
             "notifiers/services/gotify/template_service_up.json"
 
-    def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str = None) -> None:
+    def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str | None = None) -> None:
         TEMPLATE = self.SERVICE_UP_TEMPLATE if success else self.SERVICE_DOWN_TEMPLATE
 
         with open(TEMPLATE) as ft:
@@ -38,7 +38,7 @@ class Gotify(NotifierService):
 
         self.payload = template_data.encode("utf-8")
 
-    def send(self, webhook: str) -> bool:
+    def send(self, webhook: str) -> Tuple[bool, int | None, str | None]:
         try:
             response = requests_post(webhook, self.payload, self.HEADERS)
             logger.info("Response from Gotify, status_code=%s, response=%s",
