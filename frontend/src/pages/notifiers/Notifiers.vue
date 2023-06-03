@@ -4,8 +4,11 @@
             <div class="row">
                 <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)"
                     :disable="!notifiers.length">
-                    <template v-slot:append>
+                    <template v-slot:prepend>
                         <q-icon name="search" />
+                    </template>
+                    <template v-slot:append>
+                        <q-icon name="clear" size="xs" class="cursor-pointer" @click="clearSearch" v-if="search" />
                     </template>
                 </q-input>
                 <q-btn round flat icon="refresh" @click="refreshNotifiers"
@@ -68,6 +71,10 @@ import NotifierAddEdit from '../../components/notifiers/NotifierAddEdit.vue';
 const search = ref<string>('')
 
 const notifiersStore = useNotifiersStore()
+
+const clearSearch = () => {
+    search.value = ''
+}
 
 const notifiers = computed(() => {
     return notifiersStore.getNotifiers

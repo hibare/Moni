@@ -16,8 +16,11 @@
             <div class="row">
                 <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 150px)"
                     :disable="!jobs.length">
-                    <template v-slot:append>
+                    <template v-slot:prepend>
                         <q-icon name="search" />
+                    </template>
+                    <template v-slot:append>
+                        <q-icon name="clear" size="xs" class="cursor-pointer" @click="clearSearch" v-if="search" />
                     </template>
                 </q-input>
                 <q-btn round flat icon="refresh" @click="refreshJobs" :disable="jobsLoading || jobs.length === 0">
@@ -157,6 +160,10 @@ const jobsFilter = ref<JobsFilterType>({
     unhealthyJobs: false,
     pausedJobs: false
 })
+
+const clearSearch = () => {
+    search.value = ''
+}
 
 const clearFilters = () => {
     jobsFilter.value.healthyJobs = false
