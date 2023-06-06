@@ -4,8 +4,6 @@
 #
 #    pip-compile --resolver=backtracking requirements.in
 #
---trusted-host pypi.org
-
 apscheduler==3.10.1
     # via django-apscheduler
 asgiref==3.7.2
@@ -14,7 +12,7 @@ beautifulsoup4==4.12.2
     # via -r requirements.in
 dj-database-url==2.0.0
     # via -r requirements.in
-django==4.2.1
+django==4.2.2
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -62,9 +60,7 @@ soupsieve==2.4.1
 sqlparse==0.4.4
     # via django
 typing-extensions==4.6.2
-    # via
-    #   asgiref
-    #   dj-database-url
+    # via dj-database-url
 tzdata==2023.3
     # via pytz-deprecation-shim
 tzlocal==5.0.1
