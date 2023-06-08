@@ -7,6 +7,8 @@
                     :disable="rows.length === 0" @click="toggleDeleteHistoryDialog" />
                 <q-btn :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'" size="sm" flat round color="primary"
                     class="float-right" :disable="rows.length === 0" @click="toggleFullscreen" />
+                <q-btn icon="refresh" size="sm" flat round color="primary" class="float-right"
+                    :disable="rows.length === 0 || historyLoading" :loading="historyLoading" @click="refreshHistory" />
             </div>
         </template>
         <template v-slot:loading>
@@ -137,6 +139,10 @@ const toggleDeleteHistoryDialog = function () {
 const deleteJobHistory = async function () {
     await notifierHistoryStore.deleteHistory(props.uuid)
     deleteHistoryDialog.value = false
+}
+
+const refreshHistory = () => {
+    notifierHistoryStore.fetchHistory(props.uuid, true)
 }
 
 onMounted(() => {
