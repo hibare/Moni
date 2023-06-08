@@ -31,7 +31,6 @@ export const useJobHistoryStore = defineStore("jobHistory", () => {
       historyError.value = null;
 
       for (const hist of history.value) {
-        hist.timestamp = prettyDate(hist.timestamp);
         hist.error = hist.error || "-";
       }
     } catch (err: unknown) {

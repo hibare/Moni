@@ -31,7 +31,6 @@ export const useNotifierHistoryStore = defineStore("notifierHistory", () => {
       historyError.value = null;
 
       for (const hist of history.value) {
-        hist.timestamp = prettyDate(hist.timestamp);
         hist.error = hist.error || "-";
       }
     } catch (err: unknown) {

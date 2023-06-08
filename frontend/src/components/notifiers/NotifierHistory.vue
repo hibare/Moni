@@ -26,6 +26,11 @@
                     size="1.2rem" />
             </q-td>
         </template>
+        <template v-slot:body-cell-timestamp="props">
+            <q-td :props="props">
+                {{ prettyDate(props.row.timestamp) }}
+            </q-td>
+        </template>
     </q-table>
 
     <q-dialog v-model="deleteHistoryDialog">
@@ -52,6 +57,7 @@ import { ref, onMounted, computed } from 'vue';
 import { QTableColumn } from 'quasar';
 import { HistoryType } from '../../types';
 import { useNotifierHistoryStore } from '../../store';
+import { prettyDate } from "../../utils/utils";
 
 const fullscreen = ref<boolean>(false)
 const pagination = ref<Record<string, any>>({
