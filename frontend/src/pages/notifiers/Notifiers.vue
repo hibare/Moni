@@ -36,7 +36,7 @@
             <error :text="notifierError" v-if="notifierError"></error>
 
             <div class="row q-col-gutter-md q-col-gutter-y-lg" v-else>
-                <div class="col-md-3 clickable-card " v-for="notifier in filteredNotifiers"
+                <div class="col-md-3 col-12 clickable-card " v-for="notifier in filteredNotifiers"
                     @click="route2Details(notifier.uuid)">
                     <q-card style="min-height: 70px">
                         <q-item>
