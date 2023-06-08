@@ -23,9 +23,7 @@ def job_post_save(sender, instance, created, **kwargs):
 
     if created:
         JobOps.add(instance.uuid)
-
-        favicon_url = Favicon.get_favicon_url(instance.url)
-        Jobs.objects.filter(uuid=instance.uuid).update(favicon_url=favicon_url)
+        instance.update_favicon_url()
     else:
         if instance.tracker.has_changed('state'):
             if instance.state:
