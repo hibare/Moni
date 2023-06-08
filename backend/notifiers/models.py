@@ -25,6 +25,7 @@ class Notifiers(models.Model):
     type = models.CharField(max_length=10, choices=NOTIFIER_TYPES)
     title = models.CharField(max_length=15)
     description = models.TextField(default="", blank=True)
+    state = models.BooleanField(default=True)
 
     class Meta:
         indexes = [

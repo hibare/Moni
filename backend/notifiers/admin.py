@@ -11,9 +11,9 @@ class NotifiersAdmin(admin.ModelAdmin):
     """Notifiers admin class"""
 
     empty_value_display = '-empty-'
-    list_display = ['uuid', 'url', 'type',
+    list_display = ['uuid', 'state', 'url', 'type',
                     'description']
-    list_filter = ['type']
+    list_filter = ['type', 'state']
 
     def has_add_permission(self, request: HttpRequest) -> bool:
         return False

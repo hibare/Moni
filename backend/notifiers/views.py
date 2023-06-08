@@ -173,6 +173,40 @@ class NotifiersViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Up
                 "error": n_error
             }, status=n_status_code)
 
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
+    def pause(self, request, **kwargs):
+        """Pause notifier"""
+
+        try:
+            uuid = self.kwargs['uuid']
+            notifier = self.queryset.get(uuid=uuid)
+
+            if notifier.state:
+                notifier.state = False
+                notifier.save()
+                return Response({"detail": "Notifier paused"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Notifier already in pause state"}, status=status.HTTP_409_CONFLICT)
+        except Notifiers.DoesNotExist:
+            raise NotFound
+
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
+    def resume(self, request, **kwargs):
+        """Resume notifier"""
+
+        try:
+            uuid = self.kwargs['uuid']
+            notifier = self.queryset.get(uuid=uuid)
+
+            if not notifier.state:
+                notifier.state = True
+                notifier.save()
+                return Response({"detail": "Notifier resumed"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Notifier already in active state"}, status=status.HTTP_409_CONFLICT)
+        except Notifiers.DoesNotExist:
+            raise NotFound
+
 
 class NotifiersHistoryViewSet(generics.ListAPIView, viewsets.GenericViewSet):
     """
