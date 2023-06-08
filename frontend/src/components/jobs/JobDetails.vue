@@ -60,6 +60,9 @@
                                     {{ job?.check_redirect ? 'Checks for redirect' : 'Does not check for redirect' }}
                                 </q-tooltip>
                             </q-icon></span>
+                        <span><q-icon name="data_thresholding" color="brown" class="q-pr-xs" />
+                            <q-tooltip>Job Failure Threshold</q-tooltip>
+                            {{ job?.failure_threshold }}</span>
                     </div>
                 </q-card-section>
             </template>
