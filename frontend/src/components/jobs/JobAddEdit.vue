@@ -122,7 +122,7 @@ const jobItem = ref<JobAddEditType>({
     headers: {},
     notifiers: [],
     success_status: [200],
-    failure_threshold: 1,
+    failure_threshold: 3,
 })
 
 const jobDefaultItem: JobAddEditType = {
@@ -135,7 +135,7 @@ const jobDefaultItem: JobAddEditType = {
     headers: {},
     notifiers: [],
     success_status: [200],
-    failure_threshold: 1,
+    failure_threshold: 3,
 }
 
 const props = defineProps({
