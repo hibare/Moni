@@ -15,7 +15,7 @@
                 <span class="text-caption">{{ getBadge }}</span>
                 <q-menu transition-show="scale" transition-hide="scale" anchor="bottom left">
                     <q-list style="min-width: 100px">
-                        <q-item clickable :to="{ name: 'profile' }">
+                        <q-item clickable :to="{ name: 'profile.account' }">
                             <q-item-section>Profile</q-item-section>
                         </q-item>
                     </q-list>
