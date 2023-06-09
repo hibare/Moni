@@ -22,8 +22,8 @@ import { useAuthStore } from './store'
 const authStore = useAuthStore()
 const { getIsVerifyingToken, getIsLoggedIn, validateSession } = authStore
 
-onMounted(async () => {
-  await validateSession()
+onMounted(() => {
+  validateSession()
 })
 </script>
 
