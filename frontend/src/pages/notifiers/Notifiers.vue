@@ -1,5 +1,5 @@
 <template>
-    <q-page container class="q-pb-xl q-px-md">
+    <q-page container class="q-pb-xl">
         <div class="q-pa-md q-gutter-md" v-if="!notifierError">
             <div class="row">
                 <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)"

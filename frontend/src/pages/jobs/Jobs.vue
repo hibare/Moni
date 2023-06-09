@@ -1,5 +1,5 @@
 <template>
-    <q-page container class="q-pb-xl q-px-md">
+    <q-page container class="q-pb-xl">
         <div class="q-pa-md q-gutter-md" v-if="!jobsError">
             <template v-if="jobs.length">
                 <q-banner inline-actions rounded :class="[systemsOperational ? 'bg-green' : 'bg-orange', 'text-white']"
