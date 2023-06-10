@@ -25,10 +25,11 @@ export const useNotifierHistoryStore = defineStore("notifierHistory", () => {
 
     try {
       historyLoading.value = true;
+      historyError.value = null;
+
       const data = await notifiersApi.getNotifierHistory(uuid);
       history.value = data;
       loadedNotifier.value = uuid;
-      historyError.value = null;
 
       for (const hist of history.value) {
         hist.error = hist.error || "-";
@@ -43,8 +44,9 @@ export const useNotifierHistoryStore = defineStore("notifierHistory", () => {
   async function deleteHistory(uuid: string) {
     try {
       historyDelLoading.value = true;
-      await notifiersApi.deleteNotifierHistory(uuid);
       historyDelError.value = null;
+
+      await notifiersApi.deleteNotifierHistory(uuid);
       history.value = [];
     } catch (err: unknown) {
       historyDelError.value = getErrorMessage(err);

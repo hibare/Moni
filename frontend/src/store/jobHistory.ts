@@ -25,10 +25,11 @@ export const useJobHistoryStore = defineStore("jobHistory", () => {
 
     try {
       historyLoading.value = true;
+      historyError.value = null;
+
       const data = await jobsApi.getJobHistory(uuid);
       history.value = data;
       loadedJob.value = uuid;
-      historyError.value = null;
 
       for (const hist of history.value) {
         hist.error = hist.error || "-";
@@ -43,8 +44,9 @@ export const useJobHistoryStore = defineStore("jobHistory", () => {
   async function deleteHistory(uuid: string) {
     try {
       historyDelLoading.value = true;
-      await jobsApi.deleteJobHistory(uuid);
       historyDelError.value = null;
+
+      await jobsApi.deleteJobHistory(uuid);
       history.value = [];
     } catch (err: unknown) {
       historyDelError.value = getErrorMessage(err);

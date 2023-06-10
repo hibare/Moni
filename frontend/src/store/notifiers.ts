@@ -20,9 +20,10 @@ export const useNotifiersStore = defineStore("notifiersStore", () => {
 
     try {
       loading.value = true;
+      error.value = null;
+
       const data = await notifiersApi.getNotifiers();
       notifiers.value = data;
-      error.value = null;
     } catch (err: unknown) {
       error.value = getErrorMessage(err);
     } finally {

@@ -35,12 +35,11 @@ export const useJobStore = defineStore("job", () => {
     }
 
     try {
+      jobError.value = null;
       jobLoading.value = true;
 
       const data = await jobsApi.getJob(uuid);
       job.value = data;
-
-      jobError.value = null;
     } catch (err: unknown) {
       jobError.value = getErrorMessage(err);
     } finally {
@@ -52,12 +51,12 @@ export const useJobStore = defineStore("job", () => {
     let status: boolean = false;
 
     try {
+      jobError.value = null;
       jobLoading.value = true;
 
       const data = await jobsApi.addJob(addJob);
       job.value = data;
 
-      jobError.value = null;
       status = true;
     } catch (err: unknown) {
       jobError.value = getErrorMessage(err);
@@ -72,13 +71,14 @@ export const useJobStore = defineStore("job", () => {
     patchJob: JobAddEditType
   ): Promise<boolean> {
     let status: boolean = false;
+
     try {
+      jobError.value = null;
       jobLoading.value = true;
 
       const data = await jobsApi.patchJob(uuid, patchJob);
       job.value = data;
 
-      jobError.value = null;
       status = true;
     } catch (err: unknown) {
       jobError.value = getErrorMessage(err);
@@ -95,9 +95,10 @@ export const useJobStore = defineStore("job", () => {
 
     try {
       jobUptimeLoading.value = true;
+      jobUptimeError.value = null;
+
       const data = await jobsApi.getJobUptime(uuid);
       jobUptime.value = data.uptime;
-      jobUptimeError.value = null;
     } catch (err: unknown) {
       jobUptimeError.value = getErrorMessage(err);
     } finally {
@@ -119,9 +120,10 @@ export const useJobStore = defineStore("job", () => {
 
     try {
       jobResponseTimeLoading.value = true;
+      jobResponseTimeError.value = null;
+
       const data = await jobsApi.getJobResponseTime(uuid);
       jobResponseTime.value = data.response;
-      jobResponseTimeError.value = null;
     } catch (err: unknown) {
       jobResponseTimeError.value = getErrorMessage(err);
     } finally {

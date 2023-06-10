@@ -32,9 +32,10 @@ export const useNotifierStore = defineStore("notifierStore", () => {
 
     try {
       notifierLoading.value = true;
+      notifierError.value = null;
+
       const data = await notifiersApi.getNotifier(uuid);
       notifier.value = data;
-      notifierError.value = null;
     } catch (err: unknown) {
       notifierError.value = getErrorMessage(err);
     } finally {
@@ -97,9 +98,10 @@ export const useNotifierStore = defineStore("notifierStore", () => {
 
     try {
       notifierDeliveryLoading.value = true;
+      notifierDeliveryError.value = null;
+
       const data = await notifiersApi.getNotifierDelivery(uuid);
       notifierDelivery.value = data.delivery;
-      notifierDeliveryError.value = null;
     } catch (err: unknown) {
       notifierDeliveryError.value = getErrorMessage(err);
     } finally {
