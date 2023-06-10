@@ -96,7 +96,7 @@
             <error :text="jobsError" v-if="jobsError"></error>
 
             <div class="row q-col-gutter-md q-col-gutter-y-lg" v-else>
-                <div class="col-md-4 col-12 clickable-card " v-for="job in filteredJobs" @click="route2Details(job.uuid)">
+                <div class="col-md-4 col-12 clickable-card" v-for="job in filteredJobs" @click="route2Details(job.uuid)">
                     <q-card>
                         <q-item>
                             <q-item-section avatar class="q-pr-xs">
@@ -124,7 +124,7 @@
                                 </q-chip>
                             </q-card-section>
                         </q-item>
-                        <q-item>
+                        <q-item class="q-pt-none">
                             <q-item-section>
                                 <q-item-label caption class="q-py-2">
                                     {{ job.url }}
