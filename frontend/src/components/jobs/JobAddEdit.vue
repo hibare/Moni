@@ -5,7 +5,7 @@
         </q-tooltip>
     </q-btn>
     <q-dialog v-model="jobAddEditDialog" class="q-pa-md" persistent>
-        <q-card class="q-px-lg q-pt-md" style="width: 800px; max-width: 80vw;">
+        <q-card class="q-px-md q-pt-sm" style="width: 800px; max-width: 80vw;">
             <q-inner-loading showing v-if="notifiersLoading || jobLoading">
                 <q-spinner-puff size="50px" color="primary" />
             </q-inner-loading>
