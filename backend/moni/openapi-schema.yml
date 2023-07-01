@@ -885,6 +885,66 @@ paths:
           description: "Invalid notifier / No jobs found"
       tags:
         - Notifiers
+  /api/v1/notifiers/{uuid}/pause/:
+    post:
+      operationId: Pause a Notifier
+      description: Pause a Notifier
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A unique value identifying this Notifiers.
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pause"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such Notifier"
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pause"
+          description: "Conflict with the state"
+      tags:
+      - Notifiers
+  /api/v1/notifiers/{uuid}/resume/:
+    post:
+      operationId: Resume a Notifier
+      description: Resume a Notifier
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A unique value identifying this Notifiers.
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resume"
+          description: ""
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "No such Notifier"
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resume"
+          description: "Conflict with the state"
+      tags:
+      - Notifiers
   /api/v1/notifiers/history/:
     get:
       operationId: List notificaitons history
@@ -1242,5 +1302,17 @@ components:
           type: integer
           readOnly: true
         error:
+          type: string
+          readOnly: true
+    Pause:
+      type: object
+      properties:
+        details:
+          type: string
+          readOnly: true
+    Resume:
+      type: object
+      properties:
+        details:
           type: string
           readOnly: true

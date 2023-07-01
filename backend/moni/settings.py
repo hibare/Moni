@@ -232,3 +232,7 @@ SCHEDULER_JOB_REPLACE_EXISTING = config(
 # App info
 VERSION = get_version()
 TITLE = get_title()
+
+JOB_HISTORY_PURGE_AGE = config('JOB_HISTORY_PURGE_AGE', default=30, cast=int)
+NOTIFIER_HISTORY_PURGE_AGE = config(
+    'NOTIFIER_HISTORY_PURGE_AGE', default=30, cast=int)

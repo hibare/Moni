@@ -105,3 +105,9 @@ export type PasswordType = {
 export type APITokenType = {
   token: string;
 };
+
+export type JobsFilterType = {
+  healthyJobs: boolean;
+  unhealthyJobs: boolean;
+  pausedJobs: boolean;
+};

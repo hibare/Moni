@@ -1,4 +1,10 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, {
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+  AxiosRequestHeaders,
+  AxiosError,
+  AxiosRequestConfig,
+} from "axios";
 import router from "../router";
 import { NotificationType } from "../types";
 import { useAuthStore } from "../store";
@@ -10,7 +16,7 @@ const responseIgnorePaths = ["/api/v1/notifiers/test/"];
 const loginPaths = ["/api/v1/accounts/jwt/"];
 
 axios.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     if (
       config.url &&
       !requestsIgnorePaths.includes(config.url) &&
@@ -20,7 +26,7 @@ axios.interceptors.request.use(
       const token = authStore.getAccessToken.value;
 
       if (!config.headers) {
-        config.headers = {};
+        config.headers = {} as AxiosRequestHeaders;
       }
       config.headers["X-Access-Token"] = `JWT ${token}`;
     }
@@ -33,26 +39,22 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(
-  (response) => {
-    if (
-      response.status === 200 ||
-      response.status === 201 ||
-      response.status === 204
-    ) {
-      return Promise.resolve(response);
-    } else {
-      return Promise.reject(response);
-    }
+  (response: AxiosResponse): AxiosResponse => {
+    return response;
   },
-  (error) => {
-    if (
-      error.response.status &&
-      !responseIgnorePaths.includes(error.config.url)
-    ) {
+  (error: AxiosError | Error): Promise<AxiosError> => {
+    if (axios.isAxiosError(error)) {
+      const { method, url } = error.config as AxiosRequestConfig;
+      const { status } = (error.response as AxiosResponse) ?? {};
+
+      if (url && responseIgnorePaths.includes(url)) {
+        return Promise.reject(error);
+      }
+
       var notification = {} as NotificationType;
       const authStore = useAuthStore();
 
-      switch (error.response.status) {
+      switch (status) {
         case 400:
           notification.status = NotifyStatus.Error;
           notification.message = "Bad request";
@@ -60,21 +62,21 @@ axios.interceptors.response.use(
 
         case 401:
           notification.status = NotifyStatus.Error;
-          if (loginPaths.includes(error.config.url)) {
+          if (loginPaths.includes(url as string)) {
             notification.message = "Username / Password is incorrect";
           } else {
             notification.message = authStore.getIsLoggedIn.value
               ? "Session Expired"
               : "Unauthorised";
           }
+          if (method === "get") {
+            router.push({ name: "logout" });
+          }
           break;
 
         case 403:
           notification.status = NotifyStatus.Error;
           notification.message = "Forbidden";
-          if (error.config.method === "get") {
-            router.push({ name: "login" });
-          }
           break;
 
         case 404:

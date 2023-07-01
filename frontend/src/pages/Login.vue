@@ -1,7 +1,7 @@
 <template>
     <q-page container>
         <div class="row">
-            <div class="col-4 absolute-center">
+            <div class="col-12 col-md-4 absolute-center q-px-lg">
                 <div class="row q-pb-md justify-center">
                     <q-avatar class="q-mr-sm">
                         <img src="/favicon.png" height="40px" width="50px" />

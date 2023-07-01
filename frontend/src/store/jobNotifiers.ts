@@ -21,10 +21,11 @@ export const useJobNotifiersStore = defineStore("jobNotifiers", () => {
 
     try {
       loading.value = true;
+      error.value = null;
+
       const data = await jobsApi.getJobNotifiers(uuid);
       notifiers.value = data;
       loadedJob.value = uuid;
-      error.value = null;
     } catch (err: unknown) {
       error.value = getErrorMessage(err);
     } finally {

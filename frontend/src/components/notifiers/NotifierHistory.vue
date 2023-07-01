@@ -1,12 +1,14 @@
 <template>
     <q-table title="History" :rows="rows" :columns="columns" :loading="historyLoading" row-key="timestamp"
-        :fullscreen="fullscreen" class="q-px-sm q-py-sm">
+        :fullscreen="fullscreen" @fullscreen="onFullscreen" v-model:pagination="pagination" class="q-px-sm q-py-sm">
         <template v-slot:top>
             <div class="col-12 card-title text-weight-medium"><q-icon name="history" size="xs" />
                 History <q-btn icon="delete" size="sm" flat round color="red" class="float-right"
                     :disable="rows.length === 0" @click="toggleDeleteHistoryDialog" />
                 <q-btn :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'" size="sm" flat round color="primary"
                     class="float-right" :disable="rows.length === 0" @click="toggleFullscreen" />
+                <q-btn icon="refresh" size="sm" flat round color="primary" class="float-right"
+                    :disable="rows.length === 0 || historyLoading" :loading="historyLoading" @click="refreshHistory" />
             </div>
         </template>
         <template v-slot:loading>
@@ -24,6 +26,11 @@
             <q-td :props="props">
                 <q-icon :name="props.row.status ? 'check' : 'close'" :color="props.row.status ? 'green' : 'red'"
                     size="1.2rem" />
+            </q-td>
+        </template>
+        <template v-slot:body-cell-timestamp="props">
+            <q-td :props="props">
+                {{ prettyDate(props.row.timestamp) }}
             </q-td>
         </template>
     </q-table>
@@ -52,10 +59,13 @@ import { ref, onMounted, computed } from 'vue';
 import { QTableColumn } from 'quasar';
 import { HistoryType } from '../../types';
 import { useNotifierHistoryStore } from '../../store';
+import { prettyDate } from "../../utils/utils";
 
 const fullscreen = ref<boolean>(false)
+const pagination = ref<Record<string, any>>({
+    rowsPerPage: 5
+})
 const deleteHistoryDialog = ref<boolean>(false)
-
 
 const props = defineProps({
     uuid: {
@@ -96,6 +106,10 @@ const columns: QTableColumn[] = [
     },
 ]
 
+const onFullscreen = (val: boolean) => {
+    pagination.value.rowsPerPage = val ? 10 : 5
+}
+
 const notifierHistoryStore = useNotifierHistoryStore()
 
 const rows = computed((): Array<HistoryType> => {
@@ -125,6 +139,10 @@ const toggleDeleteHistoryDialog = function () {
 const deleteJobHistory = async function () {
     await notifierHistoryStore.deleteHistory(props.uuid)
     deleteHistoryDialog.value = false
+}
+
+const refreshHistory = () => {
+    notifierHistoryStore.fetchHistory(props.uuid, true)
 }
 
 onMounted(() => {

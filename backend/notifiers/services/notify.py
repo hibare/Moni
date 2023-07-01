@@ -27,11 +27,15 @@ class Notify:
     def notify(notification_obj: Notifiers, title: str, url: str, success: bool, success_status: List, status_code: int | None, error: str | None = None):
         """Prepare & send notifier"""
 
+        if not notification_obj.state:
+            logger.warning("Notifier disabled, uuid=%s",
+                           notification_obj.uuid)
+            return
+
         notifier = Notify.NOTIFIERS.get(notification_obj.type, None)
 
         if notifier:
             notify = notifier()
-
         else:
             logger.error("Unknown notifier uuid=%s, type=%s",
                          notification_obj.uuid, notification_obj.type)

@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from model_utils import FieldTracker
+from moni.utils.favicon import Favicon
 from moni.utils.funcs import get_str_uuid
 from notifiers.models import Notifiers
 
@@ -51,6 +52,10 @@ class Jobs(models.Model):
     def __str__(self) -> str:
         return self.uuid
 
+    def update_favicon_url(self):
+        self.favicon_url = Favicon.get_favicon_url(self.url)
+        self.save()
+
 
 class JobsHistoryManager(models.Manager):
     """Job history manager"""
@@ -59,7 +64,7 @@ class JobsHistoryManager(models.Manager):
         """Delete job history from database"""
 
         self.filter(timestamp__lte=timezone.now() -
-                    timedelta(seconds=max_age)).delete()
+                    timedelta(days=max_age)).delete()
 
 
 class JobsHistory(models.Model):

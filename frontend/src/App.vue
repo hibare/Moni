@@ -15,12 +15,16 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import Header from './components/Header.vue'
 import { useAuthStore } from './store'
 
 const authStore = useAuthStore()
-const { getIsVerifyingToken, getIsLoggedIn } = authStore
+const { getIsVerifyingToken, getIsLoggedIn, validateSession } = authStore
 
+onMounted(() => {
+  validateSession()
+})
 </script>
 
 <style>

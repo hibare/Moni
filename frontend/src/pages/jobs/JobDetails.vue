@@ -1,6 +1,6 @@
 <template>
     <q-page container class="q-pa-md q-col-gutter-md">
-        <error :text="jobError" v-if="jobError"></error>
+        <error :text="jobError" v-if="jobError && job !== undefined"></error>
 
         <template v-else>
             <JobDetails :uuid="(uuid as string)" v-if="uuid !== null"></JobDetails>
@@ -47,8 +47,13 @@ import JobHistory from '../../components/jobs/JobHistory.vue';
 
 const uuid = ref<String | null>(null)
 
+const jobStore = useJobStore()
+
+const job = computed(() => {
+    return jobStore.job
+})
+
 const jobError = computed((): string => {
-    const jobStore = useJobStore()
     return jobStore.getJobError || ''
 })
 

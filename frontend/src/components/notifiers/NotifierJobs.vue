@@ -41,7 +41,8 @@
         <template v-slot:body-cell-healthy="props">
             <q-td :props="props">
                 <q-icon :name="props.row.healthy ? 'check' : 'close'" :color="props.row.healthy ? 'green' : 'red'"
-                    size="1.2rem" />
+                    size="1.2rem" v-if="props.row.state" />
+                <q-icon name="remove" size="1.2rem" v-else />
             </q-td>
         </template>
     </q-table>

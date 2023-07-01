@@ -25,6 +25,7 @@ class Notifiers(models.Model):
     type = models.CharField(max_length=10, choices=NOTIFIER_TYPES)
     title = models.CharField(max_length=15)
     description = models.TextField(default="", blank=True)
+    state = models.BooleanField(default=True)
 
     class Meta:
         indexes = [
@@ -44,7 +45,7 @@ class NotifiersHistoryManager(models.Manager):
         """Delete notifiers history from database"""
 
         self.filter(timestamp__lte=timezone.now() -
-                    timedelta(seconds=max_age)).delete()
+                    timedelta(days=max_age)).delete()
 
 
 class NotifiersHistory(models.Model):

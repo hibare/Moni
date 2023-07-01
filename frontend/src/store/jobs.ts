@@ -20,10 +20,10 @@ export const useJobsStore = defineStore("jobs", () => {
 
     try {
       loading.value = true;
+      error.value = null;
 
       const data = await jobsApi.getJobs();
       jobs.value = data;
-      error.value = null;
     } catch (err: unknown) {
       error.value = getErrorMessage(err);
     } finally {

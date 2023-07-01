@@ -15,7 +15,7 @@
                 <span class="text-caption">{{ getBadge }}</span>
                 <q-menu transition-show="scale" transition-hide="scale" anchor="bottom left">
                     <q-list style="min-width: 100px">
-                        <q-item clickable :to="{ name: 'profile' }">
+                        <q-item clickable :to="{ name: 'profile.account' }">
                             <q-item-section>Profile</q-item-section>
                         </q-item>
                     </q-list>
@@ -61,7 +61,7 @@
 
                 <span class="fixed-bottom">
                     <q-separator />
-                    <q-item clickable v-ripple :to="{ name: 'profile' }">
+                    <q-item clickable v-ripple :to="{ name: 'profile.account' }">
                         <q-item-section avatar>
                             <q-icon name="person" />
                         </q-item-section>
@@ -70,7 +70,7 @@
                             Profile
                         </q-item-section>
                     </q-item>
-                    <q-item clickable v-ripple>
+                    <q-item clickable v-ripple target="_blank" :href=AppGithub>
                         <q-item-section avatar>
                             <q-icon name="fa-brands fa-github" />
                         </q-item-section>
@@ -98,6 +98,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useAuthStore } from '../store';
+import { AppGithub } from '../constants';
 
 const drawer = ref<boolean>(false)
 const miniState = ref<boolean>(true)

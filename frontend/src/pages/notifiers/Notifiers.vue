@@ -1,10 +1,14 @@
 <template>
-    <q-page container class="q-pb-xl q-px-md">
-        <div class="q-pa-md q-gutter-md" v-if="!notifierError && notifiers.length">
+    <q-page container class="q-pb-xl">
+        <div class="q-pa-md q-gutter-md" v-if="!notifierError">
             <div class="row">
-                <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)">
-                    <template v-slot:append>
+                <q-input filled dense v-model="search" label="Search..." style="width: calc(100% - 100px)"
+                    :disable="!notifiers.length">
+                    <template v-slot:prepend>
                         <q-icon name="search" />
+                    </template>
+                    <template v-slot:append>
+                        <q-icon name="clear" size="xs" class="cursor-pointer" @click="clearSearch" v-if="search" />
                     </template>
                 </q-input>
                 <q-btn round flat icon="refresh" @click="refreshNotifiers"
@@ -16,6 +20,14 @@
                 <NotifierAddEdit iconSize="md" />
             </div>
         </div>
+
+        <div class="row absolute-center" v-if="!notifiers.length && !notifierLoading && !notifierError">
+            <div class="text-subtitle2"><q-icon name="psychology_alt" size="sm" /> No Notifiers found<br />
+                Click
+                <NotifierAddEdit iconSize="sm" /> to add a Notifier.
+            </div>
+        </div>
+
         <div class="q-mx-md q-mt-sm ">
             <q-inner-loading :showing="notifierLoading">
                 <q-spinner-puff size="50px" color="primary" />
@@ -24,7 +36,7 @@
             <error :text="notifierError" v-if="notifierError"></error>
 
             <div class="row q-col-gutter-md q-col-gutter-y-lg" v-else>
-                <div class="col-md-3 clickable-card " v-for="notifier in filteredNotifiers"
+                <div class="col-md-3 col-12 clickable-card " v-for="notifier in filteredNotifiers"
                     @click="route2Details(notifier.uuid)">
                     <q-card style="min-height: 70px">
                         <q-item>
@@ -59,6 +71,10 @@ import NotifierAddEdit from '../../components/notifiers/NotifierAddEdit.vue';
 const search = ref<string>('')
 
 const notifiersStore = useNotifiersStore()
+
+const clearSearch = () => {
+    search.value = ''
+}
 
 const notifiers = computed(() => {
     return notifiersStore.getNotifiers

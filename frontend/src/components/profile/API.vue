@@ -1,7 +1,7 @@
 <template>
     <div style="max-width: 40vw">
         <div class="text-h6 q-mb-lg">API</div>
-        <div>
+        <div class="q-pb-xs">
             <q-inner-loading showing v-if="apiTokenLoading">
                 <q-spinner-puff size="50px" color="primary" />
             </q-inner-loading>
@@ -11,7 +11,8 @@
                 one
             </q-banner>
             <q-banner inline-actions rounded class="bg-primary text-white q-mb-md" v-else>
-                <q-icon name="info" size="sm" /> Please keep your API token in a secure place.
+                <q-icon name="info" size="sm" /> Please keep your API token in a secure place. <a href="/swagger"
+                    target="_blank" class="text-white">API Swagger Doc</a>
             </q-banner>
 
             <q-input dense filled v-model="apiToken" label="API Token" readonly
@@ -22,8 +23,9 @@
                     <q-icon name="content_copy" class="cursor-pointer" size="xs" @click="copy2Clipboard(apiToken)" />
                 </template>
             </q-input>
-            <div class="row q-gutter-sm q-mt-sm">
-                <q-icon name="refresh" color="primary" size="sm" class="cursor-pointer" @click="regenerateToken">
+            <div class="row q-gutter-sm q-my-md">
+                <q-icon name="refresh" color="primary" size="sm" class="cursor-pointer"
+                    @click="apiTokenRenerateDialog = true">
                     <q-tooltip>Re-generate API Token</q-tooltip>
                 </q-icon>
                 <q-icon name="delete" color="red" size="sm" class="cursor-pointer" :disable="apiTokenDeleteLoading"
@@ -33,6 +35,24 @@
             </div>
         </div>
     </div>
+
+    <q-dialog v-model="apiTokenRenerateDialog">
+        <q-card class="q-px-md">
+            <q-card-section>
+                <div class="text-h6 text-primary">Regenerate API Token?</div>
+            </q-card-section>
+
+            <q-card-section class="q-py-md">
+                Are you sure you want to regenerate this API token? Deleting API token may produce unintended side-effects.
+            </q-card-section>
+
+            <q-card-actions align="right" class="q-pt-md">
+                <q-btn flat label="Cancel" class="text-capitalize" v-close-popup />
+                <q-btn flat label="Regenerate" class="text-capitalize" color="red" :loading="apiTokenRegenerateLoading"
+                    :disable="apiTokenRegenerateLoading" @click="regenerateToken" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 
     <q-dialog v-model="apiTokenDeleteDialog">
         <q-card class="q-px-md">
@@ -62,8 +82,10 @@ import { NotificationType } from '../../types';
 
 const apiToken = ref<string>("")
 const apiTokenLoading = ref<boolean>(false)
+const apiTokenRegenerateLoading = ref<boolean>(false)
 const apiTokenDeleteLoading = ref<boolean>(false)
 const apiTokenDeleteDialog = ref<boolean>(false)
+const apiTokenRenerateDialog = ref<boolean>(false)
 const apiTokenVisibility = ref<boolean>(false)
 
 const regenerateToken = async () => {
@@ -75,6 +97,7 @@ const regenerateToken = async () => {
         apiToken.value = data.token
         notifications.status = NotifyStatus.Success
         notifications.message = "Token Regenerated"
+        apiTokenRenerateDialog.value = false
     } catch (err: unknown) {
         notifications.status = NotifyStatus.Error
         notifications.message = `Failed to regenerate token: ${getErrorMessage(err)}`

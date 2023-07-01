@@ -1,6 +1,7 @@
 import { QNotifyCreateOptions } from "quasar";
 
 export const AppName: string = "Moni";
+export const AppGithub: string = "https://github.com/hibare/Moni";
 
 export const NotifyStatus: Record<string, string> = {
   Success: "positive",

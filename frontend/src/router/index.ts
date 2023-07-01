@@ -13,6 +13,9 @@ import JobDetails from "../pages/jobs/JobDetails.vue";
 import Notifiers from "../pages/notifiers/Notifiers.vue";
 import NotifierDetails from "../pages/notifiers/NotifierDetails.vue";
 import Profile from "../pages/Profile.vue";
+import AccountVue from "../components/profile/Account.vue";
+import APIVue from "../components/profile/API.vue";
+import PasswordVue from "../components/profile/Password.vue";
 import { AppName } from "../constants";
 
 const routes: Readonly<RouteRecordRaw[]> = [
@@ -69,6 +72,30 @@ const routes: Readonly<RouteRecordRaw[]> = [
     name: "profile",
     component: Profile,
     meta: { title: "Profile" },
+    children: [
+      {
+        path: "",
+        redirect: { name: "profile.account" },
+      },
+      {
+        path: "/profile/account",
+        name: "profile.account",
+        component: AccountVue,
+        meta: { title: "Account" },
+      },
+      {
+        path: "/profile/api",
+        name: "profile.api",
+        component: APIVue,
+        meta: { title: "API" },
+      },
+      {
+        path: "/profile/password",
+        name: "profile.password",
+        component: PasswordVue,
+        meta: { title: "Password" },
+      },
+    ],
   },
 ];
 
@@ -77,9 +104,8 @@ const router: Router = createRouter({
   routes, // short for `routes: routes`
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   const store = useAuthStore();
-  await store.validateSession();
 
   if (!store.isLoggedIn && to.name !== "login") {
     next({ name: "login", query: { redirect: to.fullPath } });
