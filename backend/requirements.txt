@@ -35,10 +35,12 @@ djangorestframework-simplejwt==5.2.2
     # via -r requirements.in
 drf-writable-nested==0.7.0
     # via -r requirements.in
-gunicorn==20.1.0
+gunicorn==21.1.0
     # via -r requirements.in
 markdown==3.4.3
     # via -r requirements.in
+packaging==23.1
+    # via gunicorn
 psycopg2-binary==2.9.6
     # via -r requirements.in
 pyjwt==2.7.0
