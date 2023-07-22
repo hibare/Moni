@@ -51,7 +51,7 @@ pytz==2023.3
     #   djangorestframework
 pytz-deprecation-shim==0.1.0.post0
     # via -r requirements.in
-pyyaml==6.0
+pyyaml==6.0.1
     # via -r requirements.in
 six==1.16.0
     # via apscheduler
