@@ -10,7 +10,7 @@ asgiref==3.7.2
     # via django
 beautifulsoup4==4.12.2
     # via -r requirements.in
-dj-database-url==2.0.0
+dj-database-url==2.1.0
     # via -r requirements.in
 django==4.2.4
     # via
