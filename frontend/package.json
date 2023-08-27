@@ -23,7 +23,7 @@
     "@quasar/vite-plugin": "^1.4.1",
     "@vitejs/plugin-vue": "^4.3.1",
     "sass": "^1.66.1",
-    "typescript": "^5.1.6",
+    "typescript": "^5.2.2",
     "vite": "^4.4.9",
     "vue-tsc": "^1.8.8"
   }
