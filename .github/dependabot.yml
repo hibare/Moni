@@ -4,26 +4,42 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/.github"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "friday"
+      time: "00:30"
     target-branch: "dev"
+    assignees:
+      - "hibare"
 
   # Maintain dependencies for Go mods
   - package-ecosystem: "pip"
     directory: "/backend"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "friday"
+      time: "00:30"
     target-branch: "dev"
+    assignees:
+      - "hibare"
 
   # Maintain version for Docker
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "friday"
+      time: "00:30"
     target-branch: "dev"
+    assignees:
+      - "hibare"
 
   # Maintain version for npm or yarn
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
+      day: "friday"
+      time: "00:30"
     target-branch: "dev"
+    assignees:
+      - "hibare"
