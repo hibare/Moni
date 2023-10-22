@@ -19,7 +19,7 @@ on:
       - "**/.github"
 
 jobs:
-  docker-image-publish:
+  docker-image-test-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
