@@ -12,7 +12,7 @@ beautifulsoup4==4.12.2
     # via -r requirements.in
 dj-database-url==2.1.0
     # via -r requirements.in
-django==4.2.4
+django==4.2.6
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -23,7 +23,7 @@ django==4.2.4
     #   djangorestframework-simplejwt
 django-apscheduler==0.6.2
     # via -r requirements.in
-django-filter==23.2
+django-filter==23.3
     # via -r requirements.in
 django-model-utils==4.3.1
     # via -r requirements.in
@@ -37,11 +37,11 @@ drf-writable-nested==0.7.0
     # via -r requirements.in
 gunicorn==21.2.0
     # via -r requirements.in
-markdown==3.4.4
+markdown==3.5
     # via -r requirements.in
 packaging==23.1
     # via gunicorn
-psycopg2-binary==2.9.7
+psycopg2-binary==2.9.9
     # via -r requirements.in
 pyjwt==2.7.0
     # via djangorestframework-simplejwt
@@ -67,9 +67,9 @@ tzdata==2023.3
     # via pytz-deprecation-shim
 tzlocal==5.0.1
     # via apscheduler
-urllib3==2.0.6
+urllib3==2.0.7
     # via -r requirements.in
-whitenoise==6.5.0
+whitenoise==6.6.0
     # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
