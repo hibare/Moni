@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.7",
-    "@types/lodash.clonedeep": "^4.5.7",
+    "@types/lodash.clonedeep": "^4.5.8",
     "axios": "^1.5.1",
     "lodash.clonedeep": "^4.5.0",
     "pinia": "^2.1.6",
