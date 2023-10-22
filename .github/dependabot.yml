@@ -10,6 +10,10 @@ updates:
     target-branch: "dev"
     assignees:
       - "hibare"
+    groups:
+      deps:
+        patterns:
+          - "*"
 
   # Maintain dependencies for Go mods
   - package-ecosystem: "pip"
@@ -21,6 +25,10 @@ updates:
     target-branch: "dev"
     assignees:
       - "hibare"
+    groups:
+      deps:
+        patterns:
+          - "*"
 
   # Maintain version for Docker
   - package-ecosystem: "docker"
@@ -32,6 +40,10 @@ updates:
     target-branch: "dev"
     assignees:
       - "hibare"
+    groups:
+      deps:
+        patterns:
+          - "*"
 
   # Maintain version for npm or yarn
   - package-ecosystem: "npm"
@@ -43,3 +55,7 @@ updates:
     target-branch: "dev"
     assignees:
       - "hibare"
+    groups:
+      deps:
+        patterns:
+          - "*"
