@@ -11,7 +11,7 @@ updates:
     assignees:
       - "hibare"
     groups:
-      deps:
+      actions:
         patterns:
           - "*"
 
@@ -26,7 +26,7 @@ updates:
     assignees:
       - "hibare"
     groups:
-      deps:
+      python:
         patterns:
           - "*"
 
@@ -41,7 +41,7 @@ updates:
     assignees:
       - "hibare"
     groups:
-      deps:
+      docker:
         patterns:
           - "*"
 
@@ -56,6 +56,6 @@ updates:
     assignees:
       - "hibare"
     groups:
-      deps:
+      npm:
         patterns:
           - "*"
