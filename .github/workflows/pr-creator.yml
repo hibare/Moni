@@ -1,5 +1,6 @@
 name: Create PR from Dev to Default Branch
 on:
+  workflow_dispatch:
   schedule:
     - cron: '30 18 * * 6'  # Runs every Saturday at midnight IST (adjust as needed)
 
