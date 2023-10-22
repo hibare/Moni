@@ -4,7 +4,7 @@ LABEL Github="hibare"
 
 # Build frontend assets
 
-FROM node as frontend
+FROM node:20 as frontend
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
