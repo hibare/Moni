@@ -21,3 +21,5 @@ jobs:
         PR_URL=$(gh pr create --base master --head "dev" --title "Auto-generated PR" -t "Auto-generated PR" -b "Auto-generated PR")
 
         echo "Created PR: $PR_URL"
+      env:
+        GH_TOKEN: ${{ github.token }}
