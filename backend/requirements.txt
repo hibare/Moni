@@ -12,7 +12,7 @@ beautifulsoup4==4.12.2
     # via -r requirements.in
 dj-database-url==2.1.0
     # via -r requirements.in
-django==4.2.6
+django==4.2.7
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -37,7 +37,7 @@ drf-writable-nested==0.7.0
     # via -r requirements.in
 gunicorn==21.2.0
     # via -r requirements.in
-markdown==3.5
+markdown==3.5.1
     # via -r requirements.in
 packaging==23.1
     # via gunicorn
@@ -62,7 +62,9 @@ soupsieve==2.4.1
 sqlparse==0.4.4
     # via django
 typing-extensions==4.6.2
-    # via dj-database-url
+    # via
+    #   asgiref
+    #   dj-database-url
 tzdata==2023.3
     # via pytz-deprecation-shim
 tzlocal==5.0.1
