@@ -23,7 +23,7 @@ django==4.2.7
     #   djangorestframework-simplejwt
 django-apscheduler==0.6.2
     # via -r requirements.in
-django-filter==23.3
+django-filter==23.4
     # via -r requirements.in
 django-model-utils==4.3.1
     # via -r requirements.in
