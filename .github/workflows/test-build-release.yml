@@ -1,0 +1,76 @@
+name: Test, Build & Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+    paths-ignore:
+      - "**/README.md"
+      - "**/Makefile"
+      - "**/.env.**"
+      - "**/docker-compose.*.yml"
+      - "**/.vscode"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  docker-image-build-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write # For cosign
+      packages: write # For GHCR
+    steps:
+      - name: Set Metadata
+        id: set-metadata
+        run: |          
+          DOCKER_TAGS="unknown"
+          VERSION="unknown"
+          IMAGE_NAMES="hibare/moni ghcr.io/hibare/moni"
+
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+              DOCKER_TAGS="next"
+              VERSION="next"
+            elif [[ "${{ github.ref }}" == "refs/tags/v"* ]]; then
+              DOCKER_TAGS="type=semver,pattern={{version}} type=semver,pattern={{major}}"
+              VERSION="${GITHUB_REF#refs/tags/v}"
+            else
+              echo "Unknown ref: ${{ github.ref }}"
+              exit 1
+            fi
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            DOCKER_TAGS="test"
+            VERSION="test"
+          else
+            echo "Unknown event: ${{ github.event_name }}"
+            exit 1
+          fi
+
+          echo "docker_image_names=$IMAGE_NAMES" >> $GITHUB_OUTPUT
+          echo "docker_tags=$DOCKER_TAGS" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        shell: bash
+  
+      - name: image-build-publish
+        uses: hibare/.github/github/shared-workflows/docker-image-build-publish@030fa3508e984f9e90dd35f107883798e85e86e4 # v0.2.0
+        with:
+          image_names: ${{ steps.set-metadata.outputs.docker_image_names }}
+          tags: ${{ steps.set-metadata.outputs.docker_tags }}
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          push_dockerhub: ${{ github.event_name != 'pull_request' }}
+          push_ghcr: ${{ github.event_name != 'pull_request' }}
+          build_args: VERSION=${{ steps.set-metadata.outputs.version }}
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

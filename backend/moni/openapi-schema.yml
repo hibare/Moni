@@ -7,7 +7,7 @@ info:
     Checkout project on [Github](https://github.com/hibare/Moni).
   license:
     name: MIT
-    url: https://github.com/hibare/Moni/blob/master/LICENSE
+    url: https://github.com/hibare/Moni/blob/main/LICENSE
 tags:
   - name: Admin
     description: Admin APIs.
