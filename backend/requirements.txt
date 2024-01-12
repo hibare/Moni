@@ -37,7 +37,7 @@ drf-writable-nested==0.7.0
     # via -r requirements.in
 gunicorn==21.2.0
     # via -r requirements.in
-markdown==3.5.1
+markdown==3.5.2
     # via -r requirements.in
 packaging==23.1
     # via gunicorn
