@@ -8,7 +8,7 @@ apscheduler==3.10.1
     # via django-apscheduler
 asgiref==3.7.2
     # via django
-beautifulsoup4==4.12.2
+beautifulsoup4==4.12.3
     # via -r requirements.in
 dj-database-url==2.1.0
     # via -r requirements.in
