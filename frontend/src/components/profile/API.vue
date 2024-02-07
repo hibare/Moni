@@ -1,5 +1,5 @@
 <template>
-    <div style="max-width: 40vw">
+    <div style="min-width: 30vw">
         <div class="text-h6 q-mb-lg">API</div>
         <div class="q-pb-xs">
             <q-inner-loading showing v-if="apiTokenLoading">
@@ -25,7 +25,7 @@
             </q-input>
             <div class="row q-gutter-sm q-my-md">
                 <q-icon name="refresh" color="primary" size="sm" class="cursor-pointer"
-                    @click="apiTokenRenerateDialog = true">
+                    @click="apiTokenRegenerateDialog = true">
                     <q-tooltip>Re-generate API Token</q-tooltip>
                 </q-icon>
                 <q-icon name="delete" color="red" size="sm" class="cursor-pointer" :disable="apiTokenDeleteLoading"
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <q-dialog v-model="apiTokenRenerateDialog">
+    <q-dialog v-model="apiTokenRegenerateDialog">
         <q-card class="q-px-md">
             <q-card-section>
                 <div class="text-h6 text-primary">Regenerate API Token?</div>
@@ -85,7 +85,7 @@ const apiTokenLoading = ref<boolean>(false)
 const apiTokenRegenerateLoading = ref<boolean>(false)
 const apiTokenDeleteLoading = ref<boolean>(false)
 const apiTokenDeleteDialog = ref<boolean>(false)
-const apiTokenRenerateDialog = ref<boolean>(false)
+const apiTokenRegenerateDialog = ref<boolean>(false)
 const apiTokenVisibility = ref<boolean>(false)
 
 const regenerateToken = async () => {
@@ -97,7 +97,7 @@ const regenerateToken = async () => {
         apiToken.value = data.token
         notifications.status = NotifyStatus.Success
         notifications.message = "Token Regenerated"
-        apiTokenRenerateDialog.value = false
+        apiTokenRegenerateDialog.value = false
     } catch (err: unknown) {
         notifications.status = NotifyStatus.Error
         notifications.message = `Failed to regenerate token: ${getErrorMessage(err)}`

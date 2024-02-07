@@ -1,0 +1,9 @@
+FROM node:21 as frontend
+
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
+COPY ./frontend/package*.json ${BUILD_DIR}/
+
+RUN npm install

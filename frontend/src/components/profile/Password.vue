@@ -1,5 +1,5 @@
 <template>
-    <div style="max-width: 40vw">
+    <div style="min-width: 30vw">
         <div class="text-h6 q-mb-lg">Password</div>
         <div>
             <q-form class="q-gutter-sm" ref="passwordForm">
@@ -19,10 +19,11 @@
                     </template></q-input>
 
                 <q-input dense filled v-model="password.new_password_confirm" label="New Password (Confirm)" lazy-rules
-                    :rules="rules.emptyRule" :type="newPasswordConfimVisibility ? 'text' : 'password'">
+                    :rules="rules.emptyRule" :type="newPasswordConfirmVisibility ? 'text' : 'password'">
                     <template v-slot:append>
-                        <q-icon :name="newPasswordConfimVisibility ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                            @click="newPasswordConfimVisibility = !newPasswordConfimVisibility" size="xs" />
+                        <q-icon :name="newPasswordConfirmVisibility ? 'visibility_off' : 'visibility'"
+                            class="cursor-pointer" @click="newPasswordConfirmVisibility = !newPasswordConfirmVisibility"
+                            size="xs" />
                     </template></q-input>
 
                 <div>
@@ -50,7 +51,7 @@ const password = ref<PasswordType>({
 
 const oldPasswordVisibility = ref<boolean>(false)
 const newPasswordVisibility = ref<boolean>(false)
-const newPasswordConfimVisibility = ref<boolean>(false)
+const newPasswordConfirmVisibility = ref<boolean>(false)
 const passwordLoading = ref<boolean>(false)
 const passwordForm = ref(null)
 

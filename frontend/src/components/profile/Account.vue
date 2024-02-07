@@ -1,5 +1,5 @@
 <template>
-    <div style="max-width: 40vw">
+    <div style="min-width: 30vw">
         <div class="text-h6 q-mb-lg">Account</div>
         <div>
             <q-form class="q-gutter-sm" ref="accountForm">
