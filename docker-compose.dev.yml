@@ -10,8 +10,7 @@ services:
       - POSTGRES_USER=john
       - POSTGRES_PASSWORD=pwd0123456789
       - POSTGRES_DB=moni
-    ports:
-      - 127.0.0.1:5432:5432
+    network_mode: host
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
     logging:
@@ -24,8 +23,7 @@ services:
     image: adminer
     container_name: adminer
     hostname: adminer
-    ports:
-      - 127.0.0.1:8090:8080
+    network_mode: host
     healthcheck:
       test: "curl -f localhost:8080 || false"
       interval: 30s
@@ -42,44 +40,70 @@ services:
     image: gotify/server
     container_name: gotify
     hostname: gotify
-    ports:
-      - 127.0.0.1:8080:80
+    network_mode: host
     environment:
       - GOTIFY_DEFAULTUSER_PASS=password
     volumes:
       - "./volumes/gotify:/app/data"
-  
+
   httpbin:
     image: kennethreitz/httpbin
     container_name: httpbin
     hostname: httpbin
-    ports:
-      - 127.0.0.1:8082:80
+    network_mode: host
 
   api:
-    image: python:3.11.3
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.api
     command: >
-        bash -c "pip install -r requirements.txt -r dev-requirements.txt
-        && python manage.py runserver 0.0.0.0:5000"
+      bash -c "python manage.py runserver 0.0.0.0:5000"
     working_dir: /app
     container_name: api
     hostname: api
     user: ${HOST_UID}:${HOST_GID}
     env_file:
       - .env
-    ports:
-      - 127.0.0.1:5000:5000
+    network_mode: host
     volumes:
       - ./backend:/app
-    
+    healthcheck:
+      test: "curl -f localhost:5000/__health || false"
+      interval: 30s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    depends_on:
+      postgres:
+        condition: service_started
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.ui
+    command: >
+      bash -c "npm run dev"
+    working_dir: /app
+    container_name: ui
+    hostname: ui
+    user: ${HOST_UID}:${HOST_GID}
+    env_file:
+      - .env
+    volumes:
+      - ./frontend:/app
+    network_mode: host
+    depends_on:
+      api:
+        condition: service_healthy
+
   moni:
     build: .
     container_name: moni
     hostname: moni
-    env_file: 
+    env_file:
       - .env
     ports:
       - 127.0.0.1:5000:8000
-    depends_on: 
+    depends_on:
       - postgres
       - gotify
