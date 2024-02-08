@@ -6,8 +6,8 @@ import logging
 from typing import Optional
 import bs4
 from urllib.parse import urljoin, urlparse, urlunparse
-from moni.utils.urls import get_base_url, parse_url
-from moni.utils.requests_proxy import requests_get
+from moni.requests.urls import get_base_url, parse_url
+from moni.requests.proxy import requests_get
 
 logger = logging.getLogger(__name__)
 

@@ -4,7 +4,7 @@ import logging
 import json
 from typing import List, Tuple
 from django.conf import settings
-from moni.utils.requests_proxy import requests_post
+from moni.requests.proxy import requests_post
 from notifiers.services import NotifierService
 
 logger = logging.getLogger(__name__)

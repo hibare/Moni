@@ -3,7 +3,7 @@
 import logging
 from typing import List, Tuple
 import json
-from moni.utils.requests_proxy import requests_post
+from moni.requests.proxy import requests_post
 from notifiers.services import NotifierService
 
 
