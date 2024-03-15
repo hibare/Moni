@@ -12,7 +12,7 @@ beautifulsoup4==4.12.3
     # via -r requirements.in
 dj-database-url==2.1.0
     # via -r requirements.in
-django==5.0.2
+django==5.0.3
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -23,7 +23,7 @@ django==5.0.2
     #   djangorestframework-simplejwt
 django-apscheduler==0.6.2
     # via -r requirements.in
-django-filter==23.5
+django-filter==24.1
     # via -r requirements.in
 django-model-utils==4.4.0
     # via -r requirements.in
@@ -37,7 +37,7 @@ drf-writable-nested==0.7.0
     # via -r requirements.in
 gunicorn==21.2.0
     # via -r requirements.in
-markdown==3.5.2
+markdown==3.6
     # via -r requirements.in
 packaging==23.1
     # via gunicorn
