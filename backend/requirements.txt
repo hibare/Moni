@@ -27,7 +27,7 @@ django-filter==24.1
     # via -r requirements.in
 django-model-utils==4.4.0
     # via -r requirements.in
-djangorestframework==3.14.0
+djangorestframework==3.15.0
     # via
     #   -r requirements.in
     #   djangorestframework-simplejwt
@@ -48,9 +48,7 @@ pyjwt==2.7.0
 python-decouple==3.8
     # via -r requirements.in
 pytz==2023.3
-    # via
-    #   apscheduler
-    #   djangorestframework
+    # via apscheduler
 pytz-deprecation-shim==0.1.0.post0
     # via -r requirements.in
 pyyaml==6.0.1
