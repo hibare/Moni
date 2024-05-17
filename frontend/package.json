@@ -15,16 +15,16 @@
     "lodash.clonedeep": "^4.5.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
-    "quasar": "^2.16.2",
+    "quasar": "^2.16.4",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.7.0",
     "@vitejs/plugin-vue": "^5.0.4",
-    "sass": "^1.77.0",
+    "sass": "^1.77.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
-    "vue-tsc": "^2.0.16"
+    "vue-tsc": "^2.0.19"
   }
 }
