@@ -17,14 +17,14 @@
     "pinia-plugin-persistedstate": "^3.2.1",
     "quasar": "^2.16.4",
     "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.3"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.7.0",
     "@vitejs/plugin-vue": "^5.0.5",
-    "sass": "^1.77.4",
+    "sass": "^1.77.5",
     "typescript": "^5.4.5",
-    "vite": "^5.2.12",
-    "vue-tsc": "^2.0.19"
+    "vite": "^5.3.0",
+    "vue-tsc": "^2.0.21"
   }
 }
