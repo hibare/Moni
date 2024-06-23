@@ -4,7 +4,7 @@
 #
 #    pip-compile dev-requirements.in
 #
-autopep8==2.2.0
+autopep8==2.3.0
     # via -r dev-requirements.in
 build==1.0.3
     # via pip-tools
@@ -14,7 +14,7 @@ packaging==23.1
     # via build
 pip-tools==7.4.1
     # via -r dev-requirements.in
-pycodestyle==2.11.1
+pycodestyle==2.12.0
     # via autopep8
 pyproject-hooks==1.0.0
     # via
