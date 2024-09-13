@@ -1,4 +1,4 @@
-FROM python:3.12.5 as base
+FROM python:3.12.6 as base
 
 LABEL Github="hibare"
 
