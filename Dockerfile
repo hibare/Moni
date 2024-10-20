@@ -1,10 +1,10 @@
-FROM python:3.12.7-slim as base
+FROM python:3.13.0-slim AS base
 
 LABEL Github="hibare"
 
 # Build frontend assets
 
-FROM node:22 as frontend
+FROM node:23 AS frontend
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
@@ -22,11 +22,11 @@ RUN npm run build
 
 # Build backend deps
 
-FROM base as builder
+FROM base AS builder
 
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONDONTWRITEBYTECODE=1
 
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libssl-dev libffi-dev rustc
 
