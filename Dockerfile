@@ -1,10 +1,10 @@
-FROM python:3.13.0-slim as base
+FROM python:3.13.0-slim AS base
 
 LABEL Github="hibare"
 
 # Build frontend assets
 
-FROM node:23 as frontend
+FROM node:23 AS frontend
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
@@ -22,7 +22,7 @@ RUN npm run build
 
 # Build backend deps
 
-FROM base as builder
+FROM base AS builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 
