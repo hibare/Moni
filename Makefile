@@ -42,12 +42,12 @@ api-py-shell: ## Open python shell in API container
 api-shell: ## Open shell in API container
 	${DOCKER_COMPOSE_PREFIX} exec api bash
 
-.PHONY: build-api
-build-api: ## Build API
+.PHONY: build-dev-api
+build-dev-api: ## Build Dev API
 	${DOCKER_COMPOSE_PREFIX} build --no-cache api 
 
-.PHONY: build-ui
-build-ui: ## Build UI
+.PHONY: build-dev-ui
+build-dev-ui: ## Build Dev UI
 	${DOCKER_COMPOSE_PREFIX} build --no-cache ui
 
 .PHONY: ui-up
