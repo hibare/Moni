@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,9 +11,14 @@ export default defineConfig({
     }),
 
     quasar({
-      sassVariables: "src/styles/quasar-variables.sass",
+      sassVariables: "@/styles/quasar-variables.sass",
     }),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
+  },
   server: {
     proxy: {
       "^/api": {
