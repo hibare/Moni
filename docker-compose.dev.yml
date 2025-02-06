@@ -8,7 +8,7 @@ services:
       - POSTGRES_USER=john
       - POSTGRES_PASSWORD=pwd0123456789
       - POSTGRES_DB=moni
-    network_mode: host
+    network_mode: host # Port: 5432
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
     logging:
@@ -21,7 +21,7 @@ services:
     image: adminer
     container_name: adminer
     hostname: adminer
-    network_mode: host
+    network_mode: host # Port: 8080
     healthcheck:
       test: "curl -f localhost:8080 || false"
       interval: 30s
@@ -34,21 +34,11 @@ services:
         max-size: "500k"
         max-file: "5"
 
-  gotify:
-    image: gotify/server
-    container_name: gotify
-    hostname: gotify
-    network_mode: host
-    environment:
-      - GOTIFY_DEFAULTUSER_PASS=password
-    volumes:
-      - "./volumes/gotify:/app/data"
-
   httpbin:
     image: kennethreitz/httpbin
     container_name: httpbin
     hostname: httpbin
-    network_mode: host
+    network_mode: host # Port:
 
   api:
     build:
@@ -62,7 +52,7 @@ services:
     user: ${HOST_UID}:${HOST_GID}
     env_file:
       - .env
-    network_mode: host
+    network_mode: host # Port: 5000
     volumes:
       - ./backend:/app
     healthcheck:
@@ -89,7 +79,7 @@ services:
       - .env
     volumes:
       - ./frontend:/app
-    network_mode: host
+    network_mode: host # Port: 5173
     depends_on:
       api:
         condition: service_healthy
@@ -104,4 +94,3 @@ services:
       - 127.0.0.1:5000:8000
     depends_on:
       - postgres
-      - gotify

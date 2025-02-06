@@ -9,11 +9,11 @@ DOCKER_COMPOSE_PREFIX = HOST_UID=${UID} HOST_GID=${GID} docker compose -f docker
 
 .PHONY: db-up
 db-up: ## Spin up DB and other services
-	${DOCKER_COMPOSE_PREFIX} up -d postgres adminer gotify httpbin
+	${DOCKER_COMPOSE_PREFIX} up -d postgres adminer  httpbin
 
 .PHONY: db-down
 db-down: ## Spin down DB and other services
-	${DOCKER_COMPOSE_PREFIX} rm -fsv postgres adminer gotify httpbin
+	${DOCKER_COMPOSE_PREFIX} rm -fsv postgres adminer  httpbin
 
 .PHONY: moni-up
 moni-up: ## Build and run moni
