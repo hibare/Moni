@@ -1,6 +1,4 @@
 # Docker compose file for development
-
-version: "3"
 services:
   postgres:
     image: postgres:13
