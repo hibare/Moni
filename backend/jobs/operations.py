@@ -3,12 +3,11 @@
 import copy
 import time
 import datetime
-import ssl
 import logging
 from typing import Dict, Tuple, Union
-import urllib3
 from moni import settings
 from moni.scheduler import scheduler
+from moni.requests.proxy import requests_get
 from jobs.models import Jobs, JobsHistory
 from notifiers.services.notify import Notify
 
@@ -23,7 +22,8 @@ def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirec
     """
 
     DEFAULT_HEADERS = {
-        "Cache-Control": "no-cache"
+        "Cache-Control": "no-cache",
+        "User-Agent": settings.MONI_USER_AGENT
     }
 
     if not headers:
@@ -33,27 +33,12 @@ def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirec
     request_headers.update(DEFAULT_HEADERS)
 
     try:
-        if verify_ssl:
-            cert_reqs = ssl.CERT_REQUIRED
-        else:
-            cert_reqs = ssl.CERT_NONE
-
-        http = urllib3.PoolManager(cert_reqs=cert_reqs)
-
         start = time.time()
-        response = http.request(
-            'GET',
-            url,
-            headers=request_headers,
-            timeout=10,
-            redirect=not check_redirect
-        )
+        response = requests_get(url, request_headers, verify_ssl=verify_ssl, redirect=not check_redirect)
         end = time.time()
-
         elapsed_seconds = end - start
 
         return response.status, response.data, elapsed_seconds, None
-
     except Exception as err:
         logger.exception("URL=%s", url)
         return None, None, None, str(err)
