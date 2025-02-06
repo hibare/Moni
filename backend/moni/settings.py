@@ -14,8 +14,7 @@ from pathlib import Path
 from dj_database_url import parse as db_url
 from decouple import config, Csv
 from datetime import timedelta
-from moni import TITLE, VERSION
-from moni.utils.funcs import get_version, get_title
+from moni.utils.funcs import get_version, get_title, get_ua
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -236,3 +235,5 @@ TITLE = get_title()
 JOB_HISTORY_PURGE_AGE = config('JOB_HISTORY_PURGE_AGE', default=30, cast=int)
 NOTIFIER_HISTORY_PURGE_AGE = config(
     'NOTIFIER_HISTORY_PURGE_AGE', default=30, cast=int)
+
+MONI_USER_AGENT = config('MONI_USER_AGENT', default=get_ua())
