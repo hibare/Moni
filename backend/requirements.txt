@@ -8,11 +8,11 @@ apscheduler==3.10.1
     # via django-apscheduler
 asgiref==3.8.1
     # via django
-beautifulsoup4==4.12.3
+beautifulsoup4==4.13.3
     # via -r requirements.in
 dj-database-url==2.3.0
     # via -r requirements.in
-django==5.1.5
+django==5.1.6
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -62,6 +62,7 @@ sqlparse==0.5.0
 typing-extensions==4.6.2
     # via
     #   asgiref
+    #   beautifulsoup4
     #   dj-database-url
 tzdata==2023.3
     # via pytz-deprecation-shim
@@ -69,7 +70,7 @@ tzlocal==5.0.1
     # via apscheduler
 urllib3==2.3.0
     # via -r requirements.in
-whitenoise==6.8.2
+whitenoise==6.9.0
     # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
