@@ -11,7 +11,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.17",
     "@types/lodash.clonedeep": "^4.5.9",
-    "axios": "^1.8.1",
+    "axios": "^1.8.2",
     "lodash.clonedeep": "^4.5.0",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
