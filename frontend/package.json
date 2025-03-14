@@ -11,7 +11,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.17",
     "@types/lodash.clonedeep": "^4.5.9",
-    "axios": "^1.8.2",
+    "axios": "^1.8.3",
     "lodash.clonedeep": "^4.5.0",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
@@ -24,7 +24,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "sass": "^1.85.1",
     "typescript": "^5.8.2",
-    "vite": "^6.2.0",
+    "vite": "^6.2.1",
     "vue-tsc": "^2.2.8"
   }
 }
