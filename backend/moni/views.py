@@ -52,7 +52,7 @@ class OpenAPISchemaView(APIView):
 
     def get(self, request, format=None):
         """
-        Return OpenAPI Schema. 
+        Return OpenAPI Schema.
         """
         schema_file = "moni/openapi-schema.yml"
 
@@ -81,7 +81,7 @@ class ReDocView(APIView):
 
     def get(self, request):
         """
-        Return ReDoc template. 
+        Return ReDoc template.
         """
 
         return Response({'schema_url': 'openapi-schema'}, template_name='redoc.html')
@@ -100,7 +100,7 @@ class SwaggerUIView(APIView):
 
     def get(self, request):
         """
-        Return ReDoc template. 
+        Return ReDoc template.
         """
 
         return Response({'schema_url': 'openapi-schema'}, template_name='swagger-ui.html')

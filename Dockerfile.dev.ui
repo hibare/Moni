@@ -1,4 +1,4 @@
-FROM node:23 as frontend
+FROM node:23 AS frontend
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 

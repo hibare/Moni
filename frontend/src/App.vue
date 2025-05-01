@@ -32,4 +32,3 @@ body {
   background-color: rgb(241, 242, 244);
 }
 </style>
-

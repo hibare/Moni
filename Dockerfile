@@ -1,7 +1,5 @@
 FROM python:3.13.3-slim AS base
 
-LABEL Github="hibare"
-
 # Build frontend assets
 
 FROM node:23 AS frontend
@@ -28,15 +26,29 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 ENV PYTHONUNBUFFERED=1
 
-RUN apt-get update && apt-get install -y build-essential python3-dev libpq-dev libssl-dev libffi-dev rustc
+# hadolint ignore=DL3008
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    build-essential \
+    python3-dev \
+    libpq-dev \
+    libssl-dev \
+    libffi-dev \
+    rustc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN python -m venv /opt/venv
 
 ENV PATH="/opt/venv/bin:$PATH"
 
+WORKDIR /app
+
 COPY backend/requirements.txt .
 
-RUN pip install -U pip setuptools wheel && pip install -r requirements.txt 
+# hadolint ignore=DL3013
+RUN pip install -U pip setuptools wheel --no-cache-dir \
+    && pip install -r requirements.txt --no-cache-dir
 
 # Build final image
 
@@ -46,7 +58,11 @@ ENV USER=ghost
 
 ENV APP_DIR=/home/${USER}/app
 
-RUN apt-get update && apt-get install -y libpq5 
+# hadolint ignore=DL3008
+RUN apt-get update \
+    && apt-get install -y libpq5 --no-install-recommends \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/venv /opt/venv
 
