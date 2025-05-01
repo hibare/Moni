@@ -7,6 +7,14 @@ DOCKER_COMPOSE_PREFIX = HOST_UID=${UID} HOST_GID=${GID} docker compose -f docker
 
 .DEFAULT_GOAL := help
 
+.PHONY: init
+init: ## Initialize the project
+	$(MAKE) install-pre-commit
+
+.PHONY: install-pre-commit
+install-pre-commit: ## Install pre-commit
+	pre-commit install
+
 .PHONY: db-up
 db-up: ## Spin up DB and other services
 	${DOCKER_COMPOSE_PREFIX} up -d postgres adminer  httpbin
@@ -23,6 +31,7 @@ build-dev: ## Build Dev
 
 .PHONY: dev
 dev: ## Spin up dev
+	$(MAKE) db-up
 	${DOCKER_COMPOSE_PREFIX} up ui api
 
 .PHONY: api-py-shell
