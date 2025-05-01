@@ -64,7 +64,7 @@ paths:
         '200':
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: "#/components/schemas/JobsMisfireGraceTime"
           description: ''
       tags:

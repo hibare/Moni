@@ -4,3 +4,5 @@
 **/*data
 **/*dist
 **/*frontendv1
+**/*node_modules
+**/*__pycache__
