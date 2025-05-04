@@ -28,7 +28,7 @@ def export_jobs(
     """Export Jobs"""
 
     endpoint = "/api/v1/jobs/"
-    headers = {"Authorization": "Token %s" % (api_token)}
+    headers = {"Authorization": f"Token {(api_token)}"}
 
     url = "%s://%s%s" % (http_schema, hostname, endpoint)
 
