@@ -5,7 +5,11 @@ from django.conf import settings
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django_apscheduler.jobstores import register_events
-from jobs.scheduler import delete_old_job_executions, delete_old_job_history, update_favicon_url
+from jobs.scheduler import (
+    delete_old_job_executions,
+    delete_old_job_history,
+    update_favicon_url,
+)
 from notifiers.scheduler import delete_old_notifier_history
 
 logger = logging.getLogger(__name__)
@@ -20,7 +24,7 @@ def start(default_jobs=True):
     if settings.DEBUG:
         # Hook into the apscheduler logger
         logging.basicConfig()
-        logging.getLogger('apscheduler').setLevel(logging.DEBUG)
+        logging.getLogger("apscheduler").setLevel(logging.DEBUG)
 
     # Add the scheduled jobs to the Django admin interface
     register_events(scheduler)
@@ -30,39 +34,31 @@ def start(default_jobs=True):
     default_jobs_func = {
         "delete_old_job_executions": {
             "func": delete_old_job_executions,
-            "trigger": CronTrigger(
-                hour="00", minute="00"
-            )
+            "trigger": CronTrigger(hour="00", minute="00"),
         },
         "delete_old_job_history": {
             "func": delete_old_job_history,
-            "trigger": CronTrigger(
-                hour="00", minute="00"
-            )
+            "trigger": CronTrigger(hour="00", minute="00"),
         },
         "delete_old_notifier_history": {
             "func": delete_old_notifier_history,
-            "trigger": CronTrigger(
-                hour="00", minute="00"
-            )
+            "trigger": CronTrigger(hour="00", minute="00"),
         },
         "update_favicon_url": {
             "func": update_favicon_url,
-            "trigger": CronTrigger(
-                hour="00", minute="00"
-            )
-        }
+            "trigger": CronTrigger(hour="00", minute="00"),
+        },
     }
 
     if default_jobs:
         for id, det in default_jobs_func.items():
             scheduler.add_job(
-                det['func'],
-                trigger=det['trigger'],
+                det["func"],
+                trigger=det["trigger"],
                 id=id,
                 max_instances=settings.SCHEDULER_JOB_MAX_INSTANCES,
                 replace_existing=settings.SCHEDULER_JOB_REPLACE_EXISTING,
-                misfire_grace_time=settings.SCHEDULER_JOB_MISFIRE_GRACETIME
+                misfire_grace_time=settings.SCHEDULER_JOB_MISFIRE_GRACETIME,
             )
             logger.info("Added daily job: '%s'.", id)
 

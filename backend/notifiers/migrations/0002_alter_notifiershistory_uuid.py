@@ -7,13 +7,17 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifiers', '0001_initial'),
+        ("notifiers", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='notifiershistory',
-            name='uuid',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notifier_uuid', to='notifiers.notifiers'),
+            model_name="notifiershistory",
+            name="uuid",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="notifier_uuid",
+                to="notifiers.notifiers",
+            ),
         ),
     ]

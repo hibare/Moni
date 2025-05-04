@@ -23,12 +23,12 @@ class URL:
 
 def format_url(url: str) -> str:
     """
-        Check URL for HTTP(S) schema. Add if its missing.
+    Check URL for HTTP(S) schema. Add if its missing.
     """
-    DEFAUTL_SCHEME = 'http'
+    DEFAUTL_SCHEME = "http"
 
-    if not re.match('(?:http|https)://', url):
-        return '{}://{}'.format(DEFAUTL_SCHEME, url)
+    if not re.match("(?:http|https)://", url):
+        return f"{DEFAUTL_SCHEME}://{url}"
     return url
 
 
@@ -44,7 +44,7 @@ def get_base_url(url: str) -> str:
 
     url = format_url(url)
     parsed = parse_url(url)
-    return f'{parsed.SCHEME}://{parsed.NETLOC}/'
+    return f"{parsed.SCHEME}://{parsed.NETLOC}/"
 
 
 def parse_url(url: str) -> URL:
@@ -56,7 +56,7 @@ def parse_url(url: str) -> URL:
 
         url = format_url(url)
 
-        parsed_url = urlparse(url, 'http')
+        parsed_url = urlparse(url, "http")
 
         url_obj.SCHEME = parsed_url.scheme
         url_obj.NETLOC = parsed_url.netloc

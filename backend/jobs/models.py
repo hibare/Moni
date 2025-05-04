@@ -22,19 +22,20 @@ class Jobs(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    uuid = models.CharField(
-        max_length=40, default=get_str_uuid, primary_key=True)
+    uuid = models.CharField(max_length=40, default=get_str_uuid, primary_key=True)
     url = models.URLField(unique=True)
     title = models.CharField(max_length=15)
     # Job state aka, enabled or disabled
     state = models.BooleanField(default=True)
     headers = models.JSONField(default=dict)
     notifiers = models.ManyToManyField(
-        Notifiers, related_name="jobs_notifiers", db_column='uuid', blank=True)
+        Notifiers, related_name="jobs_notifiers", db_column="uuid", blank=True
+    )
     verify_ssl = models.BooleanField(default=True)
     interval = models.PositiveIntegerField(default=15)
     success_status = ArrayField(
-        models.PositiveIntegerField(), default=default_success_status)
+        models.PositiveIntegerField(), default=default_success_status
+    )
     check_redirect = models.BooleanField(default=True)
     healthy = models.BooleanField(default=True)
     favicon_url = models.URLField(null=True, blank=True)
@@ -44,7 +45,7 @@ class Jobs(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['uuid']),
+            models.Index(fields=["uuid"]),
         ]
         verbose_name = "Jobs"
         verbose_name_plural = "Jobs"
@@ -63,8 +64,7 @@ class JobsHistoryManager(models.Manager):
     def delete_old_history(self, max_age: int) -> None:
         """Delete job history from database"""
 
-        self.filter(timestamp__lte=timezone.now() -
-                    timedelta(days=max_age)).delete()
+        self.filter(timestamp__lte=timezone.now() - timedelta(days=max_age)).delete()
 
 
 class JobsHistory(models.Model):
@@ -72,7 +72,8 @@ class JobsHistory(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     uuid = models.ForeignKey(
-        Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE)
+        Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE
+    )
     status_code = models.IntegerField(null=True, blank=True)
     success = models.BooleanField()
     response_time = models.FloatField(null=True, blank=True)
@@ -82,8 +83,8 @@ class JobsHistory(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['uuid']),
-            models.Index(fields=['-timestamp', 'uuid'])
+            models.Index(fields=["uuid"]),
+            models.Index(fields=["-timestamp", "uuid"]),
         ]
         verbose_name = "Jobs History"
         verbose_name_plural = "Jobs History"

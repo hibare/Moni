@@ -12,57 +12,96 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('notifiers', '0001_initial'),
+        ("notifiers", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Jobs',
+            name="Jobs",
             fields=[
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
-                ('uuid', models.CharField(default=moni.utils.funcs.get_str_uuid, max_length=40, primary_key=True, serialize=False)),
-                ('url', models.URLField(unique=True)),
-                ('title', models.CharField(max_length=50)),
-                ('state', models.BooleanField(default=True)),
-                ('headers', models.JSONField(default=dict)),
-                ('verify_ssl', models.BooleanField(default=True)),
-                ('interval', models.PositiveIntegerField(default=15)),
-                ('success_status', django.contrib.postgres.fields.ArrayField(base_field=models.PositiveIntegerField(), default=jobs.models.default_success_status, size=None)),
-                ('check_redirect', models.BooleanField(default=True)),
-                ('notifiers', models.ManyToManyField(db_column='uuid', related_name='jobs_notification', to='notifiers.Notifiers')),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
+                (
+                    "uuid",
+                    models.CharField(
+                        default=moni.utils.funcs.get_str_uuid,
+                        max_length=40,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("url", models.URLField(unique=True)),
+                ("title", models.CharField(max_length=50)),
+                ("state", models.BooleanField(default=True)),
+                ("headers", models.JSONField(default=dict)),
+                ("verify_ssl", models.BooleanField(default=True)),
+                ("interval", models.PositiveIntegerField(default=15)),
+                (
+                    "success_status",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.PositiveIntegerField(),
+                        default=jobs.models.default_success_status,
+                        size=None,
+                    ),
+                ),
+                ("check_redirect", models.BooleanField(default=True)),
+                (
+                    "notifiers",
+                    models.ManyToManyField(
+                        db_column="uuid",
+                        related_name="jobs_notification",
+                        to="notifiers.Notifiers",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Jobs',
-                'verbose_name_plural': 'Jobs',
+                "verbose_name": "Jobs",
+                "verbose_name_plural": "Jobs",
             },
         ),
         migrations.CreateModel(
-            name='JobsHistory',
+            name="JobsHistory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('status_code', models.IntegerField(null=True)),
-                ('success', models.BooleanField()),
-                ('response_time', models.FloatField(null=True)),
-                ('error', models.TextField(null=True)),
-                ('uuid', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='jobs_history_uuid', to='jobs.jobs')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                ("status_code", models.IntegerField(null=True)),
+                ("success", models.BooleanField()),
+                ("response_time", models.FloatField(null=True)),
+                ("error", models.TextField(null=True)),
+                (
+                    "uuid",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="jobs_history_uuid",
+                        to="jobs.jobs",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Jobs History',
-                'verbose_name_plural': 'Jobs History',
+                "verbose_name": "Jobs History",
+                "verbose_name_plural": "Jobs History",
             },
         ),
         migrations.AddIndex(
-            model_name='jobshistory',
-            index=models.Index(fields=['uuid'], name='jobs_jobshi_uuid_id_a30d59_idx'),
+            model_name="jobshistory",
+            index=models.Index(fields=["uuid"], name="jobs_jobshi_uuid_id_a30d59_idx"),
         ),
         migrations.AddIndex(
-            model_name='jobshistory',
-            index=models.Index(fields=['-timestamp', 'uuid'], name='jobs_jobshi_timesta_69c060_idx'),
+            model_name="jobshistory",
+            index=models.Index(
+                fields=["-timestamp", "uuid"], name="jobs_jobshi_timesta_69c060_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='jobs',
-            index=models.Index(fields=['uuid'], name='jobs_jobs_uuid_076788_idx'),
+            model_name="jobs",
+            index=models.Index(fields=["uuid"], name="jobs_jobs_uuid_076788_idx"),
         ),
     ]

@@ -27,6 +27,7 @@ def get_title():
 
     return moni.TITLE
 
-def get_ua()-> str:
+
+def get_ua() -> str:
 
     return f"{get_title()}/{get_version()}"

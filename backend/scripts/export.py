@@ -6,25 +6,29 @@ import urllib3
 import json
 import argparse
 
-FORMAT = '%(message)s'
+FORMAT = "%(message)s"
 
 logging.basicConfig(
     level=logging.INFO,
     format=FORMAT,
     handlers=[
         logging.StreamHandler(),
-    ])
+    ],
+)
 
-logger = logging.getLogger('export_jobs')
+logger = logging.getLogger("export_jobs")
 
 
-def export_jobs(hostname: str, api_token: str, http_schema: str = "http", output_file: str = "moni_jobs.json") -> None:
+def export_jobs(
+    hostname: str,
+    api_token: str,
+    http_schema: str = "http",
+    output_file: str = "moni_jobs.json",
+) -> None:
     """Export Jobs"""
 
     endpoint = "/api/v1/jobs/"
-    headers = {
-        "Authorization": "Token %s" % (api_token)
-    }
+    headers = {"Authorization": f"Token {(api_token)}"}
 
     url = "%s://%s%s" % (http_schema, hostname, endpoint)
 
@@ -33,7 +37,7 @@ def export_jobs(hostname: str, api_token: str, http_schema: str = "http", output
 
         http = urllib3.PoolManager()
         response = http.request(
-            'GET',
+            "GET",
             url,
             headers=headers,
         )
@@ -43,7 +47,7 @@ def export_jobs(hostname: str, api_token: str, http_schema: str = "http", output
 
             logger.info("Found %s jobs", len(jobs))
 
-            with open(output_file, 'w') as output_fh:
+            with open(output_file, "w", encoding="utf_8") as output_fh:
                 output_fh.write(json.dumps(jobs, indent=4))
 
             logger.info("Saved jobs to %s", output_file)
@@ -60,8 +64,9 @@ def export_jobs(hostname: str, api_token: str, http_schema: str = "http", output
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', dest='hostname', required=True,
-                        help="Server hostname / FQDN")
+    parser.add_argument(
+        "-s", dest="hostname", required=True, help="Server hostname / FQDN"
+    )
     args = parser.parse_args()
 
     hostname = args.hostname

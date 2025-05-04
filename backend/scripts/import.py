@@ -10,25 +10,28 @@ from pathlib import Path
 import sys
 
 
-FORMAT = '%(message)s'
+FORMAT = "%(message)s"
 
 logging.basicConfig(
     level=logging.INFO,
     format=FORMAT,
     handlers=[
         logging.StreamHandler(),
-    ])
+    ],
+)
 
-logger = logging.getLogger('import_jobs')
+logger = logging.getLogger("import_jobs")
 
 
-def import_jobs(hostname: str, job: Dict, api_token: str, http_schema: str = "http") -> None:
+def import_jobs(
+    hostname: str, job: Dict, api_token: str, http_schema: str = "http"
+) -> None:
     """Import jobs"""
 
     endpoint = "/api/v1/jobs/"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Token %s" % (api_token)
+        "Authorization": f"Token {(api_token)}",
     }
 
     url = "%s://%s%s" % (http_schema, hostname, endpoint)
@@ -40,11 +43,11 @@ def import_jobs(hostname: str, job: Dict, api_token: str, http_schema: str = "ht
 
         http = urllib3.PoolManager()
         response = http.request(
-            'POST',
+            "POST",
             url,
             headers=headers,
             body=json.dumps(job).encode("utf-8"),
-            redirect=True
+            redirect=True,
         )
 
         if response.status in [200, 201]:
@@ -61,12 +64,15 @@ def import_jobs(hostname: str, job: Dict, api_token: str, http_schema: str = "ht
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--server', dest='hostname', required=True,
-                        help="Server hostname / FQDN")
-    parser.add_argument('--file', dest='jobs_file', default="moni_jobs.json",
-                        help="Jobs JSON file")
-    parser.add_argument('--schema', dest='schema', default="http",
-                        help="HTTP Protocol (https/http)")
+    parser.add_argument(
+        "--server", dest="hostname", required=True, help="Server hostname / FQDN"
+    )
+    parser.add_argument(
+        "--file", dest="jobs_file", default="moni_jobs.json", help="Jobs JSON file"
+    )
+    parser.add_argument(
+        "--schema", dest="schema", default="http", help="HTTP Protocol (https/http)"
+    )
     args = parser.parse_args()
 
     hostname = args.hostname
@@ -74,7 +80,7 @@ if __name__ == "__main__":
     schema = args.schema
     api_token = getpass.getpass(prompt="Enter API token: ")
 
-    if schema not in ['http', 'https']:
+    if schema not in ["http", "https"]:
         logger.error("Invalid schema specified.")
         sys.exit(1)
 

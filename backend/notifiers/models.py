@@ -14,13 +14,12 @@ class Notifiers(models.Model):
         ("discord", "Discord"),
         ("webhook", "Webhook"),
         ("gotify", "Gotify"),
-        ("telegram", "Telegram")
+        ("telegram", "Telegram"),
     ]
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    uuid = models.CharField(
-        max_length=40, default=get_str_uuid, primary_key=True)
+    uuid = models.CharField(max_length=40, default=get_str_uuid, primary_key=True)
     url = models.URLField(unique=True)
     type = models.CharField(max_length=10, choices=NOTIFIER_TYPES)
     title = models.CharField(max_length=15)
@@ -29,7 +28,7 @@ class Notifiers(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['uuid']),
+            models.Index(fields=["uuid"]),
         ]
         verbose_name = "Notifiers"
         verbose_name_plural = "Notifiers"
@@ -44,8 +43,7 @@ class NotifiersHistoryManager(models.Manager):
     def delete_old_history(self, max_age: int) -> None:
         """Delete notifiers history from database"""
 
-        self.filter(timestamp__lte=timezone.now() -
-                    timedelta(days=max_age)).delete()
+        self.filter(timestamp__lte=timezone.now() - timedelta(days=max_age)).delete()
 
 
 class NotifiersHistory(models.Model):
@@ -53,7 +51,8 @@ class NotifiersHistory(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     uuid = models.ForeignKey(
-        Notifiers, related_name="notifier_uuid", on_delete=models.CASCADE)
+        Notifiers, related_name="notifier_uuid", on_delete=models.CASCADE
+    )
     status = models.BooleanField(default=False)
     status_code = models.IntegerField(null=True, blank=True)
     error = models.TextField(null=True, blank=True)
@@ -62,8 +61,8 @@ class NotifiersHistory(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['uuid']),
-            models.Index(fields=['-timestamp', 'uuid'])
+            models.Index(fields=["uuid"]),
+            models.Index(fields=["-timestamp", "uuid"]),
         ]
         verbose_name = "Notifiers History"
         verbose_name_plural = "Notifiers History"

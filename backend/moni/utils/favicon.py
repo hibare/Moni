@@ -17,11 +17,11 @@ logger = logging.getLogger(__name__)
 class Favicon:
     """Favicon operations using requests"""
 
-    DEFAULT_FAVICON_PATH = '/favicon.ico'
-    ICON_RELS = ['icon', 'shortcut icon', 'apple-touch-icon']
+    DEFAULT_FAVICON_PATH = "/favicon.ico"
+    ICON_RELS = ["icon", "shortcut icon", "apple-touch-icon"]
     VALIDATION_TIMEOUT = 10
     FETCH_TIMEOUT = 15
-    DEFAULT_HEADERS = {'User-Agent': settings.MONI_USER_AGENT}
+    DEFAULT_HEADERS = {"User-Agent": settings.MONI_USER_AGENT}
 
     @staticmethod
     def _validate_icon_url(url: str) -> bool:
@@ -35,24 +35,32 @@ class Favicon:
                 verify=False,  # Equivalent to verify_ssl=False
                 timeout=Favicon.VALIDATION_TIMEOUT,
                 allow_redirects=True,  # Allow redirects for HEAD
-                headers=Favicon.DEFAULT_HEADERS
+                headers=Favicon.DEFAULT_HEADERS,
             )
 
             # Check if HEAD request was successful (status code 2xx)
             if response.ok:  # response.ok checks for status_code < 400
-                logger.debug("Validated via HEAD: URL=%s, Status=%s", url, response.status_code)
+                logger.debug(
+                    "Validated via HEAD: URL=%s, Status=%s", url, response.status_code
+                )
                 return True
 
             # Fallback to GET request if HEAD failed (e.g., 405 Method Not Allowed) or was inconclusive
-            logger.debug("HEAD failed or inconclusive for %s (Status: %s), trying GET.", url, response.status_code)
+            logger.debug(
+                "HEAD failed or inconclusive for %s (Status: %s), trying GET.",
+                url,
+                response.status_code,
+            )
             response = requests.get(
                 url,
                 verify=False,
                 timeout=Favicon.VALIDATION_TIMEOUT,
-                headers=Favicon.DEFAULT_HEADERS
+                headers=Favicon.DEFAULT_HEADERS,
             )
 
-            logger.debug("Validating via GET: URL=%s, Status=%s", url, response.status_code)
+            logger.debug(
+                "Validating via GET: URL=%s, Status=%s", url, response.status_code
+            )
             return response.ok  # Return True if GET status is 2xx
 
         except RequestException as e:  # Catch requests-specific exceptions
@@ -84,7 +92,7 @@ class Favicon:
                 base_url,
                 verify=False,
                 timeout=Favicon.FETCH_TIMEOUT,
-                headers=Favicon.DEFAULT_HEADERS
+                headers=Favicon.DEFAULT_HEADERS,
             )
 
             logger.info("URL=%s, Response Status=%s", base_url, response.status_code)
@@ -93,16 +101,22 @@ class Favicon:
             response.raise_for_status()
 
             # 3. Parse HTML for <link rel="icon" ...> tags
-            page = bs4.BeautifulSoup(response.content, 'html.parser')
+            page = bs4.BeautifulSoup(response.content, "html.parser")
             icons: List[Tuple[str, Optional[str]]] = []
 
             for rel_value in Favicon.ICON_RELS:
-                for link_tag in page.find_all('link', attrs={'rel': lambda r: bool(r and rel_value in r.lower())}):
+                for link_tag in page.find_all(
+                    "link", attrs={"rel": lambda r: bool(r and rel_value in r.lower())}
+                ):
                     # Ensure link_tag is a Tag and has attrs before proceeding
-                    if isinstance(link_tag, bs4.Tag) and hasattr(link_tag, 'attrs'):
-                        href_val = link_tag.attrs.get('href')
+                    if isinstance(link_tag, bs4.Tag) and hasattr(link_tag, "attrs"):
+                        href_val = link_tag.attrs.get("href")
                         # Ensure href is a string (handle potential list values, though unlikely for href)
-                        href = str(href_val[0]) if isinstance(href_val, list) else str(href_val)
+                        href = (
+                            str(href_val[0])
+                            if isinstance(href_val, list)
+                            else str(href_val)
+                        )
 
                         if href:
                             icons.append((href, rel_value))
@@ -125,7 +139,9 @@ class Favicon:
             logger.error("Request failed during favicon search for URL=%s: %s", url, e)
             return None
         except bs4.FeatureNotFound:
-            logger.error("HTML parser not found for BeautifulSoup. Ensure 'html.parser' or 'lxml' is installed.")
+            logger.error(
+                "HTML parser not found for BeautifulSoup. Ensure 'html.parser' or 'lxml' is installed."
+            )
             return None
         except Exception:
             logger.exception("Unexpected error processing URL=%s", url)
