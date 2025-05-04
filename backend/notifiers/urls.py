@@ -1,8 +1,8 @@
 """Notifiers URLs"""
 
-from django.urls import path, include
+from django.urls import include, path
+from notifiers.views import NotifiersHistoryViewSet, NotifiersViewSet
 from rest_framework.routers import DefaultRouter
-from notifiers.views import NotifiersViewSet, NotifiersHistoryViewSet
 
 router = DefaultRouter()
 router.register(r"history", NotifiersHistoryViewSet)

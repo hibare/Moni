@@ -1,12 +1,13 @@
 """Slack notification service"""
 
-import logging
 import json
-import requests
-from requests.exceptions import RequestException
+import logging
 from typing import List, Tuple
+
+import requests
 from django.conf import settings
 from notifiers.services import NotifierService
+from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)
 
@@ -17,12 +18,8 @@ class Slack(NotifierService):
     def __init__(self) -> None:
         self.payload = json.dumps({"text": "Moni: Test notification"}).encode("utf-8")
         self.HEADERS = {"Content-type": "application/json"}
-        self.SERVICE_DOWN_TEMPLATE = (
-            settings.BASE_DIR / "notifiers/services/slack/template_service_down.json"
-        )
-        self.SERVICE_UP_TEMPLATE = (
-            settings.BASE_DIR / "notifiers/services/slack/template_service_up.json"
-        )
+        self.SERVICE_DOWN_TEMPLATE = settings.BASE_DIR / "notifiers/services/slack/template_service_down.json"
+        self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / "notifiers/services/slack/template_service_up.json"
 
     def prep_payload(
         self,
@@ -69,7 +66,5 @@ class Slack(NotifierService):
             logger.exception("Slack notification exception")
             return False, None, repr(err)
         except Exception as err:
-            logger.exception(
-                "An unexpected error occurred while sending Slack notification: %s", err
-            )
+            logger.exception("An unexpected error occurred while sending Slack notification: %s", err)
             return False, None, repr(err)

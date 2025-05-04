@@ -1,10 +1,11 @@
 """Jobs controller functionality"""
 
 import logging
-from django_apscheduler.models import DjangoJob
 import pickle
-from moni.scheduler import scheduler
+
+from django_apscheduler.models import DjangoJob
 from jobs.models import Jobs
+from moni.scheduler import scheduler
 
 logger = logging.getLogger(__name__)
 

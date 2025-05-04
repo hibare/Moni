@@ -1,19 +1,16 @@
 """Accounts Views"""
 
 import logging
+
+from accounts.serializers import AccountSerializer, ChangePasswordSerializer, JWTTokenObtainPairSerializer
 from django.contrib.auth.models import User
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework import permissions, status, viewsets
 from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status, permissions, viewsets
+from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from accounts.serializers import (
-    JWTTokenObtainPairSerializer,
-    AccountSerializer,
-    ChangePasswordSerializer,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -122,9 +119,7 @@ class ChangePasswordView(viewsets.ViewSet):
 
     def update(self, request, pk=None):
         user = request.user
-        serializer = self.serializer_class(
-            user, request.data, context={"request": request}
-        )
+        serializer = self.serializer_class(user, request.data, context={"request": request})
 
         if serializer.is_valid():
             serializer.save()

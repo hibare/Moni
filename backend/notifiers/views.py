@@ -2,20 +2,17 @@
 
 import logging
 from collections import Counter
-from rest_framework import viewsets, mixins, generics, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import NotFound
-from notifiers.serializers import (
-    NotifiersSerializer,
-    NotifiersHistorySerializer,
-    NotifierTestSerializer,
-)
-from notifiers.models import Notifiers, NotifiersHistory
-from notifiers.services.notify import Notify
+
 from jobs.models import Jobs
 from jobs.serializers import JobsSerializer
+from notifiers.models import Notifiers, NotifiersHistory
+from notifiers.serializers import NotifiersHistorySerializer, NotifiersSerializer, NotifierTestSerializer
+from notifiers.services.notify import Notify
+from rest_framework import generics, mixins, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 logger = logging.getLogger(__name__)
 
@@ -84,9 +81,7 @@ class NotifiersViewSet(
         try:
             uuid = self.kwargs["uuid"]
 
-            status_list = NotifiersHistory.objects.filter(uuid=uuid).values_list(
-                "status", flat=True
-            )
+            status_list = NotifiersHistory.objects.filter(uuid=uuid).values_list("status", flat=True)
 
             if status_list.exists():
 
@@ -118,9 +113,7 @@ class NotifiersViewSet(
             return Response(serializer.data)
 
         except Notifiers.DoesNotExist:
-            return Response(
-                {"detail": "Invalid notifier"}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"detail": "Invalid notifier"}, status=status.HTTP_404_NOT_FOUND)
 
     @action(
         methods=["post"],
@@ -209,9 +202,7 @@ class NotifiersViewSet(
             if notifier.state:
                 notifier.state = False
                 notifier.save()
-                return Response(
-                    {"detail": "Notifier paused"}, status=status.HTTP_200_OK
-                )
+                return Response({"detail": "Notifier paused"}, status=status.HTTP_200_OK)
             else:
                 return Response(
                     {"detail": "Notifier already in pause state"},
@@ -231,9 +222,7 @@ class NotifiersViewSet(
             if not notifier.state:
                 notifier.state = True
                 notifier.save()
-                return Response(
-                    {"detail": "Notifier resumed"}, status=status.HTTP_200_OK
-                )
+                return Response({"detail": "Notifier resumed"}, status=status.HTTP_200_OK)
             else:
                 return Response(
                     {"detail": "Notifier already in active state"},

@@ -1,16 +1,17 @@
 """Job Operations"""
 
 import copy
-import time
 import datetime
 import logging
-import requests
-from requests.exceptions import RequestException
+import time
 from typing import Dict, Tuple, Union
+
+import requests
+from jobs.models import Jobs, JobsHistory
 from moni import settings
 from moni.scheduler import scheduler
-from jobs.models import Jobs, JobsHistory
 from notifiers.services.notify import Notify
+from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)
 
@@ -72,9 +73,7 @@ def executor(id: str) -> None:
         notifiers = job.notifiers.all()
         failure_threshold = job.failure_threshold
 
-        status_code, response, elapsed_seconds, error = request(
-            url, headers, verify_ssl, check_redirect
-        )
+        status_code, response, elapsed_seconds, error = request(url, headers, verify_ssl, check_redirect)
 
         success = (status_code in success_status) and error is None
 
@@ -104,14 +103,10 @@ def executor(id: str) -> None:
         # Notify failure
         if notifiers and not success:
             history_status = (
-                JobsHistory.objects.filter(uuid=id)
-                .order_by("-timestamp")
-                .values_list("success", flat=True)[:failure_threshold]
+                JobsHistory.objects.filter(uuid=id).order_by("-timestamp").values_list("success", flat=True)[:failure_threshold]
             )
 
-            if len(history_status) >= failure_threshold and all(
-                el is False for el in history_status
-            ):
+            if len(history_status) >= failure_threshold and all(el is False for el in history_status):
                 for notifier in notifiers:
                     Notify.notify(
                         notifier,
@@ -199,9 +194,7 @@ class JobOps:
         """Reschedule a job"""
 
         try:
-            scheduler.reschedule_job(
-                id, jobstore=None, trigger="interval", minutes=interval
-            )
+            scheduler.reschedule_job(id, jobstore=None, trigger="interval", minutes=interval)
             logger.info("Job rescheduled, id=%s", id)
             return True
         except Exception:

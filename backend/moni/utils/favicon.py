@@ -3,13 +3,14 @@ Find favicon/icon link of a web service
 """
 
 import logging
-from typing import Optional, List, Tuple
-import bs4
+from typing import List, Optional, Tuple
 from urllib.parse import urljoin
+
+import bs4
 import requests
-from requests.exceptions import RequestException
 from django.conf import settings
 from moni.requests.urls import get_base_url
+from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)
 
@@ -40,9 +41,7 @@ class Favicon:
 
             # Check if HEAD request was successful (status code 2xx)
             if response.ok:  # response.ok checks for status_code < 400
-                logger.debug(
-                    "Validated via HEAD: URL=%s, Status=%s", url, response.status_code
-                )
+                logger.debug("Validated via HEAD: URL=%s, Status=%s", url, response.status_code)
                 return True
 
             # Fallback to GET request if HEAD failed (e.g., 405 Method Not Allowed) or was inconclusive
@@ -58,9 +57,7 @@ class Favicon:
                 headers=Favicon.DEFAULT_HEADERS,
             )
 
-            logger.debug(
-                "Validating via GET: URL=%s, Status=%s", url, response.status_code
-            )
+            logger.debug("Validating via GET: URL=%s, Status=%s", url, response.status_code)
             return response.ok  # Return True if GET status is 2xx
 
         except RequestException as e:  # Catch requests-specific exceptions
@@ -105,18 +102,12 @@ class Favicon:
             icons: List[Tuple[str, Optional[str]]] = []
 
             for rel_value in Favicon.ICON_RELS:
-                for link_tag in page.find_all(
-                    "link", attrs={"rel": lambda r: bool(r and rel_value in r.lower())}
-                ):
+                for link_tag in page.find_all("link", attrs={"rel": lambda r: bool(r and rel_value in r.lower())}):
                     # Ensure link_tag is a Tag and has attrs before proceeding
                     if isinstance(link_tag, bs4.Tag) and hasattr(link_tag, "attrs"):
                         href_val = link_tag.attrs.get("href")
                         # Ensure href is a string (handle potential list values, though unlikely for href)
-                        href = (
-                            str(href_val[0])
-                            if isinstance(href_val, list)
-                            else str(href_val)
-                        )
+                        href = str(href_val[0]) if isinstance(href_val, list) else str(href_val)
 
                         if href:
                             icons.append((href, rel_value))
@@ -139,9 +130,7 @@ class Favicon:
             logger.error("Request failed during favicon search for URL=%s: %s", url, e)
             return None
         except bs4.FeatureNotFound:
-            logger.error(
-                "HTML parser not found for BeautifulSoup. Ensure 'html.parser' or 'lxml' is installed."
-            )
+            logger.error("HTML parser not found for BeautifulSoup. Ensure 'html.parser' or 'lxml' is installed.")
             return None
         except Exception:
             logger.exception("Unexpected error processing URL=%s", url)

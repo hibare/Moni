@@ -1,14 +1,14 @@
 """Import jobs from json file"""
 
-import logging
-import getpass
-from typing import Dict
-import urllib3
-import json
 import argparse
-from pathlib import Path
+import getpass
+import json
+import logging
 import sys
+from pathlib import Path
+from typing import Dict
 
+import urllib3
 
 FORMAT = "%(message)s"
 
@@ -23,9 +23,7 @@ logging.basicConfig(
 logger = logging.getLogger("import_jobs")
 
 
-def import_jobs(
-    hostname: str, job: Dict, api_token: str, http_schema: str = "http"
-) -> None:
+def import_jobs(hostname: str, job: Dict, api_token: str, http_schema: str = "http") -> None:
     """Import jobs"""
 
     endpoint = "/api/v1/jobs/"
@@ -64,15 +62,9 @@ def import_jobs(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--server", dest="hostname", required=True, help="Server hostname / FQDN"
-    )
-    parser.add_argument(
-        "--file", dest="jobs_file", default="moni_jobs.json", help="Jobs JSON file"
-    )
-    parser.add_argument(
-        "--schema", dest="schema", default="http", help="HTTP Protocol (https/http)"
-    )
+    parser.add_argument("--server", dest="hostname", required=True, help="Server hostname / FQDN")
+    parser.add_argument("--file", dest="jobs_file", default="moni_jobs.json", help="Jobs JSON file")
+    parser.add_argument("--schema", dest="schema", default="http", help="HTTP Protocol (https/http)")
     args = parser.parse_args()
 
     hostname = args.hostname

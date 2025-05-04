@@ -1,13 +1,13 @@
 """Telegram notification service"""
 
 import logging
-import json
-import requests
-from requests.exceptions import RequestException
 from typing import List, Tuple
+
+import requests
 from django.conf import settings
 from moni.requests.urls import parse_url
 from notifiers.services import NotifierService
+from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)
 
@@ -18,12 +18,8 @@ class Telegram(NotifierService):
     def __init__(self) -> None:
         self.payload = {"text": "Moni: Test notification", "parse_mode": "HTML"}
         self.HEADERS = {"Content-type": "application/json"}
-        self.SERVICE_DOWN_TEMPLATE = (
-            settings.BASE_DIR / "notifiers/services/telegram/template_service_down.html"
-        )
-        self.SERVICE_UP_TEMPLATE = (
-            settings.BASE_DIR / "notifiers/services/telegram/template_service_up.html"
-        )
+        self.SERVICE_DOWN_TEMPLATE = settings.BASE_DIR / "notifiers/services/telegram/template_service_down.html"
+        self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / "notifiers/services/telegram/template_service_up.html"
 
     def prep_payload(
         self,
@@ -70,9 +66,7 @@ class Telegram(NotifierService):
                 return True, response.status_code, None
             return False, response.status_code, None
         except RequestException as e:
-            logger.exception(
-                "Failed to send Telegram notification, webhook=%s, error=%s", webhook, e
-            )
+            logger.exception("Failed to send Telegram notification, webhook=%s, error=%s", webhook, e)
             return False, None, repr(e)
         except Exception as err:
             logger.exception(

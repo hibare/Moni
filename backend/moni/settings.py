@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
-from dj_database_url import parse as db_url
-from decouple import config, Csv
 from datetime import timedelta
-from moni.utils.funcs import get_version, get_title, get_ua
+from pathlib import Path
+
+from decouple import Csv, config
+from dj_database_url import parse as db_url
+from moni.utils.funcs import get_title, get_ua, get_version
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -215,19 +216,13 @@ SIMPLE_JWT = {
 # - Store jobs in the project database
 # - Execute jobs in threads inside the application process
 SCHEDULER_CONFIG = {
-    "apscheduler.jobstores.default": {
-        "class": "django_apscheduler.jobstores:DjangoJobStore"
-    },
+    "apscheduler.jobstores.default": {"class": "django_apscheduler.jobstores:DjangoJobStore"},
     "apscheduler.executors.processpool": {"type": "threadpool"},
 }
 SCHEDULER_AUTOSTART = True
-SCHEDULER_JOB_MISFIRE_GRACETIME = config(
-    "SCHEDULER_JOB_MISFIRE_GRACETIME", default=60, cast=int
-)
+SCHEDULER_JOB_MISFIRE_GRACETIME = config("SCHEDULER_JOB_MISFIRE_GRACETIME", default=60, cast=int)
 SCHEDULER_JOB_MAX_INSTANCES = config("SCHEDULER_JOB_MAX_INSTANCES", default=1, cast=int)
-SCHEDULER_JOB_REPLACE_EXISTING = config(
-    "SCHEDULER_JOB_REPLACE_EXISTING", default=True, cast=bool
-)
+SCHEDULER_JOB_REPLACE_EXISTING = config("SCHEDULER_JOB_REPLACE_EXISTING", default=True, cast=bool)
 
 # App info
 VERSION = get_version()

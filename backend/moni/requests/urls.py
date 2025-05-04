@@ -3,7 +3,7 @@
 import logging
 import re
 from typing import List
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
 
 logger = logging.getLogger(__name__)
 

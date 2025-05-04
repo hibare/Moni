@@ -15,8 +15,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "moni.settings")
 
 application = get_wsgi_application()
 
-from django.conf import settings
-from moni import scheduler
+from django.conf import settings  # noqa: E402
+from moni import scheduler  # noqa: E402
 
 if settings.SCHEDULER_AUTOSTART:
     scheduler.start()

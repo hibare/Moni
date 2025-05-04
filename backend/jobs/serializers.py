@@ -1,14 +1,13 @@
 """Jobs Serializer"""
 
-from rest_framework import serializers
-from .models import Jobs, JobsHistory
 from notifiers.models import Notifiers
+from rest_framework import serializers
+
+from .models import Jobs, JobsHistory
 
 
 class JobsSerializer(serializers.ModelSerializer):
-    notifiers = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Notifiers.objects.all()
-    )
+    notifiers = serializers.PrimaryKeyRelatedField(many=True, queryset=Notifiers.objects.all())
 
     def validate_failure_threshold(self, value):
         """
@@ -16,9 +15,7 @@ class JobsSerializer(serializers.ModelSerializer):
         """
 
         if value <= 0:
-            raise serializers.ValidationError(
-                detail="Value must be greater than 0", code="failure_threshold"
-            )
+            raise serializers.ValidationError(detail="Value must be greater than 0", code="failure_threshold")
         return value
 
     class Meta:

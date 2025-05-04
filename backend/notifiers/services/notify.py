@@ -2,12 +2,13 @@
 
 import logging
 from typing import List
+
 from notifiers.models import Notifiers, NotifiersHistory
-from notifiers.services.slack.slack import Slack
 from notifiers.services.discord.discord import Discord
-from notifiers.services.webhook.webhook import Webhook
 from notifiers.services.gotify.gotify import Gotify
+from notifiers.services.slack.slack import Slack
 from notifiers.services.telegram.telegram import Telegram
+from notifiers.services.webhook.webhook import Webhook
 
 logger = logging.getLogger(__name__)
 

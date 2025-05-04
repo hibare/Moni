@@ -1,7 +1,6 @@
 """Jobs App Config"""
 
 from django.apps import AppConfig
-from django.conf import settings
 
 
 class JobsConfig(AppConfig):
@@ -9,4 +8,4 @@ class JobsConfig(AppConfig):
     name = "jobs"
 
     def ready(self):
-        import jobs.signals
+        import jobs.signals  # noqa: F401

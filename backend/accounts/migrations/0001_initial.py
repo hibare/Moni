@@ -8,8 +8,8 @@ class Migration(migrations.Migration):
     dependencies = [("auth", "__latest__"), ("authtoken", "__latest__")]
 
     def generate_superuser(apps, schema_editor):
-        from django.contrib.auth.models import User
         from decouple import config
+        from django.contrib.auth.models import User
 
         DJANGO_SU_USERNAME = config("DJANGO_SU_USERNAME", default="admin")
         DJANGO_SU_EMAIL = config("DJANGO_SU_EMAIL", default="admin@example.com")

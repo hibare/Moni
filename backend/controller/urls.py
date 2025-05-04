@@ -1,7 +1,7 @@
 """Controller URLs"""
 
-from django.urls import path
 from controller.views import JobsControllerViewSet
+from django.urls import path
 
 urlpatterns = [
     path(

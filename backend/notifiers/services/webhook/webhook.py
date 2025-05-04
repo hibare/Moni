@@ -1,12 +1,11 @@
 """Webhook notification service"""
 
 import logging
-import requests
-from requests.exceptions import RequestException
 from typing import List, Tuple
-import json
-from notifiers.services import NotifierService
 
+import requests
+from notifiers.services import NotifierService
+from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)
 
