@@ -110,7 +110,7 @@ def executor(id: str) -> None:
             )
 
             if len(history_status) >= failure_threshold and all(
-                el == False for el in history_status
+                el is False for el in history_status
             ):
                 for notifier in notifiers:
                     Notify.notify(
