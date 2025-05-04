@@ -47,7 +47,7 @@ def export_jobs(
 
             logger.info("Found %s jobs", len(jobs))
 
-            with open(output_file, "w") as output_fh:
+            with open(output_file, "w", encoding="utf_8") as output_fh:
                 output_fh.write(json.dumps(jobs, indent=4))
 
             logger.info("Saved jobs to %s", output_file)
