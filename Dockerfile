@@ -36,7 +36,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install UV
-RUN pip install uv
+# hadolint ignore=DL3013
+RUN pip install uv --no-cache-dir
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
