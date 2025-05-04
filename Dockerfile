@@ -2,11 +2,10 @@ FROM python:3.13.3-slim AS base
 
 # Build frontend assets
 
-FROM node:23 AS frontend
+FROM node:23-slim AS frontend
 
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
-ENV BUILD_DIR=/frontend
+ENV NODE_OPTIONS=--openssl-legacy-provider \
+    BUILD_DIR=/frontend
 
 WORKDIR ${BUILD_DIR}
 
@@ -22,10 +21,6 @@ RUN npm run build
 
 FROM base AS builder
 
-ENV PYTHONDONTWRITEBYTECODE=1
-
-ENV PYTHONUNBUFFERED=1
-
 # hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -35,20 +30,30 @@ RUN apt-get update \
     libssl-dev \
     libffi-dev \
     rustc \
+    curl \
+    ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN python -m venv /opt/venv
+# Install UV
+# hadolint ignore=DL3013
+RUN pip install uv --no-cache-dir
 
-ENV PATH="/opt/venv/bin:$PATH"
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    UV_PYTHON_DOWNLOADS=never
 
 WORKDIR /app
 
-COPY backend/requirements.txt .
-
-# hadolint ignore=DL3013
-RUN pip install -U pip setuptools wheel --no-cache-dir \
-    && pip install -r requirements.txt --no-cache-dir
+RUN --mount=type=cache,target=/root/.cache \
+    --mount=type=bind,source=backend/uv.lock,target=uv.lock \
+    --mount=type=bind,source=backend/pyproject.toml,target=pyproject.toml \
+    uv sync \
+    --locked \
+    --no-dev \
+    --no-install-project
 
 # Build final image
 
@@ -64,7 +69,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /opt/venv /opt/venv
+COPY --from=builder /app/.venv /opt/venv
 
 ENV PATH="/opt/venv/bin:$PATH"
 

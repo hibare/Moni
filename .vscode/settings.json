@@ -1,0 +1,15 @@
+{
+  "cSpell.words": ["apscheduler"],
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
+  "python.analysis.extraPaths": ["backend"],
+  "python.envFile": "${workspaceFolder}/backend/.env",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "node_modules": true,
+    "dist": true
+  }
+}
