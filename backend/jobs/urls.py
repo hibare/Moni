@@ -1,8 +1,8 @@
 """Jobs URLs"""
 
-from django.urls import path, include
+from django.urls import include, path
+from jobs.views import JobsHistoryViewSet, JobsViewSet
 from rest_framework.routers import DefaultRouter
-from jobs.views import JobsViewSet, JobsHistoryViewSet
 
 router = DefaultRouter()
 router.register(r"history", JobsHistoryViewSet)

@@ -2,9 +2,10 @@
 
 from datetime import timedelta
 from typing import List
-from django.utils import timezone
-from django.db import models
+
 from django.contrib.postgres.fields import ArrayField
+from django.db import models
+from django.utils import timezone
 from model_utils import FieldTracker
 from moni.utils.favicon import Favicon
 from moni.utils.funcs import get_str_uuid
@@ -28,14 +29,10 @@ class Jobs(models.Model):
     # Job state aka, enabled or disabled
     state = models.BooleanField(default=True)
     headers = models.JSONField(default=dict)
-    notifiers = models.ManyToManyField(
-        Notifiers, related_name="jobs_notifiers", db_column="uuid", blank=True
-    )
+    notifiers = models.ManyToManyField(Notifiers, related_name="jobs_notifiers", db_column="uuid", blank=True)
     verify_ssl = models.BooleanField(default=True)
     interval = models.PositiveIntegerField(default=15)
-    success_status = ArrayField(
-        models.PositiveIntegerField(), default=default_success_status
-    )
+    success_status = ArrayField(models.PositiveIntegerField(), default=default_success_status)
     check_redirect = models.BooleanField(default=True)
     healthy = models.BooleanField(default=True)
     favicon_url = models.URLField(null=True, blank=True)
@@ -71,9 +68,7 @@ class JobsHistory(models.Model):
     """Health check jobs execution history"""
 
     timestamp = models.DateTimeField(auto_now_add=True)
-    uuid = models.ForeignKey(
-        Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE
-    )
+    uuid = models.ForeignKey(Jobs, related_name="jobs_history_uuid", on_delete=models.CASCADE)
     status_code = models.IntegerField(null=True, blank=True)
     success = models.BooleanField()
     response_time = models.FloatField(null=True, blank=True)

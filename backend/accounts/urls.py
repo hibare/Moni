@@ -1,13 +1,8 @@
 """Accounts URLs"""
 
+from accounts.views import AccountView, APIToken, ChangePasswordView, JWTTokenObtainPairView
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
-from accounts.views import (
-    APIToken,
-    JWTTokenObtainPairView,
-    AccountView,
-    ChangePasswordView,
-)
 
 urlpatterns = [
     path(

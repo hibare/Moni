@@ -1,15 +1,12 @@
 """Scheduler routines"""
 
 import logging
-from django.conf import settings
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
+from django.conf import settings
 from django_apscheduler.jobstores import register_events
-from jobs.scheduler import (
-    delete_old_job_executions,
-    delete_old_job_history,
-    update_favicon_url,
-)
+from jobs.scheduler import delete_old_job_executions, delete_old_job_history, update_favicon_url
 from notifiers.scheduler import delete_old_notifier_history
 
 logger = logging.getLogger(__name__)

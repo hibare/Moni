@@ -1,8 +1,9 @@
 """Notifiers models"""
 
 from datetime import timedelta
-from django.utils import timezone
+
 from django.db import models
+from django.utils import timezone
 from moni.utils.funcs import get_str_uuid
 
 
@@ -50,9 +51,7 @@ class NotifiersHistory(models.Model):
     """Notifiers execution history"""
 
     timestamp = models.DateTimeField(auto_now_add=True)
-    uuid = models.ForeignKey(
-        Notifiers, related_name="notifier_uuid", on_delete=models.CASCADE
-    )
+    uuid = models.ForeignKey(Notifiers, related_name="notifier_uuid", on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
     status_code = models.IntegerField(null=True, blank=True)
     error = models.TextField(null=True, blank=True)

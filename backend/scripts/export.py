@@ -1,10 +1,11 @@
 """Export Jobs to JSON file"""
 
-import logging
-import getpass
-import urllib3
-import json
 import argparse
+import getpass
+import json
+import logging
+
+import urllib3
 
 FORMAT = "%(message)s"
 
@@ -64,9 +65,7 @@ def export_jobs(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-s", dest="hostname", required=True, help="Server hostname / FQDN"
-    )
+    parser.add_argument("-s", dest="hostname", required=True, help="Server hostname / FQDN")
     args = parser.parse_args()
 
     hostname = args.hostname

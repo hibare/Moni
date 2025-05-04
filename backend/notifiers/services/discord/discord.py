@@ -1,12 +1,13 @@
 """Discord notification service"""
 
-import logging
 import json
-import requests
-from requests.exceptions import RequestException
+import logging
 from typing import List, Tuple
+
+import requests
 from django.conf import settings
 from notifiers.services import NotifierService
+from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)
 
@@ -15,16 +16,10 @@ class Discord(NotifierService):
     """Discord notifiers"""
 
     def __init__(self) -> None:
-        self.payload = json.dumps(
-            {"content": "Moni: Test notification", "embeds": None}
-        ).encode("utf-8")
+        self.payload = json.dumps({"content": "Moni: Test notification", "embeds": None}).encode("utf-8")
         self.HEADERS = {"Content-type": "application/json"}
-        self.SERVICE_DOWN_TEMPLATE = (
-            settings.BASE_DIR / "notifiers/services/discord/template_service_down.json"
-        )
-        self.SERVICE_UP_TEMPLATE = (
-            settings.BASE_DIR / "notifiers/services/discord/template_service_up.json"
-        )
+        self.SERVICE_DOWN_TEMPLATE = settings.BASE_DIR / "notifiers/services/discord/template_service_down.json"
+        self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / "notifiers/services/discord/template_service_up.json"
 
     def prep_payload(
         self,
@@ -52,9 +47,7 @@ class Discord(NotifierService):
 
     def send(self, webhook: str) -> Tuple[bool, int | None, str | None]:
         try:
-            response = requests.post(
-                webhook, json=self.payload, headers=self.HEADERS, timeout=10
-            )
+            response = requests.post(webhook, json=self.payload, headers=self.HEADERS, timeout=10)
             response.raise_for_status()
             logger.info(
                 "Response from Discord, status_code=%s, response=%s",
@@ -66,9 +59,7 @@ class Discord(NotifierService):
                 return True, response.status_code, None
             return False, response.status_code, None
         except RequestException as err:
-            logger.exception(
-                "Failed to send Discord notification, url=%s, error=%s", webhook, err
-            )
+            logger.exception("Failed to send Discord notification, url=%s, error=%s", webhook, err)
             return False, None, repr(err)
         except Exception as err:
             logger.exception(

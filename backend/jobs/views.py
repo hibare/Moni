@@ -3,16 +3,17 @@
 import logging
 from collections import Counter
 from statistics import mean
-from rest_framework import viewsets, mixins, generics, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated, AllowAny
+
 from jobs.models import Jobs, JobsHistory
-from jobs.serializers import JobsSerializer, JobsHistorySerializer
+from jobs.serializers import JobsHistorySerializer, JobsSerializer
 from moni.utils.favicon import Favicon
 from notifiers.models import Notifiers
 from notifiers.serializers import NotifiersSerializer
+from rest_framework import generics, mixins, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
 logger = logging.getLogger(__name__)
 
@@ -79,9 +80,7 @@ class JobsViewSet(
         if queryset.exists():
             queryset.delete()
 
-        return Response(
-            {"detail": "Job history deleted"}, status=status.HTTP_204_NO_CONTENT
-        )
+        return Response({"detail": "Job history deleted"}, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=["post"], detail=True, permission_classes=[IsAuthenticated])
     def pause(self, request, **kwargs):
@@ -134,9 +133,7 @@ class JobsViewSet(
         try:
             uuid = self.kwargs["uuid"]
 
-            success_list = JobsHistory.objects.filter(uuid=uuid).values_list(
-                "success", flat=True
-            )
+            success_list = JobsHistory.objects.filter(uuid=uuid).values_list("success", flat=True)
 
             if success_list.exists():
                 success_counter = Counter(success_list)
@@ -158,9 +155,7 @@ class JobsViewSet(
         try:
             uuid = self.kwargs["uuid"]
             response_list = (
-                JobsHistory.objects.filter(uuid=uuid)
-                .exclude(response_time__isnull=True)
-                .values_list("response_time", flat=True)
+                JobsHistory.objects.filter(uuid=uuid).exclude(response_time__isnull=True).values_list("response_time", flat=True)
             )
 
             if response_list.exists():

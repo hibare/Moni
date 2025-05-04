@@ -1,13 +1,13 @@
 """Gotify notification service"""
 
-import logging
 import json
-import requests
-from requests.exceptions import RequestException
+import logging
 from typing import List, Tuple
+
+import requests
 from django.conf import settings
 from notifiers.services import NotifierService
-
+from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)
 
@@ -18,12 +18,8 @@ class Gotify(NotifierService):
     def __init__(self) -> None:
         self.payload = {"title": "Moni: Test notification", "message": "Test Message"}
         self.HEADERS = {"Content-type": "application/json"}
-        self.SERVICE_DOWN_TEMPLATE = (
-            settings.BASE_DIR / "notifiers/services/gotify/template_service_down.json"
-        )
-        self.SERVICE_UP_TEMPLATE = (
-            settings.BASE_DIR / "notifiers/services/gotify/template_service_up.json"
-        )
+        self.SERVICE_DOWN_TEMPLATE = settings.BASE_DIR / "notifiers/services/gotify/template_service_down.json"
+        self.SERVICE_UP_TEMPLATE = settings.BASE_DIR / "notifiers/services/gotify/template_service_up.json"
 
     def prep_payload(
         self,

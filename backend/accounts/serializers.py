@@ -28,12 +28,8 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(max_length=128, write_only=True, required=True)
-    new_password = serializers.CharField(
-        max_length=128, write_only=True, required=True, validators=[validate_password]
-    )
-    new_password_confirm = serializers.CharField(
-        max_length=128, write_only=True, required=True
-    )
+    new_password = serializers.CharField(max_length=128, write_only=True, required=True, validators=[validate_password])
+    new_password_confirm = serializers.CharField(max_length=128, write_only=True, required=True)
 
     def __init__(self, instance=None, data=..., **kwargs):
         super().__init__(instance=instance, data=data, **kwargs)
@@ -47,9 +43,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         elif not self.user.check_password(data["old_password"]):
             raise serializers.ValidationError("Old password is incorrect.")
         elif data.get("new_password") != data.get("new_password_confirm"):
-            raise serializers.ValidationError(
-                "New password & confirm password does not match."
-            )
+            raise serializers.ValidationError("New password & confirm password does not match.")
 
         return data
 
