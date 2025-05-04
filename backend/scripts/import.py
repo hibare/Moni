@@ -31,7 +31,7 @@ def import_jobs(
     endpoint = "/api/v1/jobs/"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Token %s" % (api_token),
+        "Authorization": f"Token {(api_token)}",
     }
 
     url = "%s://%s%s" % (http_schema, hostname, endpoint)
