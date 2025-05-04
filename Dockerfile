@@ -45,7 +45,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_COMPILE_BYTECODE=1 \
     UV_PYTHON_DOWNLOADS=never
 
-WORKDIR /app
+WORKDIR /opt
 
 RUN --mount=type=cache,target=/root/.cache \
     --mount=type=bind,source=backend/uv.lock,target=uv.lock \
@@ -69,9 +69,9 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /app/.venv /opt/venv
+COPY --from=builder /opt/.venv /opt/.venv
 
-ENV PATH="/opt/venv/bin:$PATH"
+ENV PATH="/opt/.venv/bin:$PATH"
 
 RUN useradd -ms /bin/bash ${USER}
 
