@@ -16,20 +16,27 @@ class Notify:
     """Notiy operations"""
 
     NOTIFIERS = {
-        'slack': Slack,
-        'discord': Discord,
-        'webhook': Webhook,
-        'gotify': Gotify,
-        'telegram': Telegram
+        "slack": Slack,
+        "discord": Discord,
+        "webhook": Webhook,
+        "gotify": Gotify,
+        "telegram": Telegram,
     }
 
     @staticmethod
-    def notify(notification_obj: Notifiers, title: str, url: str, success: bool, success_status: List, status_code: int | None, error: str | None = None):
+    def notify(
+        notification_obj: Notifiers,
+        title: str,
+        url: str,
+        success: bool,
+        success_status: List,
+        status_code: int | None,
+        error: str | None = None,
+    ):
         """Prepare & send notifier"""
 
         if not notification_obj.state:
-            logger.warning("Notifier disabled, uuid=%s",
-                           notification_obj.uuid)
+            logger.warning("Notifier disabled, uuid=%s", notification_obj.uuid)
             return
 
         notifier = Notify.NOTIFIERS.get(notification_obj.type, None)
@@ -37,15 +44,16 @@ class Notify:
         if notifier:
             notify = notifier()
         else:
-            logger.error("Unknown notifier uuid=%s, type=%s",
-                         notification_obj.uuid, notification_obj.type)
+            logger.error(
+                "Unknown notifier uuid=%s, type=%s",
+                notification_obj.uuid,
+                notification_obj.type,
+            )
             return
 
-        notify.prep_payload(title, url, success,
-                            success_status, status_code, error)
+        notify.prep_payload(title, url, success, success_status, status_code, error)
 
-        n_status, n_status_code, n_error = notify.send(
-            notification_obj.url)
+        n_status, n_status_code, n_error = notify.send(notification_obj.url)
 
         _ = NotifiersHistory.objects.create(
             uuid=notification_obj,
@@ -66,11 +74,13 @@ class Notify:
             notify = notifier()
 
         else:
-            logger.error("Unknown notifier uuid=%s, type=%s",
-                         notification_obj.uuid, notification_obj.type)
+            logger.error(
+                "Unknown notifier uuid=%s, type=%s",
+                notification_obj.uuid,
+                notification_obj.type,
+            )
             return n_status, n_status_code, n_error
 
-        n_status, n_status_code, n_error = notify.send(
-            notification_obj.url)
+        n_status, n_status_code, n_error = notify.send(notification_obj.url)
 
         return n_status, n_status_code, n_error

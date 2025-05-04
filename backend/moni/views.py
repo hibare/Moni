@@ -16,23 +16,19 @@ logger = logging.getLogger(__name__)
 
 def index_v(request):
     """Index view"""
-    return render(request, 'index.html')
+    return render(request, "index.html")
 
 
 def health_v(request):
     """Health view"""
 
-    return JsonResponse({
-        "status": "healthy"
-    })
+    return JsonResponse({"status": "healthy"})
 
 
 def version_v(request):
     """Version view"""
 
-    return JsonResponse({
-        "version": settings.VERSION
-    })
+    return JsonResponse({"version": settings.VERSION})
 
 
 class OpenAPISchemaView(APIView):
@@ -47,7 +43,7 @@ class OpenAPISchemaView(APIView):
     renderer_classes = [
         renderers.OpenAPIRenderer,
         renderers.JSONOpenAPIRenderer,
-        renderers.BrowsableAPIRenderer
+        renderers.BrowsableAPIRenderer,
     ]
 
     def get(self, request, format=None):
@@ -62,8 +58,8 @@ class OpenAPISchemaView(APIView):
             data = yaml.safe_load(stream)
 
         # Update app info
-        data['info']['version'] = settings.VERSION
-        data['info']['title'] = settings.TITLE
+        data["info"]["version"] = settings.VERSION
+        data["info"]["title"] = settings.TITLE
 
         return Response(data)
 
@@ -75,16 +71,14 @@ class ReDocView(APIView):
 
     authentication_classes = []
     permission_classes = [permissions.AllowAny]
-    renderer_classes = [
-        renderers.TemplateHTMLRenderer
-    ]
+    renderer_classes = [renderers.TemplateHTMLRenderer]
 
     def get(self, request):
         """
         Return ReDoc template.
         """
 
-        return Response({'schema_url': 'openapi-schema'}, template_name='redoc.html')
+        return Response({"schema_url": "openapi-schema"}, template_name="redoc.html")
 
 
 class SwaggerUIView(APIView):
@@ -94,13 +88,13 @@ class SwaggerUIView(APIView):
 
     authentication_classes = []
     permission_classes = [permissions.AllowAny]
-    renderer_classes = [
-        renderers.TemplateHTMLRenderer
-    ]
+    renderer_classes = [renderers.TemplateHTMLRenderer]
 
     def get(self, request):
         """
         Return ReDoc template.
         """
 
-        return Response({'schema_url': 'openapi-schema'}, template_name='swagger-ui.html')
+        return Response(
+            {"schema_url": "openapi-schema"}, template_name="swagger-ui.html"
+        )

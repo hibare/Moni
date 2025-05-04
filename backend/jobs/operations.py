@@ -15,7 +15,9 @@ from notifiers.services.notify import Notify
 logger = logging.getLogger(__name__)
 
 
-def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirect: bool = False) -> Tuple[Union[int, None], Union[bytes, None], Union[float, None], Union[str, None]]:
+def request(
+    url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirect: bool = False
+) -> Tuple[Union[int, None], Union[bytes, None], Union[float, None], Union[str, None]]:
     """
     HTTP Request executor
 
@@ -24,7 +26,7 @@ def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirec
 
     DEFAULT_HEADERS = {
         "Cache-Control": "no-cache",
-        "User-Agent": settings.MONI_USER_AGENT
+        "User-Agent": settings.MONI_USER_AGENT,
     }
 
     if not headers:
@@ -39,7 +41,7 @@ def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirec
             url,
             headers=request_headers,
             verify=verify_ssl,
-            allow_redirects=not check_redirect
+            allow_redirects=not check_redirect,
         )
         end = time.time()
         elapsed_seconds = end - start
@@ -71,12 +73,20 @@ def executor(id: str) -> None:
         failure_threshold = job.failure_threshold
 
         status_code, response, elapsed_seconds, error = request(
-            url, headers, verify_ssl, check_redirect)
+            url, headers, verify_ssl, check_redirect
+        )
 
         success = (status_code in success_status) and error is None
 
-        logger.info("Response id=%s, url=%s, status_code=%s, elapsed_seconds=%s, success=%s, error=%s",
-                    id, url, status_code, elapsed_seconds, success, error)
+        logger.info(
+            "Response id=%s, url=%s, status_code=%s, elapsed_seconds=%s, success=%s, error=%s",
+            id,
+            url,
+            status_code,
+            elapsed_seconds,
+            success,
+            error,
+        )
 
         # Update job health status
         job.healthy = success
@@ -88,18 +98,30 @@ def executor(id: str) -> None:
             status_code=status_code,
             success=success,
             response_time=elapsed_seconds,
-            error=error
+            error=error,
         )
 
         # Notify failure
         if notifiers and not success:
-            history_status = JobsHistory.objects.filter(uuid=id).order_by(
-                '-timestamp').values_list('success', flat=True)[:failure_threshold]
+            history_status = (
+                JobsHistory.objects.filter(uuid=id)
+                .order_by("-timestamp")
+                .values_list("success", flat=True)[:failure_threshold]
+            )
 
-            if len(history_status) >= failure_threshold and all(el == False for el in history_status):
+            if len(history_status) >= failure_threshold and all(
+                el == False for el in history_status
+            ):
                 for notifier in notifiers:
-                    Notify.notify(notifier, title, url,
-                                  success, success_status, status_code, error)
+                    Notify.notify(
+                        notifier,
+                        title,
+                        url,
+                        success,
+                        success_status,
+                        status_code,
+                        error,
+                    )
 
     except Exception:
         logger.exception("Failed to execute health check, id=%s", id)
@@ -127,7 +149,7 @@ class JobOps:
                 minutes=interval,
                 args=[id],
                 max_instances=settings.SCHEDULER_JOB_MAX_INSTANCES,
-                misfire_grace_time=settings.SCHEDULER_JOB_MISFIRE_GRACETIME
+                misfire_grace_time=settings.SCHEDULER_JOB_MISFIRE_GRACETIME,
             )
             logger.info("Job added, id=%s", id)
             return True
@@ -177,8 +199,9 @@ class JobOps:
         """Reschedule a job"""
 
         try:
-            scheduler.reschedule_job(id,
-                                     jobstore=None, trigger="interval", minutes=interval)
+            scheduler.reschedule_job(
+                id, jobstore=None, trigger="interval", minutes=interval
+            )
             logger.info("Job rescheduled, id=%s", id)
             return True
         except Exception:
@@ -193,7 +216,6 @@ class JobOps:
             job = scheduler.get_job(job_id=id)
 
             if job is not None:
-                job.modify(
-                    next_run_time=datetime.datetime.now())
+                job.modify(next_run_time=datetime.datetime.now())
         except Exception:
             logger.exception("Failed to run job, id=%s", id)

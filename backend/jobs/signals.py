@@ -25,16 +25,20 @@ def job_post_save(sender, instance, created, **kwargs):
         JobOps.add(instance.uuid)
         instance.update_favicon_url()
     else:
-        if instance.tracker.has_changed('state'):
+        if instance.tracker.has_changed("state"):
             if instance.state:
                 JobOps.resume(instance.uuid)
             else:
                 JobOps.pause(instance.uuid)
 
-        if instance.tracker.has_changed('interval'):
+        if instance.tracker.has_changed("interval"):
             JobOps.reschedule(instance.uuid, instance.interval)
 
-    if instance.state and (created or instance.tracker.has_changed('state') or instance.tracker.has_changed('url')):
+    if instance.state and (
+        created
+        or instance.tracker.has_changed("state")
+        or instance.tracker.has_changed("url")
+    ):
         JobOps.run(instance.uuid)
 
 

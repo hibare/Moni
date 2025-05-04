@@ -16,22 +16,30 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
-from .views import index_v, health_v, version_v, OpenAPISchemaView, ReDocView, SwaggerUIView
+from .views import (
+    index_v,
+    health_v,
+    version_v,
+    OpenAPISchemaView,
+    ReDocView,
+    SwaggerUIView,
+)
 
 urlpatterns = [
-    path('', index_v, name='index'),
-    path('favicon.png/', RedirectView.as_view(
-        url='/static/img/favicon.png',
-        permanent=True
-    ), name='favicon'),
-    path('admin/', admin.site.urls),
-    path('__version/', version_v, name='version'),
-    path('__health/', health_v, name='health'),
-    path('api/v1/accounts/', include('accounts.urls')),
-    path('api/v1/jobs/', include('jobs.urls')),
-    path('api/v1/notifiers/', include('notifiers.urls')),
-    path('api/v1/admin/', include('controller.urls')),
-    path('openapi/', OpenAPISchemaView.as_view(), name='openapi-schema'),
-    path('redoc/', ReDocView.as_view(), name='redoc'),
-    path('swagger/', SwaggerUIView.as_view(), name='swagger-ui'),
+    path("", index_v, name="index"),
+    path(
+        "favicon.png/",
+        RedirectView.as_view(url="/static/img/favicon.png", permanent=True),
+        name="favicon",
+    ),
+    path("admin/", admin.site.urls),
+    path("__version/", version_v, name="version"),
+    path("__health/", health_v, name="health"),
+    path("api/v1/accounts/", include("accounts.urls")),
+    path("api/v1/jobs/", include("jobs.urls")),
+    path("api/v1/notifiers/", include("notifiers.urls")),
+    path("api/v1/admin/", include("controller.urls")),
+    path("openapi/", OpenAPISchemaView.as_view(), name="openapi-schema"),
+    path("redoc/", ReDocView.as_view(), name="redoc"),
+    path("swagger/", SwaggerUIView.as_view(), name="swagger-ui"),
 ]

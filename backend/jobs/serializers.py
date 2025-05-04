@@ -7,7 +7,8 @@ from notifiers.models import Notifiers
 
 class JobsSerializer(serializers.ModelSerializer):
     notifiers = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Notifiers.objects.all())
+        many=True, queryset=Notifiers.objects.all()
+    )
 
     def validate_failure_threshold(self, value):
         """
@@ -16,19 +17,25 @@ class JobsSerializer(serializers.ModelSerializer):
 
         if value <= 0:
             raise serializers.ValidationError(
-                detail="Value must be greater than 0", code="failure_threshold")
+                detail="Value must be greater than 0", code="failure_threshold"
+            )
         return value
 
     class Meta:
         model = Jobs
-        fields = '__all__'
-        read_only_fields = ['uuid', 'healthy']
+        fields = "__all__"
+        read_only_fields = ["uuid", "healthy"]
 
 
 class JobsHistorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = JobsHistory
-        fields = '__all__'
-        read_only_fields = ['timestamp', 'uuid',
-                            'status_code', 'success', 'response_time', 'error']
+        fields = "__all__"
+        read_only_fields = [
+            "timestamp",
+            "uuid",
+            "status_code",
+            "success",
+            "response_time",
+            "error",
+        ]

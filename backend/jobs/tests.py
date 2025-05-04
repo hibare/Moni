@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 class JobsModelsTests(TestCase):
-
     def test_default_success_status(self):
         """Test default sucess status"""
 
@@ -23,13 +22,9 @@ class JobsModelsTests(TestCase):
 
 
 class JobsTests(TestCase):
-
     def setUp(self) -> None:
         scheduler.start(default_jobs=False)
-        self.obj = Jobs.objects.create(
-            url="https://hibare.in",
-            title="Hibare.in"
-        )
+        self.obj = Jobs.objects.create(url="https://hibare.in", title="Hibare.in")
 
     def tearDown(self) -> None:
         scheduler.shutdown()
@@ -48,25 +43,24 @@ class JobsTests(TestCase):
         self.obj.state = True
         self.obj.save()
         obj = DjangoJob.objects.get(id=self.obj.uuid)
-        self.assertIsNotNone(pickle.loads(obj.job_state).get('next_run_time'))
+        self.assertIsNotNone(pickle.loads(obj.job_state).get("next_run_time"))
 
         """Test job pause status"""
         logger.info("Testing job pause state")
         self.obj.state = False
         self.obj.save()
         obj = DjangoJob.objects.get(id=self.obj.uuid)
-        self.assertIsNone(pickle.loads(obj.job_state).get('next_run_time'))
+        self.assertIsNone(pickle.loads(obj.job_state).get("next_run_time"))
 
         """Test job resume status"""
         logger.info("Testing job resume state")
         self.obj.state = True
         self.obj.save()
         obj = DjangoJob.objects.get(id=self.obj.uuid)
-        self.assertIsNotNone(pickle.loads(obj.job_state).get('next_run_time'))
+        self.assertIsNotNone(pickle.loads(obj.job_state).get("next_run_time"))
 
 
 class NotificationTests(TestCase):
-
     def test_notification_url_success(self):
         """Validate a notifier URL (success)"""
 

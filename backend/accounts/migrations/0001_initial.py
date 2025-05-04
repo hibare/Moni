@@ -5,24 +5,21 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('auth', '__latest__'),
-        ('authtoken', '__latest__')
-    ]
+    dependencies = [("auth", "__latest__"), ("authtoken", "__latest__")]
 
     def generate_superuser(apps, schema_editor):
         from django.contrib.auth.models import User
         from decouple import config
 
-        DJANGO_SU_USERNAME = config('DJANGO_SU_USERNAME', default='admin')
-        DJANGO_SU_EMAIL = config(
-            'DJANGO_SU_EMAIL', default='admin@example.com')
-        DJANGO_SU_PASSWORD = config('DJANGO_SU_PASSWORD', default='@Admin123')
+        DJANGO_SU_USERNAME = config("DJANGO_SU_USERNAME", default="admin")
+        DJANGO_SU_EMAIL = config("DJANGO_SU_EMAIL", default="admin@example.com")
+        DJANGO_SU_PASSWORD = config("DJANGO_SU_PASSWORD", default="@Admin123")
 
         superuser = User.objects.create_superuser(
             username=DJANGO_SU_USERNAME,
             email=DJANGO_SU_EMAIL,
-            password=DJANGO_SU_PASSWORD)
+            password=DJANGO_SU_PASSWORD,
+        )
 
         superuser.save()
 

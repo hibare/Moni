@@ -5,9 +5,7 @@ from rest_framework.routers import DefaultRouter
 from jobs.views import JobsViewSet, JobsHistoryViewSet
 
 router = DefaultRouter()
-router.register(r'history', JobsHistoryViewSet)
-router.register('', JobsViewSet)
+router.register(r"history", JobsHistoryViewSet)
+router.register("", JobsViewSet)
 
-urlpatterns = [
-    path('', include(router.urls))
-]
+urlpatterns = [path("", include(router.urls))]

@@ -10,12 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 class JobsController:
-
     @classmethod
     def update_job_misfire_grace_time(cls, uuid: str, grace_time: int) -> None:
         job = DjangoJob.objects.get(id=uuid)
         job_state = pickle.loads(job.job_state)
-        job_state['misfire_grace_time'] = grace_time
+        job_state["misfire_grace_time"] = grace_time
         job.job_state = pickle.dumps(job_state)
         job.save()
         logger.info("Job misfire grace time updated, id=%s", uuid)

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('jobs', '0007_alter_jobs_healthy'),
+        ("jobs", "0007_alter_jobs_healthy"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='jobs',
-            name='failure_threshold',
+            model_name="jobs",
+            name="failure_threshold",
             field=models.PositiveIntegerField(default=1),
         ),
     ]

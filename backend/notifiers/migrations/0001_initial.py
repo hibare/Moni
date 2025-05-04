@@ -9,50 +9,86 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Notifiers',
+            name="Notifiers",
             fields=[
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
-                ('uuid', models.CharField(default=moni.utils.funcs.get_str_uuid, max_length=40, primary_key=True, serialize=False)),
-                ('url', models.URLField(unique=True)),
-                ('type', models.CharField(choices=[('slack', 'Slack'), ('discord', 'Discord'), ('webhook', 'Webhook'), ('gotify', 'Gotify'), ('telegram', 'Telegram')], max_length=10)),
-                ('description', models.TextField()),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
+                (
+                    "uuid",
+                    models.CharField(
+                        default=moni.utils.funcs.get_str_uuid,
+                        max_length=40,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("url", models.URLField(unique=True)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("slack", "Slack"),
+                            ("discord", "Discord"),
+                            ("webhook", "Webhook"),
+                            ("gotify", "Gotify"),
+                            ("telegram", "Telegram"),
+                        ],
+                        max_length=10,
+                    ),
+                ),
+                ("description", models.TextField()),
             ],
             options={
-                'verbose_name': 'Notifiers',
-                'verbose_name_plural': 'Notifiers',
+                "verbose_name": "Notifiers",
+                "verbose_name_plural": "Notifiers",
             },
         ),
         migrations.CreateModel(
-            name='NotifiersHistory',
+            name="NotifiersHistory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('status', models.BooleanField(default=False)),
-                ('status_code', models.IntegerField(null=True)),
-                ('error', models.TextField(null=True)),
-                ('uuid', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notifications_uuid', to='notifiers.notifiers')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                ("status", models.BooleanField(default=False)),
+                ("status_code", models.IntegerField(null=True)),
+                ("error", models.TextField(null=True)),
+                (
+                    "uuid",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="notifications_uuid",
+                        to="notifiers.notifiers",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Notifiers History',
-                'verbose_name_plural': 'Notifiers History',
+                "verbose_name": "Notifiers History",
+                "verbose_name_plural": "Notifiers History",
             },
         ),
         migrations.AddIndex(
-            model_name='notifiers',
-            index=models.Index(fields=['uuid'], name='notifiers_n_uuid_6ee14d_idx'),
+            model_name="notifiers",
+            index=models.Index(fields=["uuid"], name="notifiers_n_uuid_6ee14d_idx"),
         ),
         migrations.AddIndex(
-            model_name='notifiershistory',
-            index=models.Index(fields=['uuid'], name='notifiers_n_uuid_id_d9a976_idx'),
+            model_name="notifiershistory",
+            index=models.Index(fields=["uuid"], name="notifiers_n_uuid_id_d9a976_idx"),
         ),
         migrations.AddIndex(
-            model_name='notifiershistory',
-            index=models.Index(fields=['-timestamp', 'uuid'], name='notifiers_n_timesta_b168a8_idx'),
+            model_name="notifiershistory",
+            index=models.Index(
+                fields=["-timestamp", "uuid"], name="notifiers_n_timesta_b168a8_idx"
+            ),
         ),
     ]
