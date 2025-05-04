@@ -1,9 +1,10 @@
 """Webhook notification service"""
 
 import logging
+import requests
+from requests.exceptions import RequestException
 from typing import List, Tuple
 import json
-from moni.requests.proxy import requests_post
 from notifiers.services import NotifierService
 
 
@@ -14,15 +15,15 @@ class Webhook(NotifierService):
     """Webhook notifiers"""
 
     def __init__(self) -> None:
-        self.payload = json.dumps({
+        self.payload = {
             "text": "Moni: Test notification"
-        }).encode("utf-8")
+        }
         self.HEADERS = {
             "Content-type": "application/json"
         }
 
     def prep_payload(self, title: str, health_check_url: str, success: bool, expected_status: List, received_status: int, error: str | None = None) -> None:
-        payload = {
+        self.payload = {
             "title": title,
             "health_check_url": health_check_url,
             "success": success,
@@ -31,17 +32,21 @@ class Webhook(NotifierService):
             "error": error
         }
 
-        self.payload = json.dumps(payload).encode("utf-8")
-
     def send(self, webhook: str) -> Tuple[bool, int | None, str | None]:
         try:
-            response = requests_post(webhook, self.payload, self.HEADERS)
+            response = requests.post(
+                webhook,
+                json=self.payload,
+                headers=self.HEADERS
+            )
+            response.raise_for_status()
             logger.info("Response from webhook, status_code=%s, response=%s",
-                        response.status, response.data)
+                        response.status_code, response.text)
 
-            if response.status == 200:
-                return True, response.status, None
-            return False, response.status, None
-        except Exception as err:
+            return True, response.status_code, None
+        except RequestException as err:
             logger.exception("Webhook notification exception")
+            return False, None, repr(err)
+        except Exception as err:
+            logger.exception("An unexpected error occurred while sending Webhook notification: %s", err)
             return False, None, repr(err)
