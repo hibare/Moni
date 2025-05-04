@@ -2,9 +2,10 @@
 
 import logging
 import json
+import requests
+from requests.exceptions import RequestException
 from typing import List, Tuple
 from django.conf import settings
-from moni.requests.proxy import requests_post
 from notifiers.services import NotifierService
 
 
@@ -15,10 +16,10 @@ class Gotify(NotifierService):
     """Gotify notifiers"""
 
     def __init__(self) -> None:
-        self.payload = json.dumps({
+        self.payload = {
             "title": "Moni: Test notification",
             "message": "Test Message"
-        }).encode("utf-8")
+        }
         self.HEADERS = {
             "Content-type": "application/json"
         }
@@ -36,17 +37,25 @@ class Gotify(NotifierService):
         template_data = template_data % (
             title, health_check_url, expected_status, received_status, error)
 
-        self.payload = template_data.encode("utf-8")
+        self.payload = json.loads(template_data)
 
     def send(self, webhook: str) -> Tuple[bool, int | None, str | None]:
         try:
-            response = requests_post(webhook, self.payload, self.HEADERS)
+            response = requests.post(
+                webhook,
+                json=self.payload,
+                headers=self.HEADERS
+            )
+            response.raise_for_status()
             logger.info("Response from Gotify, status_code=%s, response=%s",
-                        response.status, response.data)
+                        response.status_code, response.text)
 
-            if response.status == 200:
-                return True, response.status, None
-            return False, response.status, None
-        except Exception as err:
+            if response.status_code == 200:
+                return True, response.status_code, None
+            return False, response.status_code, None
+        except RequestException as err:
             logger.exception("Gotify notification exception")
+            return False, None, repr(err)
+        except Exception as err:
+            logger.exception("An unexpected error occurred while sending Gotify notification: %s", err)
             return False, None, repr(err)

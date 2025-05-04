@@ -10,6 +10,8 @@ DOCKER_COMPOSE_PREFIX = HOST_UID=${UID} HOST_GID=${GID} docker compose -f docker
 .PHONY: init
 init: ## Initialize the project
 	$(MAKE) install-pre-commit
+	cd frontend && npm install && cd -
+	cd backend && uv sync &&  cd -
 
 .PHONY: install-pre-commit
 install-pre-commit: ## Install pre-commit
@@ -19,40 +21,38 @@ install-pre-commit: ## Install pre-commit
 db-up: ## Spin up DB and other services
 	${DOCKER_COMPOSE_PREFIX} up -d postgres adminer  httpbin
 
-.PHONY: moni-up
-moni-up: ## Build and run moni
-	$(MAKE) db-up
-	${DOCKER_COMPOSE_PREFIX} up --build moni
-
-.PHONY: build-dev
-build-dev: ## Build Dev
-	${DOCKER_COMPOSE_PREFIX} build --no-cache api
-	${DOCKER_COMPOSE_PREFIX} build --no-cache ui
-
 .PHONY: dev
-dev: ## Spin up dev
+dev: ## Spin up dev (frontend & backend parallel using xargs)
 	$(MAKE) db-up
-	${DOCKER_COMPOSE_PREFIX} up ui api
+	@echo "Starting frontend and backend in parallel using xargs..."
+	# Use printf to feed commands line by line to xargs
+	# -P 2 runs up to 2 processes in parallel
+	# -I {} substitutes the command line
+	# sh -c 'eval "$$1"' executes the command string in a shell
+	# xargs should handle signal propagation (Ctrl+C) to children
+	printf '%s\n' \
+		"cd frontend && npm run dev" \
+		"cd backend && uv run python manage.py runserver 0.0.0.0:5000" | \
+	xargs -P 2 -I {} sh -c 'eval "$$1"' - {}
+	@echo ">>> Development servers stopped."
 
 .PHONY: api-py-shell
 api-py-shell: ## Open python shell in API container
-	${DOCKER_COMPOSE_PREFIX} exec api python manage.py shell
+	uv run python manage.py shell
 
-.PHONY: api-shell
-api-shell: ## Open shell in API container
-	${DOCKER_COMPOSE_PREFIX} exec api bash
+.PHONY: migrate
+migrate: ## Run migrations
+	cd backend && uv run python manage.py migrate
 
 .PHONY: clean
 clean: ## Perform cleanup
-	${DOCKER_COMPOSE_PREFIX} down --remove-orphans
-	${DOCKER_COMPOSE_PREFIX} rm -f
-	${DOCKER_COMPOSE_PREFIX} volume prune -f
-	${DOCKER_COMPOSE_PREFIX} network prune -f
+	cd frontend && rm -rf node_modules && cd -
+	cd backend && rm -rf .venv && cd -
+	@echo ">>> Cleaned up frontend and backend directories."
 
 .PHONY: gen-openapi-schema
 gen-openapi-schema: ## Generate openapi schema
-	${DOCKER_COMPOSE_PREFIX} exec api python manage.py generateschema --file openapi-schema.yml
-	docker cp api:/app/openapi-schema.yml openapi-schema.yml
+	uv run python manage.py generateschema --file openapi-schema.yml
 
 .PHONY: help
 help: ## Disply this help

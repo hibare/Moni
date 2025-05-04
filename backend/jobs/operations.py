@@ -4,10 +4,11 @@ import copy
 import time
 import datetime
 import logging
+import requests
+from requests.exceptions import RequestException
 from typing import Dict, Tuple, Union
 from moni import settings
 from moni.scheduler import scheduler
-from moni.requests.proxy import requests_get
 from jobs.models import Jobs, JobsHistory
 from notifiers.services.notify import Notify
 
@@ -34,18 +35,26 @@ def request(url: str, headers: Dict = {}, verify_ssl: bool = True, check_redirec
 
     try:
         start = time.time()
-        response = requests_get(url, request_headers, verify_ssl=verify_ssl, redirect=not check_redirect)
+        response = requests.get(
+            url,
+            headers=request_headers,
+            verify=verify_ssl,
+            allow_redirects=not check_redirect
+        )
         end = time.time()
         elapsed_seconds = end - start
 
-        return response.status, response.data, elapsed_seconds, None
-    except Exception as err:
+        return response.status_code, response.content, elapsed_seconds, None
+    except RequestException as err:
         logger.exception("URL=%s", url)
         return None, None, None, str(err)
+    except Exception as err:
+        logger.exception("Unexpected error for URL=%s", url)
+        return None, None, None, f"Unexpected error: {str(err)}"
 
 
 def executor(id: str) -> None:
-    """Healthcheck executor"""
+    """Health check executor"""
 
     logger.info("Running health check, id=%s", id)
 
@@ -93,7 +102,7 @@ def executor(id: str) -> None:
                                   success, success_status, status_code, error)
 
     except Exception:
-        logger.exception("Failed to execute healthcheck, id=%s", id)
+        logger.exception("Failed to execute health check, id=%s", id)
 
         # Todo - Notify failure
 

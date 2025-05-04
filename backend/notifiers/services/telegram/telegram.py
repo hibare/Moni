@@ -2,9 +2,10 @@
 
 import logging
 import json
+import requests
+from requests.exceptions import RequestException
 from typing import List, Tuple
 from django.conf import settings
-from moni.requests.proxy import requests_post
 from moni.requests.urls import parse_url
 from notifiers.services import NotifierService
 
@@ -47,15 +48,21 @@ class Telegram(NotifierService):
                 raise Exception("Unable to find chat id")
 
             self.payload['chat_id'] = chat_id
-            self.payload = json.dumps(self.payload).encode("utf-8")
 
-            response = requests_post(webhook, self.payload, self.HEADERS)
+            response = requests.post(
+                webhook,
+                json=self.payload,
+                headers=self.HEADERS
+            )
             logger.info("Response from Telegram, status_code=%s, response=%s",
-                        response.status, response.data)
+                        response.status_code, response.text)
 
-            if response.status == 200:
-                return True, response.status, None
-            return False, response.status, None
+            if response.status_code == 200:
+                return True, response.status_code, None
+            return False, response.status_code, None
+        except RequestException as e:
+            logger.exception("Failed to send Telegram notification, webhook=%s, error=%s", webhook, e)
+            return False, None, repr(e)
         except Exception as err:
-            logger.exception("Telegram notification exception")
+            logger.exception("An unexpected error occurred while sending Telegram notification: %s", err)
             return False, None, repr(err)
