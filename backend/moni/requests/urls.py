@@ -28,7 +28,7 @@ def format_url(url: str) -> str:
     DEFAUTL_SCHEME = "http"
 
     if not re.match("(?:http|https)://", url):
-        return "{}://{}".format(DEFAUTL_SCHEME, url)
+        return f"{DEFAUTL_SCHEME}://{url}"
     return url
 
 
