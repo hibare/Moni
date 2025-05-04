@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "streetsidesoftware.code-spell-checker",
+    "ms-azuretools.vscode-docker",
+    "editorconfig.editorconfig",
+    "exiasr.hadolint",
+    "ms-python.isort",
+    "xabikos.javascriptsnippets",
+    "ms-vscode.makefile-tools",
+    "esbenp.prettier-vscode",
+    "ms-python.vscode-pylance",
+    "ms-python.python",
+    "vue.volar",
+    "redhat.vscode-yaml"
+  ]
+}
