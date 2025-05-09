@@ -54,6 +54,10 @@ clean: ## Perform cleanup
 gen-openapi-schema: ## Generate openapi schema
 	uv run python manage.py generateschema --file openapi-schema.yml
 
+.PHONY: gen-uv-lock
+gen-uv-lock: ## Generate uv lock file
+	cd backend && uv lock
+
 .PHONY: help
 help: ## Disply this help
 		@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BCYAN)%-35s$(NC)%s\n", $$1, $$2}'
