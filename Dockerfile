@@ -1,4 +1,4 @@
-FROM python:3.15.0a3-slim AS base
+FROM python:3.15.0a5-slim AS base
 
 # Build frontend assets
 
