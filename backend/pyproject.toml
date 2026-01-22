@@ -44,5 +44,5 @@ dev = [
     "pyyaml==6.0.3",
     "tomli==2.3.0",
     "uritemplate==4.2.0",
-    "wheel==0.45.1",
+    "wheel==0.46.2",
 ]
