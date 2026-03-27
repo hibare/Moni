@@ -11,10 +11,10 @@ dependencies = [
     "django-apscheduler==0.7.0",
     "django-filter==25.2",
     "django-model-utils==5.0.0",
-    "djangorestframework==3.17.0",
+    "djangorestframework==3.17.1",
     "djangorestframework-simplejwt==5.5.1",
     "drf-writable-nested==0.7.2",
-    "gunicorn==25.1.0",
+    "gunicorn==25.3.0",
     "markdown==3.10.2",
     "packaging==26.0",
     "psycopg2-binary==2.9.11",
@@ -36,13 +36,13 @@ dependencies = [
 [dependency-groups]
 dev = [
     "autopep8==2.3.2",
-    "build==1.4.0",
+    "build==1.4.2",
     "click==8.3.1",
     "packaging==26.0",
     "pycodestyle==2.14.0",
     "pyproject-hooks==1.2.0",
     "pyyaml==6.0.3",
-    "tomli==2.4.0",
+    "tomli==2.4.1",
     "uritemplate==4.2.0",
     "wheel==0.46.3",
 ]
