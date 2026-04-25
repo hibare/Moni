@@ -11,20 +11,20 @@
   "dependencies": {
     "@quasar/extras": "^1.18.0",
     "@types/lodash.clonedeep": "^4.5.9",
-    "axios": "^1.15.0",
+    "axios": "^1.15.2",
     "lodash.clonedeep": "^4.5.0",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "quasar": "^2.19.3",
-    "vue": "^3.5.32",
-    "vue-router": "^5.0.4"
+    "vue": "^3.5.33",
+    "vue-router": "^5.0.6"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.11.0",
-    "@vitejs/plugin-vue": "^6.0.5",
+    "@vitejs/plugin-vue": "^6.0.6",
     "sass": "^1.99.0",
-    "typescript": "^6.0.2",
-    "vite": "^8.0.8",
-    "vue-tsc": "^3.2.6"
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10",
+    "vue-tsc": "^3.2.7"
   }
 }
