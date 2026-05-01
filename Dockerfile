@@ -1,4 +1,4 @@
-FROM python:3.15.0a8-slim@sha256:d9422b48034b1fbfd05968ad1fc203309d432a5dff3d5553b112d3326636abc2 AS base
+FROM python:3.15.0a8-slim@sha256:ff6330e2ba8a637606b3eb96f0e6f92def4290225b349bb9578eb0bfc15a605d AS base
 
 # Build frontend assets
 
