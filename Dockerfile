@@ -2,7 +2,7 @@ FROM python:3.15.0a8-slim@sha256:ff6330e2ba8a637606b3eb96f0e6f92def4290225b349bb
 
 # Build frontend assets
 
-FROM node:25-slim@sha256:e49fd70491eb042270f974167c874d6245287263ffc16422fcf93b3c150409d8 AS frontend
+FROM node:26-slim@sha256:f879737cd65b6dbf82bc34572bcc88b3580cebd2ba067619febfb0ed5acddd0b AS frontend
 
 ENV NODE_OPTIONS=--openssl-legacy-provider \
     BUILD_DIR=/frontend
