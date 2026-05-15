@@ -1,8 +1,8 @@
-FROM python:3.15.0a8-slim@sha256:ff6330e2ba8a637606b3eb96f0e6f92def4290225b349bb9578eb0bfc15a605d AS base
+FROM python:3.15.0b1-slim@sha256:1da1bbdf6835599de7e8041bdf001c17f9331e7b6a07ba28636566a382deceef AS base
 
 # Build frontend assets
 
-FROM node:26-slim@sha256:f879737cd65b6dbf82bc34572bcc88b3580cebd2ba067619febfb0ed5acddd0b AS frontend
+FROM node:26-slim@sha256:424cafd2a035ed2b2d74acc3142b68b426fb62a47742c80a75e7117db02d6b30 AS frontend
 
 ENV NODE_OPTIONS=--openssl-legacy-provider \
     BUILD_DIR=/frontend
