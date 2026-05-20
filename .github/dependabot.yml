@@ -15,8 +15,8 @@ updates:
         patterns:
           - "*"
 
-  # Maintain dependencies for Go mods
-  - package-ecosystem: "pip"
+  # Maintain dependencies for Python (uv)
+  - package-ecosystem: "uv"
     directory: "/backend"
     schedule:
       interval: "monthly"
