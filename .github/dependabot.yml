@@ -1,61 +1,58 @@
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "main"
-    assignees:
-      - "hibare"
-    groups:
-      actions:
-        patterns:
-          - "*"
-
-  # Maintain dependencies for Go mods
-  - package-ecosystem: "pip"
-    directory: "/backend"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "main"
-    assignees:
-      - "hibare"
-    groups:
-      python:
-        patterns:
-          - "*"
-
-  # Maintain version for Docker
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "main"
-    assignees:
-      - "hibare"
-    groups:
-      docker:
-        patterns:
-          - "*"
-
-  # Maintain version for npm or yarn
-  - package-ecosystem: "npm"
-    directory: "/frontend"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "main"
-    assignees:
-      - "hibare"
-    groups:
-      npm:
-        patterns:
-          - "*"
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: monthly
+    day: friday
+    time: 00:30
+  target-branch: main
+  assignees:
+  - hibare
+  groups:
+    actions:
+      patterns:
+      - '*'
+  cooldown-period: 10
+- package-ecosystem: pip
+  directory: /backend
+  schedule:
+    interval: monthly
+    day: friday
+    time: 00:30
+  target-branch: main
+  assignees:
+  - hibare
+  groups:
+    python:
+      patterns:
+      - '*'
+  cooldown-period: 10
+- package-ecosystem: docker
+  directory: /
+  schedule:
+    interval: monthly
+    day: friday
+    time: 00:30
+  target-branch: main
+  assignees:
+  - hibare
+  groups:
+    docker:
+      patterns:
+      - '*'
+  cooldown-period: 10
+- package-ecosystem: npm
+  directory: /frontend
+  schedule:
+    interval: monthly
+    day: friday
+    time: 00:30
+  target-branch: main
+  assignees:
+  - hibare
+  groups:
+    npm:
+      patterns:
+      - '*'
+  cooldown-period: 10
