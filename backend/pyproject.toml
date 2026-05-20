@@ -22,7 +22,7 @@ dependencies = [
     "pytz==2026.2",
     "pytz-deprecation-shim==0.1.0.post0",
     "pyyaml==6.0.3",
-    "requests>=2.32.3",
+    "requests>=2.34.2",
     "six==1.17.0",
     "soupsieve==2.8.3",
     "sqlparse==0.5.5",
@@ -37,7 +37,7 @@ dependencies = [
 dev = [
     "autopep8==2.3.2",
     "build==1.5.0",
-    "click==8.3.3",
+    "click==8.4.0",
     "packaging==26.2",
     "pycodestyle==2.14.0",
     "pyproject-hooks==1.2.0",
