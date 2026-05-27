@@ -39,7 +39,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       - name: Run pre-commit
-        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
+        uses: hibare/.github/github/shared-workflows/pre-commit//@ec61c90a75c7438d3fa683fffffd83908d1e7447 # v0.10.0
 
   docker-image-build-publish:
     runs-on: ubuntu-latest
