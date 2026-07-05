@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@quasar/extras": "^2.0.2",
+    "@quasar/extras": "^1.18.0",
     "@types/lodash.clonedeep": "^4.5.9",
     "axios": "^1.18.1",
     "lodash.clonedeep": "^4.5.0",
