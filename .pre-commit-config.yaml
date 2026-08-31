@@ -2,7 +2,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-json
@@ -14,7 +14,7 @@ repos:
       - id: check-shebang-scripts-are-executable
 
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.14.0
+    rev: 57e1618d78fd469a92c1e584e8c9313024656623 # v2.14.0
     hooks:
       - id: hadolint-docker
         name: Lint Dockerfiles
@@ -24,7 +24,7 @@ repos:
         entry: ghcr.io/hadolint/hadolint hadolint
 
   - repo: https://github.com/psf/black
-    rev: 26.5.1
+    rev: 87928e6d6761a4a6d22250e1fee5601b3998086e # 26.5.1
     hooks:
       - id: black
         name: Black
@@ -35,7 +35,7 @@ repos:
           - --line-length=130
 
   - repo: https://github.com/pycqa/isort
-    rev: 8.0.1
+    rev: a333737ed43df02b18e6c95477ea1b285b3de15a # 8.0.1
     hooks:
       - id: isort
         name: isort
@@ -47,13 +47,13 @@ repos:
           - --line-length=130
 
   - repo: https://github.com/pycqa/flake8
-    rev: 7.3.0
+    rev: c48217e1fc006c2dddd14df54e83b67da15de5cd # 7.3.0
     hooks:
       - id: flake8
         args:
           - --max-line-length=130
 
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: 3.0.0
+    rev: 38980559e3a605691d6579f96222c30778e5a69e # 3.0.0
     hooks:
       - id: shellcheck
