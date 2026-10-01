@@ -14,7 +14,7 @@ repos:
       - id: check-shebang-scripts-are-executable
 
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.14.0
+    rev: v2.15.1
     hooks:
       - id: hadolint-docker
         name: Lint Dockerfiles
@@ -35,7 +35,7 @@ repos:
           - --line-length=130
 
   - repo: https://github.com/pycqa/isort
-    rev: 8.0.1
+    rev: 9.0.1
     hooks:
       - id: isort
         name: isort
@@ -47,7 +47,7 @@ repos:
           - --line-length=130
 
   - repo: https://github.com/pycqa/flake8
-    rev: 7.3.0
+    rev: 7.4.1
     hooks:
       - id: flake8
         args:
