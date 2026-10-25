@@ -75,6 +75,7 @@ ENV PATH="/opt/.venv/bin:$PATH"
 
 RUN useradd -ms /bin/bash ${USER}
 
+# hadolint ignore=DL3066
 USER ${USER}
 
 RUN mkdir -p ${APP_DIR}
