@@ -1,37 +1,52 @@
-FROM python:3.15.0b3-slim@sha256:0aeb80ad5e586fbf51077e3635a64fcd9402e4c8693f2bc610b0d6929a3e51ca AS base
+# syntax=docker/dockerfile:1.7
 
-# Build frontend assets
+FROM python:3.14.9-slim@sha256:35caba83af2fe6da9a5d922f9b0156f21d1246a48278c58a08bd253303ba42e8 AS base
 
-FROM node:26-slim@sha256:a1d9d671994fc2d26e297ac56b4b1522a8bc7fa71c43b14cd1b1fe6c5116f7dc AS frontend
+# =============================================================================
+# Frontend
+# =============================================================================
 
-ENV NODE_OPTIONS=--openssl-legacy-provider \
-    BUILD_DIR=/frontend
+FROM --platform=$BUILDPLATFORM node:26-slim@sha256:a1d9d671994fc2d26e297ac56b4b1522a8bc7fa71c43b14cd1b1fe6c5116f7dc AS frontend
 
-WORKDIR ${BUILD_DIR}
+ARG TARGETOS
+ARG TARGETARCH
 
-COPY ./frontend/package*.json ${BUILD_DIR}/
+WORKDIR /frontend
 
-RUN npm install
+ENV CI=true \
+    NODE_OPTIONS=--openssl-legacy-provider
 
-COPY ./frontend ${BUILD_DIR}
+# Copy dependency manifests first for maximum cache reuse.
+COPY frontend/package*.json ./
+
+# Install dependencies in a way that keeps the dependency cache warm.
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
+
+COPY frontend/ ./
 
 RUN npm run build
 
-# Build backend deps
+# =============================================================================
+# Backend Dependencies
+# =============================================================================
 
 FROM base AS builder
 
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
+
+# Build dependencies only.
 # hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    build-essential \
-    python3-dev \
-    libpq-dev \
-    libssl-dev \
-    libffi-dev \
-    rustc \
-    curl \
-    ca-certificates \
+        build-essential \
+        ca-certificates \
+        curl \
+        libffi-dev \
+        libpq-dev \
+        libssl-dev \
+        python3-dev \
+        rustc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -47,6 +62,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /opt
 
+# Keep Python dependency resolution independently cacheable.
 RUN --mount=type=cache,target=/root/.cache \
     --mount=type=bind,source=backend/uv.lock,target=uv.lock \
     --mount=type=bind,source=backend/pyproject.toml,target=pyproject.toml \
@@ -55,17 +71,25 @@ RUN --mount=type=cache,target=/root/.cache \
     --no-dev \
     --no-install-project
 
-# Build final image
+# =============================================================================
+# Runtime
+# =============================================================================
 
 FROM base
 
-ENV USER=ghost
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
+ENV USER=ghost
 ENV APP_DIR=/home/${USER}/app
 
+# Runtime dependencies only.
 # hadolint ignore=DL3008
 RUN apt-get update \
-    && apt-get install -y libpq5 --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        libpq5 \
+    && update-ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -75,6 +99,7 @@ ENV PATH="/opt/.venv/bin:$PATH"
 
 RUN useradd -ms /bin/bash ${USER}
 
+# hadolint ignore=DL3066
 USER ${USER}
 
 RUN mkdir -p ${APP_DIR}
@@ -95,5 +120,12 @@ COPY --from=frontend --chown=${USER}:${USER} /frontend/dist/favicon.png ${APP_DI
 RUN python manage.py collectstatic --no-input
 
 EXPOSE 8000
+
+HEALTHCHECK \
+    --interval=30s \
+    --timeout=10s \
+    --start-period=5s \
+    --retries=3 \
+    CMD ["curl", "-f", "http://localhost:8000/__health/"]
 
 CMD ["sh", "entrypoint.sh"]
