@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
     "apscheduler==3.11.3",
-    "asgiref==3.12.1",
+    "asgiref==3.13.0",
     "beautifulsoup4==4.15.0",
     "dj-database-url==3.1.2",
     "django==6.1.2",
@@ -27,7 +27,7 @@ dependencies = [
     "soupsieve==3.0.4",
     "sqlparse==0.6.0",
     "typing-extensions==4.16.0",
-    "tzdata==2026.5",
+    "tzdata==2026.6",
     "tzlocal==5.4.5",
     "urllib3==2.8.0",
     "whitenoise==6.12.0",
