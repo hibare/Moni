@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -39,7 +39,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       - name: Run pre-commit
-        uses: hibare/.github/github/shared-workflows/pre-commit//@a81e8dcdc53e857e36124dd49644fc02e948dcf8 # v0.17.0
+        uses: hibare/.github/github/shared-workflows/pre-commit//@d7beb850128a3af50913656d9126a8aeb9f6c427 # v0.18.0
 
   docker-image-build-publish:
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
       packages: write # For GHCR
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -89,7 +89,7 @@ jobs:
         shell: bash
 
       - name: image-build-publish
-        uses: hibare/.github/github/shared-workflows/docker-image-build-publish@a81e8dcdc53e857e36124dd49644fc02e948dcf8 # v0.17.0
+        uses: hibare/.github/github/shared-workflows/docker-image-build-publish@d7beb850128a3af50913656d9126a8aeb9f6c427 # v0.18.0
         with:
           image_names: ${{ steps.set-metadata.outputs.docker_image_names }}
           tags: ${{ steps.set-metadata.outputs.docker_tags }}
