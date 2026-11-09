@@ -1,13 +1,17 @@
+# Managed by Axon; manual edits will be overwritten.
 version: 2
 updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "friday"
       time: "00:30"
+      timezone: "UTC"
     target-branch: "main"
+    cooldown:
+      default-days: 5
     assignees:
       - "hibare"
     groups:
@@ -15,29 +19,17 @@ updates:
         patterns:
           - "*"
 
-  # Maintain dependencies for Python (uv)
-  - package-ecosystem: "uv"
-    directory: "/backend"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "main"
-    assignees:
-      - "hibare"
-    groups:
-      python:
-        patterns:
-          - "*"
-
   # Maintain version for Docker
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "friday"
       time: "00:30"
+      timezone: "UTC"
     target-branch: "main"
+    cooldown:
+      default-days: 5
     assignees:
       - "hibare"
     groups:
@@ -45,14 +37,35 @@ updates:
         patterns:
           - "*"
 
-  # Maintain version for npm or yarn
+  # Maintain dependencies for Docker Compose
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "00:30"
+      timezone: "UTC"
+    target-branch: "main"
+    cooldown:
+      default-days: 5
+    assignees:
+      - "hibare"
+    groups:
+      docker-compose:
+        patterns:
+          - "*"
+
+  # Maintain dependencies for npm
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "friday"
       time: "00:30"
+      timezone: "UTC"
     target-branch: "main"
+    cooldown:
+      default-days: 5
     assignees:
       - "hibare"
     groups:
@@ -60,14 +73,35 @@ updates:
         patterns:
           - "*"
 
+  # Maintain dependencies for Python
+  - package-ecosystem: "uv"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "00:30"
+      timezone: "UTC"
+    target-branch: "main"
+    cooldown:
+      default-days: 5
+    assignees:
+      - "hibare"
+    groups:
+      python:
+        patterns:
+          - "*"
+
   # Maintain dependencies for pre-commit
   - package-ecosystem: "pre-commit"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "friday"
       time: "00:30"
+      timezone: "UTC"
     target-branch: "main"
+    cooldown:
+      default-days: 5
     assignees:
       - "hibare"
     groups:
